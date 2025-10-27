@@ -1,11 +1,11 @@
 package com.example.librarymanagementsystem.service;
 
-import com.example.librarymanagementsystem.model.Publication;
-import com.example.librarymanagementsystem.repository.PublicationRepo;
+import com.example.librarymanagementsystem.model.BookDetails;
+import com.example.librarymanagementsystem.repository.BookRepo;
 
-public class BookService extends BaseService<Publication> {
+public class BookService extends BaseService<BookDetails> {
 
-    public BookService(PublicationRepo repo) {
+    public BookService(BookRepo repo) {
         super(repo);
     }
 }
