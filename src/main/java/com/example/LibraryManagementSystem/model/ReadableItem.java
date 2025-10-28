@@ -1,6 +1,6 @@
 package com.example.librarymanagementsystem.model;
 
-import java.util.Objects;
+
 
 /**
  * ReadableItem reprezintă un exemplar fizic (carte, revistă) din bibliotecă.

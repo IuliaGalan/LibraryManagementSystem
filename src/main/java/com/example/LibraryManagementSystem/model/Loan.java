@@ -2,25 +2,26 @@ package com.example.librarymanagementsystem.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 /**
- * Clasa Loan reprezintă un împrumut efectuat de un membru al bibliotecii.
+ * Clasa Loan e un imprumut efectuat de un membru al bibliotecii
  *
  * Relații:
- *  - Library 1 → N Loan  (o bibliotecă are mai multe împrumuturi)
- *  - Member 1 → N Loan   (un membru poate avea mai multe împrumuturi)
  *  - Loan 1 → N ReadableItem (un împrumut poate conține mai multe iteme)
  *  - Loan 1 → N Reservation  (un împrumut poate fi asociat cu una sau mai multe rezervări)
  */
 public class Loan {
 
-    private String id;                  // identificatorul împrumutului
-    private String memberId;            // ID-ul membrului care a împrumutat
-    private String date;                // data împrumutului (ca text simplu, ex: "2025-10-27")
+    private String id;
+    private String memberId;
+    private String date;
 
-    private List<Reservation> reservations;   // rezervările asociate acestui împrumut
-    private List<ReadableItem> items;         // itemele împrumutate (cărți, reviste etc.)
+    private List<Reservation> reservations;
+    private List<ReadableItem> items;
+
+    private String dueDate;
+    private String status;
 
     public Loan(String id, String memberId, String date) {
         this.id = id;
@@ -30,7 +31,24 @@ public class Loan {
         this.items = new ArrayList<>();
     }
 
-    // --- Getteri și setteri ---
+    // getter setter
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getMemberId() {
         return memberId;
     }

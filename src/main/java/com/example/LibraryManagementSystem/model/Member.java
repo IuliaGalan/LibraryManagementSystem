@@ -2,24 +2,26 @@ package com.example.librarymanagementsystem.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 /**
  * Member: aparține unei biblioteci (libraryId) și are împrumuturi + rezervări.
  *
  * Relații:
- *  - Library (id = libraryId) 1 → N Member
+ *  - Library 1 → N Member
  *  - Member 1 → N Loan
  *  - Member 1 → N Reservation
  */
 public class Member {
 
-    private String id;                  // ex: "M001"
-    private String name;                // ex: "Cezara Pitu"
-    private String libraryId;           // referință logică către Library
+    private String id;
+    private String name;
+    private String libraryId;
 
     private List<Reservation> reservations;
     private List<Loan> loans;
+    private String address;
+    private String email;
 
     // Constructor minim
     public Member(String id, String name, String libraryId) {
@@ -31,6 +33,21 @@ public class Member {
     }
 
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getId() {
         return id;

@@ -16,7 +16,7 @@ public class LibraryController {
         this.service = service;
     }
 
-    // test simplu
+
     @GetMapping("/hello")
     public String sayHello() {
         return "LibraryController works!";

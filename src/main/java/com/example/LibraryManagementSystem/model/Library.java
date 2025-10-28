@@ -2,7 +2,10 @@ package com.example.librarymanagementsystem.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//* Relații:
+// *  - Library 1 → N Member (o bibliotecă are mai mulți membri)
+// *  - Library 1 → N ReadableItem (o bibliotecă deține mai multe exemplare de publicații)
+// */
 public class Library {
 
     private String id;
@@ -13,6 +16,8 @@ public class Library {
     private List<Publication> publications;
     private List<BookDetails> books;
     private List<MagazineDetails> magazines;
+    private String phoneNumber;
+    private String email;
 
     public Library(String id, String name, String address) {
         this.id = id;
@@ -26,6 +31,23 @@ public class Library {
     }
 
     //getter si setter
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getId() {
         return id;
     }
