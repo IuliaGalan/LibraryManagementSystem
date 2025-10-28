@@ -2,7 +2,7 @@ package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.repository.BaseRepo;
 import java.util.List;
-
+//asta nu trb sa fie influentata indiferent de cu ne procesam datele. daca scot layerul de repo si pun layerul de baze de date nu ar trebui sa crape
 public abstract class BaseService<T> {
 
     protected final BaseRepo<T> repo;

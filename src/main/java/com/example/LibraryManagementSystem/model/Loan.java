@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 
 /**
@@ -15,15 +16,15 @@ public class Loan {
 
     private String id;
     private String memberId;
-    private String date;
+    private Date date;
 
     private List<Reservation> reservations;
     private List<ReadableItem> items;
 
-    private String dueDate;
+    private Date dueDate;
     private String status;
 
-    public Loan(String id, String memberId, String date) {
+    public Loan(String id, String memberId, Date date) {
         this.id = id;
         this.memberId = memberId;
         this.date = date;
@@ -33,11 +34,11 @@ public class Loan {
 
     // getter setter
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -57,7 +58,7 @@ public class Loan {
         return id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -77,7 +78,7 @@ public class Loan {
         this.memberId = memberId;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

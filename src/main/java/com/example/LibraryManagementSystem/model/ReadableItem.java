@@ -14,9 +14,14 @@ public class ReadableItem {
     private String id;
     private String publicationId;
     private String barcode;
-    private String status;
+    private Status status;
+    public enum Status {
+        ACTIVE,
+        CANCELLED,
+        COMPLETED
+    }
     // Constructor
-    public ReadableItem(String id, String publicationId, String barcode, String status) {
+    public ReadableItem(String id, String publicationId, String barcode, Status status) {
         this.id = id;
         this.publicationId = publicationId;
         this.barcode = barcode;
@@ -41,11 +46,11 @@ public class ReadableItem {
         this.publicationId = publicationId;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

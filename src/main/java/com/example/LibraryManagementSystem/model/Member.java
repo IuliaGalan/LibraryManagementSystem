@@ -21,7 +21,7 @@ public class Member {
     private List<Reservation> reservations;
     private List<Loan> loans;
     private String address;
-    private String email;
+    private String email; //de uitat peste
 
     // Constructor minim
     public Member(String id, String name, String libraryId) {
