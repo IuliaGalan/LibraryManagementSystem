@@ -9,10 +9,12 @@ public class Author {
     private String id;
     private String name;
     private List<BookDetails> books;
+    private String nationality;
 
-    public Author(String id, String name) {
+    public Author(String id, String name, String nationality) {
         this.id = id;
         this.name = name;
+        this.nationality = nationality;
         this.books = new ArrayList<>();
     }
 
@@ -26,6 +28,10 @@ public class Author {
 
     public List<BookDetails> getBooks() {
         return books;
+    }
+
+    public String getNationality() {
+        return nationality;
     }
 
     public void setName(String name) {

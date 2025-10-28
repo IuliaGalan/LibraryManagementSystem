@@ -7,14 +7,24 @@ import java.util.List;
 
 public class BookDetails extends Publication {
     private List<Author> bookAuthors;
+    private String genre;
 
-    public BookDetails(String id, String title) {
+    public BookDetails(String id, String title, String genre) {
         super(id, title);
         this.bookAuthors = new ArrayList<>();
+        this.genre = genre;
     }
 
     public List<Author> getAuthors() {
         return bookAuthors;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     //legatura bidirectionala
