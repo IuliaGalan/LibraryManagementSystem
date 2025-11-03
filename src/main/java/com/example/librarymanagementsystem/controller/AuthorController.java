@@ -1,9 +1,15 @@
 package com.example.librarymanagementsystem.controller;
 import com.example.librarymanagementsystem.model.Author;
+import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
 
 @Controller //controleaza cererile web dintre Java si paginile HTML
 //Inversion of Conrol Container
@@ -11,19 +17,24 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorController {
 
     private final AuthorService service;
+    private final BookAuthorService bookAuthorService;
 
-    public AuthorController(AuthorService service) {
+    public AuthorController(AuthorService service, BookAuthorService bookAuthorService) {
         this.service = service; //dependency injection
+        this.bookAuthorService = bookAuthorService;
     }
 
     // GetAll
+    // AuthorController.java (doar metoda index)
     @GetMapping
-    //obiectul Model are rolul de a tine obiectele din backend si de a le pasa in frontend
     public String getAll(Model model) {
-        //datele din model vor fi afisate in pagina HTML author/index
-        model.addAttribute("authors", service.getAll());
-        //deschide fisierul index din folderul templates/author
-        //nu se afiseaza stringul author/index, ci se afiseaza continutul fisierului
+        var authors = service.getAll();
+        Map<String, List<BookDetails>> booksByAuthor = new LinkedHashMap<>();
+        for (var a : authors) {
+            booksByAuthor.put(a.getId(), bookAuthorService.getBooksOfAuthor(a.getId()));
+        }
+        model.addAttribute("authors", authors);
+        model.addAttribute("booksByAuthor", booksByAuthor);
         return "author/index";
     }
 

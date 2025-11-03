@@ -1,26 +1,42 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.BookDetails;
+import com.example.librarymanagementsystem.model.Author;
 import com.example.librarymanagementsystem.service.BookService;
+import com.example.librarymanagementsystem.service.BookAuthorService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
 public class BookController {
 
     private final BookService service;
+    private final BookAuthorService bookAuthorService;
 
-    public BookController(BookService service) {
+    public BookController(BookService service, BookAuthorService bookAuthorService) {
         this.service = service;
+        this.bookAuthorService = bookAuthorService;
     }
 
     // GET ALL
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("books", service.getAll());
-        return "book/index"; // templates/book/index.html
+        var books = service.getAll();
+        // Map: bookId -> listă autori
+        Map<String, List<Author>> authorsByBook = new LinkedHashMap<>();
+        for (var b : books) {
+            authorsByBook.put(b.getId(), bookAuthorService.getAuthorsOfBook(b.getId()));
+        }
+        model.addAttribute("books", books);
+        model.addAttribute("authorsByBook", authorsByBook);
+        return "book/index";
     }
 
     // FORM (NEW)

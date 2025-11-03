@@ -5,24 +5,35 @@
     <title>Authors</title>
 </head>
 <body>
-<h2>Authors</h2>
-
+<h1>Authors</h1>
 <a th:href="@{/authors/new}">Add new</a>
 
-<table border="1" cellpadding="6">
-    <tr><th>ID</th><th>Name</th><th>Nationality</th><th>Actions</th></tr>
-
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Nationality</th>
+        <th>Books</th>
+    </tr>
+    </thead>
+    <tbody>
     <tr th:each="a : ${authors}">
-        <td th:text="${a.id}">A1</td>
-        <td th:text="${a.name}">Name</td>
-        <td th:text="${a.nationality}">RO</td>
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.name}"></td>
+        <td th:text="${a.nationality}"></td>
         <td>
-            <form th:action="@{'/authors/' + ${a.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
-            </form>
+            <ul>
+                <li th:each="b : ${booksByAuthor[a.id]}" th:text="${b.title}">Book title</li>
+            </ul>
+        </td>
+        <td>
+            <a th:href="@{|/book-authors/link?authorId=${a.id}|}">Link book to this author</a>
         </td>
     </tr>
+    </tbody>
 </table>
+
 
 </body>
 </html>

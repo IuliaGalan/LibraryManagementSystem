@@ -7,28 +7,38 @@
 <body>
 <h2>Books</h2>
 
-<a th:href="@{/books/new}">Add new</a>
+<p><a th:href="@{/books/new}">Add new</a></p>
 
 <table border="1" cellpadding="6">
+    <thead>
     <tr>
         <th>ID</th>
         <th>Title</th>
         <th>Genre</th>
-        <th>Actions</th>
+        <th>Authors</th>
     </tr>
+    </thead>
 
+    <tbody>
     <tr th:each="b : ${books}">
         <td th:text="${b.id}">B1</td>
         <td th:text="${b.title}">Some Title</td>
         <td th:text="${b.genre}">Fiction</td>
         <td>
-            <form th:action="@{'/books/' + ${b.id} + '/delete'}" method="post">
+            <ul>
+                <li th:each="a : ${authorsByBook[b.id]}"
+                    th:text="${a.name}">Author Name</li>
+            </ul>
+            <a th:href="@{|/bookauthors/new?bookId=${b.id}|}">Link author to this book</a>
+        </td>
+        <td>
+            <form th:action="@{|/books/${b.id}/delete|}" method="post" style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
 
-<a th:href="@{/}">Home</a>
 </body>
 </html>
