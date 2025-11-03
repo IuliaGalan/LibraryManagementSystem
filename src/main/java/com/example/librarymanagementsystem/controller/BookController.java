@@ -3,41 +3,44 @@ package com.example.librarymanagementsystem.controller;
 import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.service.BookService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/books")
 public class BookController {
 
     private final BookService service;
-    public BookController(BookService service) { this.service = service; }
 
-    @GetMapping("/hello") @ResponseBody
-    public String hello() { return "BookController OK"; }
+    public BookController(BookService service) {
+        this.service = service;
+    }
 
-    @GetMapping @ResponseBody
-    public List<BookDetails> getAll() { return service.getAll(); }
+    // GET ALL
+    @GetMapping
+    public String getAll(Model model) {
+        model.addAttribute("books", service.getAll());
+        return "book/index"; // templates/book/index.html
+    }
 
-    @GetMapping("/{id}") @ResponseBody
-    public BookDetails getOne(@PathVariable String id) { return service.getById(id); }
+    // FORM (NEW)
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("book", new BookDetails());
+        return "book/form"; // templates/book/form.html
+    }
 
-    @PostMapping @ResponseBody
-    public BookDetails create(@RequestBody BookDetails book) {
+    // CREATE
+    @PostMapping
+    public String create(@ModelAttribute BookDetails book) {
         service.add(book.getId(), book);
-        return service.getById(book.getId());
+        return "redirect:/books";
     }
 
-    @PutMapping("/{id}") @ResponseBody
-    public BookDetails update(@PathVariable String id, @RequestBody BookDetails body) {
-        service.update(id, body);
-        return service.getById(id);
-    }
-
-    @DeleteMapping("/{id}") @ResponseBody
+    // DELETE
+    @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);
-        return "Deleted book " + id;
+        return "redirect:/books";
     }
 }
