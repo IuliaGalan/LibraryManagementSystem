@@ -4,4 +4,4 @@ import com.example.librarymanagementsystem.model.Member;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MemberRepo extends BaseRepo<Member> {}
+public class MemberRepo extends InMemoryBaseRepo<Member> {}
