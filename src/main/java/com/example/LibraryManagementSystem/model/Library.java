@@ -30,6 +30,11 @@ public class Library {
         this.magazines = new ArrayList<>();
     }
 
+    public Library() {
+
+    }
+
+
     //getter si setter
 
     public String getPhoneNumber() {

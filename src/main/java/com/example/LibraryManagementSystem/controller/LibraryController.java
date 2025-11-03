@@ -2,11 +2,11 @@ package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Library;
 import com.example.librarymanagementsystem.service.LibraryService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/library")
 public class LibraryController {
 
@@ -17,32 +17,30 @@ public class LibraryController {
     }
 
 
-    @GetMapping("/hello")
-    public String sayHello() {
-        return "LibraryController works!";
-    }
-
-    // returnează toate bibliotecile
     @GetMapping
-    public List<Library> getAllLibraries() {
-        return service.getAll();
+    public String getAll(Model model) {
+        model.addAttribute("libraries", service.getAll());
+        return "library/index"; // templates/library/index.html
     }
 
-    // adaugă o bibliotecă nouă
+
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("library", new Library());
+        return "library/form"; // templates/library/form.html
+    }
+
+
     @PostMapping
-    public void addLibrary(@RequestBody Library library) {
+    public String create(@ModelAttribute Library library) {
         service.add(library.getId(), library);
+        return "redirect:/library";
     }
 
-    // găsește o bibliotecă după id
-    @GetMapping("/{id}")
-    public Library getLibraryById(@PathVariable String id) {
-        return service.getById(id);
-    }
 
-    // șterge o bibliotecă
-    @DeleteMapping("/{id}")
-    public void deleteLibrary(@PathVariable String id) {
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
         service.delete(id);
+        return "redirect:/library";
     }
 }

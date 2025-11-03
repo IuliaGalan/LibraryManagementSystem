@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Loan</title>
+</head>
+<body>
+<h1>Add New Loan</h1>
+
+<form th:action="@{/loan}" method="post" th:object="${loan}">
+    <label>ID (optional):</label>
+    <input type="text" th:field="*{id}" /><br>
+
+    <label>Member ID:</label>
+    <input type="text" th:field="*{memberId}" required /><br>
+
+    <label>Date:</label>
+    <input type="date" th:field="*{date}" /><br>
+
+    <label>Due Date:</label>
+    <input type="date" th:field="*{dueDate}" /><br>
+
+    <label>Status:</label>
+    <input type="text" th:field="*{status}" /><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<p><a th:href="@{/loan}">Back to list</a></p>
+</body>
+</html>

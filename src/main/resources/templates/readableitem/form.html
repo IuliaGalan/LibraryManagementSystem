@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Add Readable Item</title></head>
+<body>
+<h1>Add New Readable Item</h1>
+
+<form th:action="@{/readableitem}" method="post" th:object="${item}">
+    <!-- Dacă ai Spring Security, poți adăuga CSRF:
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    -->
+
+    <label>ID (optional):</label>
+    <input type="text" th:field="*{id}" /><br>
+
+    <label>Publication ID:</label>
+    <input type="text" th:field="*{publicationId}" required /><br>
+
+    <label>Barcode:</label>
+    <input type="text" th:field="*{barcode}" required /><br>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+    </select><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<p><a th:href="@{/readableitem}">Back to list</a></p>
+</body>
+</html>
