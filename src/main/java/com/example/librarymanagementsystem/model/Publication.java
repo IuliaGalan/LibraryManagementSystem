@@ -9,6 +9,12 @@ public abstract class Publication {
     private String title;
     private List<String> copyIds;
 
+    public Publication() {
+        this.id = java.util.UUID.randomUUID().toString();  // sau "" dacă preferi
+        this.title = "";
+        this.copyIds = new ArrayList<>();
+    }
+
     public Publication(String id, String title) {
         this.id = id;
         this.title = title;

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book–Author Relationship</title>
+</head>
+<body>
+<h2>Add Book–Author Relationship</h2>
+
+<form th:action="@{/bookauthors}" method="post">
+    <!-- selecturi EXISTENTE -->
+    <label>Existing Book:</label>
+    <select name="bookId">
+        <option value="">-- none --</option>
+        <option th:each="b : ${books}" th:value="${b.id}" th:text="${b.title}"></option>
+    </select>
+
+    <fieldset>
+        <legend>Or create new book</legend>
+        <input type="text" name="newBookTitle"/>
+        <input type="text" name="newBookGenre"/>
+    </fieldset>
+
+    <label>Existing Author:</label>
+    <select name="authorId">
+        <option value="">-- none --</option>
+        <option th:each="a : ${authors}" th:value="${a.id}" th:text="${a.name}"></option>
+    </select>
+
+    <fieldset>
+        <legend>Or create new author</legend>
+        <input type="text" name="newAuthorName"/>
+        <input type="text" name="newAuthorNationality"/>
+    </fieldset>
+
+    <!-- dacă ai Spring Security, adaugă CSRF: -->
+    <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+
+    <button type="submit">Link</button>
+</form>
+
+
+<p><a th:href="@{/bookauthors}">Back</a></p>
+</body>
+</html>

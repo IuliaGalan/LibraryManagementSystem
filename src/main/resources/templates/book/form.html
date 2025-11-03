@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<body>
+<h2>Add Book</h2>
+
+<form th:action="@{/books}" th:object="${book}" method="post">
+    <!-- Scoate ID dacă îl generezi în service -->
+    <label>ID: <input th:field="*{id}" /></label><br/>
+    <label>Title: <input th:field="*{title}" /></label><br/>
+    <label>Genre: <input th:field="*{genre}" /></label><br/>
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/books}">Back</a>
+</body>
+</html>

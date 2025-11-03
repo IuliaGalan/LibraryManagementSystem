@@ -1,6 +1,6 @@
 package com.example.librarymanagementsystem.repository;
 import java.util.*;
-public class BaseRepo<T> {
+public class InMemoryBaseRepo<T> {
 
     protected Map<String, T> data = new LinkedHashMap<>();
 

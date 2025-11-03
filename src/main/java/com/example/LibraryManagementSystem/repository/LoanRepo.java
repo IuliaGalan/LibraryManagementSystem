@@ -4,4 +4,4 @@ import com.example.librarymanagementsystem.model.Loan;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LoanRepo extends BaseRepo<Loan> {}
+public class LoanRepo extends InMemoryBaseRepo<Loan> {}

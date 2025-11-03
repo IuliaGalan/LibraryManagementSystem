@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Magazine</title>
+</head>
+<body>
+<h2>Add Magazine</h2>
+
+<form th:action="@{/magazines}" th:object="${magazine}" method="post">
+    <!-- Scoate ID dacă îl generezi în service -->
+    <label>ID: <input th:field="*{id}" /></label><br/>
+    <label>Title: <input th:field="*{title}" /></label><br/>
+    <label>Publisher: <input th:field="*{publisher}" /></label><br/>
+    <label>Language: <input th:field="*{language}" /></label><br/>
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/magazines}">Back</a>
+</body>
+</html>
