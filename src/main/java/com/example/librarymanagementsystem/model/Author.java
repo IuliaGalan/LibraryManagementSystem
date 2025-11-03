@@ -11,6 +11,11 @@ public class Author {
     private List<BookDetails> books;
     private String nationality;
 
+    //Spring are nevoie de un constructor gol cand primeste date din formular
+    public Author() {
+        this.books = new ArrayList<>();
+    }
+    //pt crearea manuala a obiectului
     public Author(String id, String name, String nationality) {
         this.id = id;
         this.name = name;
@@ -21,15 +26,12 @@ public class Author {
     public String getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public List<BookDetails> getBooks() {
         return books;
     }
-
     public String getNationality() {
         return nationality;
     }
@@ -37,6 +39,9 @@ public class Author {
     public void setName(String name) {
         this.name = name;
     }
+    public void setId(String id) { this.id = id; }
+    public void setNationality(String nationality) { this.nationality = nationality; }
+
 
     //relație bidirectionala
     public void addBook(BookDetails book) {

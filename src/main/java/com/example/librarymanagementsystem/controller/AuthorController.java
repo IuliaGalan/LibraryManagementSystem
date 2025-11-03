@@ -1,43 +1,58 @@
 package com.example.librarymanagementsystem.controller;
-
 import com.example.librarymanagementsystem.model.Author;
 import com.example.librarymanagementsystem.service.AuthorService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
-
-@Controller
+@Controller //controleaza cererile web dintre Java si paginile HTML
+//Inversion of Conrol Container
 @RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorService service;
-    public AuthorController(AuthorService service) { this.service = service; }
 
-    @GetMapping("/hello") @ResponseBody
-    public String hello() { return "AuthorController OK"; }
+    public AuthorController(AuthorService service) {
+        this.service = service; //dependency injection
+    }
 
-    @GetMapping @ResponseBody
-    public List<Author> getAll() { return service.getAll(); }
+    // GetAll
+    @GetMapping
+    //obiectul Model are rolul de a tine obiectele din backend si de a le pasa in frontend
+    public String getAll(Model model) {
+        //datele din model vor fi afisate in pagina HTML author/index
+        model.addAttribute("authors", service.getAll());
+        //deschide fisierul index din folderul templates/author
+        //nu se afiseaza stringul author/index, ci se afiseaza continutul fisierului
+        return "author/index";
+    }
 
-    @GetMapping("/{id}") @ResponseBody
-    public Author getOne(@PathVariable String id) { return service.getById(id); }
+    // FORM - creeaza si afiseaza un formular care cere datele unui autor
+    // se creeaza un obiect gol de tip Author
+    // obiectul gol se trimite in Model
+    // deschide pagina author/form
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("author", new Author());
+        return "author/form";
+    }
 
-    @PostMapping @ResponseBody
-    public Author create(@RequestBody Author author) {
+    //utilizatorul completeaza formularul, iar dupa salvare, functia create() primeste datele
+
+    // CREATE - asculta request ul de a primi date in formular
+    // creeaza automat un obiect de tip Author cu valorile din form
+    // dupa salvare, se apeleeaza metoda getAll
+    @PostMapping
+    public String create(@ModelAttribute Author author) {
+        // dacă id-ul se generează în service, nu îl ceri în formular
         service.add(author.getId(), author);
-        return service.getById(author.getId());
+        return "redirect:/authors"; //afiseaza pagina index
     }
 
-    @PutMapping("/{id}") @ResponseBody
-    public Author update(@PathVariable String id, @RequestBody Author body) {
-        service.update(id, body);
-        return service.getById(id);
-    }
-
-    @DeleteMapping("/{id}") @ResponseBody
+    // DELETE (PRIN POST)
+    @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);
-        return "Deleted author " + id;
+        return "redirect:/authors";
     }
 }

@@ -1,13 +1,13 @@
 package com.example.librarymanagementsystem.service;
 
-import com.example.librarymanagementsystem.repository.BaseRepo;
+import com.example.librarymanagementsystem.repository.InMemoryBaseRepo;
 import java.util.List;
 
 public abstract class BaseService<T> {
 
-    protected final BaseRepo<T> repo;
+    protected final InMemoryBaseRepo<T> repo;
 
-    public BaseService(BaseRepo<T> repo) {
+    public BaseService(InMemoryBaseRepo<T> repo) {
         this.repo = repo;
     }
 
