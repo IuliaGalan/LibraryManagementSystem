@@ -9,6 +9,11 @@ public class BookDetails extends Publication {
     private List<Author> bookAuthors;
     private String genre;
 
+    public BookDetails() {
+        super(); // cheamă Publication() gol
+        this.bookAuthors = new ArrayList<>();
+    }
+
     public BookDetails(String id, String title, String genre) {
         super(id, title);
         this.bookAuthors = new ArrayList<>();

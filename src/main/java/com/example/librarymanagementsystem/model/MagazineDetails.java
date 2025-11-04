@@ -4,6 +4,10 @@ public class MagazineDetails extends Publication {
     private String publisher;
     private String language;
 
+    public MagazineDetails() {      // ← necesar pentru new MagazineDetails()
+        super();
+    }
+
     public MagazineDetails(String id, String title, String publisher, String language) {
         super(id, title);
         this.publisher = publisher;

@@ -4,4 +4,4 @@ import com.example.librarymanagementsystem.model.Reservation;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ReservationRepo extends BaseRepo<Reservation> {}
+public class ReservationRepo extends InMemoryBaseRepo<Reservation> {}

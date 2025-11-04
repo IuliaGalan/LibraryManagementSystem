@@ -4,4 +4,4 @@ import com.example.librarymanagementsystem.model.Author;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AuthorRepo extends BaseRepo<Author> {}
+public class AuthorRepo extends InMemoryBaseRepo<Author> {}
