@@ -24,34 +24,36 @@ public class AuthorController {
         this.bookAuthorService = bookAuthorService;
     }
 
-    // LIST + booksByAuthor (UNICA rută GET /authors)
+    // Afișează toți autorii + cărțile lor (dacă există)
     @GetMapping
     public String index(Model model) {
         var authors = service.getAll();
         Map<String, List<BookDetails>> booksByAuthor = new LinkedHashMap<>();
+
         for (var a : authors) {
             booksByAuthor.put(a.getId(), bookAuthorService.getBooksOfAuthor(a.getId()));
         }
+
         model.addAttribute("authors", authors);
         model.addAttribute("booksByAuthor", booksByAuthor);
         return "author/index";
     }
 
-    // FORM (GET /authors/new)
+    // Formular pentru adăugare autor
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("author", new Author());
         return "author/form";
     }
 
-    // CREATE (POST /authors)
+    // Salvare autor nou
     @PostMapping
     public String create(@ModelAttribute Author author) {
         service.add(author.getId(), author);
         return "redirect:/authors";
     }
 
-    // DELETE (POST /authors/{id}/delete)
+    // Ștergere autor
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);

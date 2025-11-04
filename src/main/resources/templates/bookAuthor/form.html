@@ -2,44 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Book–Author Relationship</title>
+    <title>Add Book–Author Link</title>
 </head>
 <body>
-<h2>Add Book–Author Relationship</h2>
+<h1>Add Book–Author Link</h1>
 
-<form th:action="@{/bookauthors}" method="post">
-    <!-- selecturi EXISTENTE -->
-    <label>Existing Book:</label>
-    <select name="bookId">
-        <option value="">-- none --</option>
-        <option th:each="b : ${books}" th:value="${b.id}" th:text="${b.title}"></option>
+<form action="/bookauthors" method="post">
+    <label for="bookId">Book:</label>
+    <select id="bookId" name="bookId" required>
+        <option value="" disabled th:selected="${selectedBookId == null}">-- select a book --</option>
+        <option th:each="b : ${books}"
+                th:value="${b.id}"
+                th:text="${b.title}"
+                th:selected="${selectedBookId != null} ? ${b.id} == ${selectedBookId} : false">
+        </option>
     </select>
 
-    <fieldset>
-        <legend>Or create new book</legend>
-        <input type="text" name="newBookTitle"/>
-        <input type="text" name="newBookGenre"/>
-    </fieldset>
+    <br><br>
 
-    <label>Existing Author:</label>
-    <select name="authorId">
-        <option value="">-- none --</option>
-        <option th:each="a : ${authors}" th:value="${a.id}" th:text="${a.name}"></option>
+    <label for="authorId">Author:</label>
+    <select id="authorId" name="authorId" required>
+        <option value="" disabled th:selected="${selectedAuthorId == null}">-- select an author --</option>
+        <option th:each="a : ${authors}"
+                th:value="${a.id}"
+                th:text="${a.name}"
+                th:selected="${selectedAuthorId != null} ? ${a.id} == ${selectedAuthorId} : false">
+        </option>
     </select>
 
-    <fieldset>
-        <legend>Or create new author</legend>
-        <input type="text" name="newAuthorName"/>
-        <input type="text" name="newAuthorNationality"/>
-    </fieldset>
-
-    <!-- dacă ai Spring Security, adaugă CSRF: -->
-    <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
-
-    <button type="submit">Link</button>
+    <br><br>
+    <button type="submit">Save</button>
+    <a th:href="@{/bookauthors}">Cancel</a>
 </form>
 
-
-<p><a th:href="@{/bookauthors}">Back</a></p>
 </body>
 </html>

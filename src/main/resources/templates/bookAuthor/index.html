@@ -5,11 +5,9 @@
     <title>Book–Author Links</title>
 </head>
 <body>
-<h2>Book–Author Links</h2>
+<h1>Book–Author Links</h1>
 
-<p>
-    <a th:href="@{/bookauthors/new}">Add new link</a> |
-</p>
+<p><a th:href="@{/bookauthors/new}">Add link</a></p>
 
 <table border="1" cellpadding="6">
     <thead>
@@ -20,21 +18,23 @@
         <th>Author Name</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="r : ${rows}">
         <td th:text="${r.bookId}">B1</td>
         <td th:text="${r.bookTitle}">Title</td>
         <td th:text="${r.authorId}">A1</td>
-        <td th:text="${r.authorName}">Name</td>
+        <td th:text="${r.authorName}">Author</td>
         <td>
             <form th:action="@{/bookauthors/delete}" method="post" style="display:inline">
-                <input type="hidden" name="bookId"   th:value="${r.bookId}"/>
-                <input type="hidden" name="authorId" th:value="${r.authorId}"/>
+                <input type="hidden" name="bookId" th:value="${r.bookId}">
+                <input type="hidden" name="authorId" th:value="${r.authorId}">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

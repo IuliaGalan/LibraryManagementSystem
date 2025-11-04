@@ -13,6 +13,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/bookauthors")
 public class BookAuthorController {
+
     private final BookAuthorService bookAuthorService;
     private final BookService bookService;
     private final AuthorService authorService;
@@ -25,12 +26,11 @@ public class BookAuthorController {
         this.authorService = authorService;
     }
 
-    // ✅ LIST: GET /bookauthors – tabel cu link-urile carte–autor
+    // LIST: GET /bookauthors – tabel cu asocierile carte–autor
     @GetMapping
     public String index(Model model) {
-        var links = bookAuthorService.getAll(); // presupusă: listează legăturile (bookId, authorId)
+        var links = bookAuthorService.getAll(); // (bookId, authorId)
 
-        // construim rânduri cu titlu/nume pentru afișare
         List<Row> rows = new ArrayList<>();
         for (var link : links) {
             var b = bookService.getById(link.getBookId());
@@ -43,37 +43,46 @@ public class BookAuthorController {
             ));
         }
         model.addAttribute("rows", rows);
-        return "bookAuthor/index";
+        return "bookAuthor/index"; // templates/bookAuthor/index.html
     }
 
-    // FORMULAR: GET /bookauthors/new
+    // FORM: GET /bookauthors/new  (opțional: preselectare prin query params)
     @GetMapping("/new")
-    public String newLinkForm(Model model) {
+    //încearcă să ia din URL valoarea lui bookId si authorId
+    public String newLinkForm(@RequestParam(required = false) String bookId,
+                              @RequestParam(required = false) String authorId,
+                              Model model) {
         model.addAttribute("books", bookService.getAll());
         model.addAttribute("authors", authorService.getAll());
-        return "bookAuthor/form"; // asigură-te că ai templates/bookAuthor/form.html
+        model.addAttribute("selectedBookId", bookId);
+        model.addAttribute("selectedAuthorId", authorId);
+        return "bookAuthor/form"; // templates/bookAuthor/form.html
     }
 
     // CREATE: POST /bookauthors
     @PostMapping
     public String createLink(@RequestParam String bookId, @RequestParam String authorId) {
         bookAuthorService.link(bookId, authorId);
-        return "redirect:/bookauthors"; // după creare revii la tabel
+        return "redirect:/bookauthors";
     }
 
     // DELETE: POST /bookauthors/delete
+    // sterge o legatura carte-autor
     @PostMapping("/delete")
     public String deleteLink(@RequestParam String bookId, @RequestParam String authorId) {
         bookAuthorService.unlink(bookId, authorId);
         return "redirect:/bookauthors";
     }
 
-    // mic DTO pentru view
+    // DTO pentru view
+    // necesar pt a trimite in view informatii combinate
+    // acest obiect tine toate informatiile impreuna
     public static class Row {
         private final String bookId;
         private final String bookTitle;
         private final String authorId;
         private final String authorName;
+
         public Row(String bookId, String bookTitle, String authorId, String authorName) {
             this.bookId = bookId; this.bookTitle = bookTitle;
             this.authorId = authorId; this.authorName = authorName;
