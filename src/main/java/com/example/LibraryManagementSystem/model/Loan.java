@@ -1,5 +1,5 @@
 package com.example.librarymanagementsystem.model;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -16,11 +16,12 @@ public class Loan {
 
     private String id;
     private String memberId;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
     private List<Reservation> reservations;
     private List<ReadableItem> items;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
     private String status;
 

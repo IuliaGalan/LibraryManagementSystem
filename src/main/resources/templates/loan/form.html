@@ -1,28 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add Loan</title>
+    <meta charset="UTF-8">
+    <title>Add New Loan</title>
 </head>
 <body>
 <h1>Add New Loan</h1>
 
 <form th:action="@{/loan}" method="post" th:object="${loan}">
-    <label>ID (optional):</label>
-    <input type="text" th:field="*{id}" /><br>
+    <div>
+        <label for="id">ID (optional):</label>
+        <input type="text" id="id" th:field="*{id}" />
+    </div>
 
-    <label>Member ID:</label>
-    <input type="text" th:field="*{memberId}" required /><br>
+    <div>
+        <label for="memberId">Member ID:</label>
+        <input type="text" id="memberId" th:field="*{memberId}" required />
+    </div>
 
-    <label>Date:</label>
-    <input type="date" th:field="*{date}" /><br>
+    <div>
+        <label for="date">Date:</label>
+        <input type="date" id="date" th:field="*{date}" required />
+    </div>
 
-    <label>Due Date:</label>
-    <input type="date" th:field="*{dueDate}" /><br>
+    <div>
+        <label for="dueDate">Due Date:</label>
+        <input type="date" id="dueDate" th:field="*{dueDate}" required />
+    </div>
 
-    <label>Status:</label>
-    <input type="text" th:field="*{status}" /><br>
+    <div>
+        <label for="status">Status:</label>
+        <input type="text" id="status" th:field="*{status}" required />
+    </div>
 
-    <button type="submit">Save</button>
+    <div>
+        <button type="submit">Save</button>
+    </div>
 </form>
 
 <p><a th:href="@{/loan}">Back to list</a></p>
