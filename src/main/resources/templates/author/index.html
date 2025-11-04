@@ -28,7 +28,9 @@
             </ul>
         </td>
         <td>
-            <a th:href="@{|/book-authors/link?authorId=${a.id}|}">Link book to this author</a>
+            <form th:action="@{/authors/{id}/delete(id=${a.id})}" method="post" style="display:inline">
+                <button type="submit">Delete</button>
+            </form>
         </td>
     </tr>
     </tbody>
