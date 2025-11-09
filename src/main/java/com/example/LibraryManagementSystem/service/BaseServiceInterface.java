@@ -1,4 +1,4 @@
-package com.example.librarymanagementsystem.service;
+package com.example.LibraryManagementSystem.service;
 
 //import com.example.librarymanagementsystem.repository.InMemoryBaseRepo;
 
