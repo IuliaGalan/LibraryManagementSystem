@@ -1,10 +1,9 @@
 package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.model.Author;
-import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.model.BookAuthor;
-import com.example.librarymanagementsystem.repository.InMemoryBaseRepo;
-import com.example.librarymanagementsystem.repository.BookAuthorRepo;
+import com.example.librarymanagementsystem.model.BookDetails;
+import com.example.librarymanagementsystem.repository.RepositoryInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,7 +15,8 @@ public class BookAuthorService extends BaseService<BookAuthor> {
     private final AuthorService authorService;
     private final BookService bookService;
 
-    public BookAuthorService(InMemoryBaseRepo<BookAuthor> repo,
+    // Spring va injecta bean-ul concret (BookAuthorRepo) pentru acest tip generic
+    public BookAuthorService(RepositoryInterface<BookAuthor> repo,
                              AuthorService authorService,
                              BookService bookService) {
         super(repo);
@@ -24,17 +24,23 @@ public class BookAuthorService extends BaseService<BookAuthor> {
         this.bookService = bookService;
     }
 
-    // creează o legătură dacă nu există deja
     public boolean link(String bookId, String authorId) {
-        // evităm duplicatele
         boolean exists = getAll().stream()
                 .anyMatch(ba -> ba.getBookId().equals(bookId) && ba.getAuthorId().equals(authorId));
         if (exists) return false;
 
-        // id simplu pentru BookAuthor (poți folosi și un UUID)
-        String linkId = bookId + "_" + authorId;
+        String linkId = UUID.randomUUID().toString();
         repo.save(linkId, new BookAuthor(linkId, bookId, authorId));
         return true;
+    }
+
+    public boolean unlink(String bookId, String authorId) {
+        Optional<String> idOpt = getAll().stream()
+                .filter(ba -> ba.getBookId().equals(bookId) && ba.getAuthorId().equals(authorId))
+                .map(BookAuthor::getId)
+                .findFirst();
+        idOpt.ifPresent(repo::delete);
+        return idOpt.isPresent();
     }
 
     public List<Author> getAuthorsOfBook(String bookId) {
@@ -52,14 +58,4 @@ public class BookAuthorService extends BaseService<BookAuthor> {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
-
-    public void unlink(String bookId, String authorId) {
-        // șterge legătura specifică
-        getAll().stream()
-                .filter(ba -> ba.getBookId().equals(bookId) && ba.getAuthorId().equals(authorId))
-                .map(BookAuthor::getId)
-                .findFirst()
-                .ifPresent(repo::delete);
-    }
 }
-

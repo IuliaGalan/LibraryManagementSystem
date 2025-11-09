@@ -1,0 +1,12 @@
+[
+  { "id": "A1", "name": "J. K. Rowling", "nationality": "UK" },
+  { "id": "A2", "name": "George R. R. Martin", "nationality": "US" },
+  { "id": "A3", "name": "Haruki Murakami", "nationality": "JP" },
+  { "id": "A4", "name": "Neil Gaiman", "nationality": "UK" },
+  { "id": "A5", "name": "Terry Pratchett", "nationality": "UK" },
+  { "id": "A6", "name": "Yuval Noah Harari", "nationality": "IL" },
+  { "id": "A7", "name": "Sally Rooney", "nationality": "IE" },
+  { "id": "A8", "name": "Elena Ferrante", "nationality": "IT" },
+  { "id": "A9", "name": "Margaret Atwood", "nationality": "CA" },
+  { "id": "A10", "name": "Isabel Allende", "nationality": "CL" }
+]
