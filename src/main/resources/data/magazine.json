@@ -1,0 +1,12 @@
+[
+  { "id": "M1", "title": "National Geographic", "publisher": "National Geographic Partners", "language": "English" },
+  { "id": "M2", "title": "Time", "publisher": "Time USA LLC", "language": "English" },
+  { "id": "M3", "title": "The Economist", "publisher": "The Economist Group", "language": "English" },
+  { "id": "M4", "title": "Vogue", "publisher": "Condé Nast", "language": "English" },
+  { "id": "M5", "title": "Scientific American", "publisher": "Springer Nature", "language": "English" },
+  { "id": "M6", "title": "Forbes", "publisher": "Forbes Media", "language": "English" },
+  { "id": "M7", "title": "National Geographic Kids", "publisher": "National Geographic Partners", "language": "English" },
+  { "id": "M8", "title": "Nature", "publisher": "Springer Nature", "language": "English" },
+  { "id": "M9", "title": "Science", "publisher": "AAAS", "language": "English" },
+  { "id": "M10", "title": "Discover", "publisher": "Kalmbach Media", "language": "English" }
+]
