@@ -1,0 +1,61 @@
+[ {
+  "id" : "M1",
+  "title" : "National Geographic",
+  "copyIds" : [ ],
+  "publisher" : "National Geographic Partners",
+  "language" : "English"
+}, {
+  "id" : "M2",
+  "title" : "Time",
+  "copyIds" : [ ],
+  "publisher" : "Time USA LLC",
+  "language" : "English"
+}, {
+  "id" : "M3",
+  "title" : "The Economist",
+  "copyIds" : [ ],
+  "publisher" : "The Economist Group",
+  "language" : "English"
+}, {
+  "id" : "M4",
+  "title" : "Vogue",
+  "copyIds" : [ ],
+  "publisher" : "Condé Nast",
+  "language" : "English"
+}, {
+  "id" : "M5",
+  "title" : "Scientific American",
+  "copyIds" : [ ],
+  "publisher" : "Springer Nature",
+  "language" : "English"
+}, {
+  "id" : "M6",
+  "title" : "Forbes",
+  "copyIds" : [ ],
+  "publisher" : "Forbes Media",
+  "language" : "English"
+}, {
+  "id" : "M7",
+  "title" : "National Geographic Kids",
+  "copyIds" : [ ],
+  "publisher" : "National Geographic Partners",
+  "language" : "English"
+}, {
+  "id" : "M8",
+  "title" : "Nature",
+  "copyIds" : [ ],
+  "publisher" : "Springer Nature",
+  "language" : "English"
+}, {
+  "id" : "M9",
+  "title" : "Science",
+  "copyIds" : [ ],
+  "publisher" : "AAAS",
+  "language" : "English"
+}, {
+  "id" : "M10",
+  "title" : "Discover",
+  "copyIds" : [ ],
+  "publisher" : "Kalmbach Media",
+  "language" : "English"
+} ]

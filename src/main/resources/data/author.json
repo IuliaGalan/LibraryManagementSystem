@@ -1,0 +1,61 @@
+[ {
+  "id" : "A1",
+  "name" : "J. K. Rowling",
+  "books" : [ ],
+  "nationality" : "UK"
+}, {
+  "id" : "A2",
+  "name" : "George R. R. Martin",
+  "books" : [ ],
+  "nationality" : "US"
+}, {
+  "id" : "A3",
+  "name" : "Haruki Murakami",
+  "books" : [ ],
+  "nationality" : "JP"
+}, {
+  "id" : "A4",
+  "name" : "Neil Gaiman",
+  "books" : [ ],
+  "nationality" : "UK"
+}, {
+  "id" : "A5",
+  "name" : "Terry Pratchett",
+  "books" : [ ],
+  "nationality" : "UK"
+}, {
+  "id" : "A6",
+  "name" : "Yuval Noah Harari",
+  "books" : [ ],
+  "nationality" : "IL"
+}, {
+  "id" : "A7",
+  "name" : "Sally Rooney",
+  "books" : [ ],
+  "nationality" : "IE"
+}, {
+  "id" : "A8",
+  "name" : "Elena Ferrante",
+  "books" : [ ],
+  "nationality" : "IT"
+}, {
+  "id" : "A9",
+  "name" : "Margaret Atwood",
+  "books" : [ ],
+  "nationality" : "CA"
+}, {
+  "id" : "A10",
+  "name" : "Isabel Allende",
+  "books" : [ ],
+  "nationality" : "CL"
+}, {
+  "id" : "A11",
+  "name" : "AuthorName1",
+  "books" : [ ],
+  "nationality" : "Nationality1"
+}, {
+  "id" : "A12",
+  "name" : "AuthorName2",
+  "books" : [ ],
+  "nationality" : "Nationality2"
+} ]
