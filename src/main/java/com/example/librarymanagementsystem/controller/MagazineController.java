@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/magazines")
+@RequestMapping("/magazines")  // fără method aici!
 public class MagazineController {
 
     private final MagazineService service;
@@ -16,28 +16,28 @@ public class MagazineController {
         this.service = service;
     }
 
-    // GET ALL
+    // LIST (GET /magazines)
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("magazines", service.getAll());
-        return "magazine/index"; // templates/magazine/index.html
+        return "magazine/index";           // -> templates/magazine/index.html
     }
 
-    // FORM (NEW)
+    // FORM (GET /magazines/new)
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("magazine", new MagazineDetails());
-        return "magazine/form"; // templates/magazine/form.html
+        return "magazine/form";            // -> templates/magazine/form.html
     }
 
-    // CREATE
+    // CREATE (POST /magazines)
     @PostMapping
-    public String create(@ModelAttribute MagazineDetails magazine) {
-        service.add(magazine.getId(), magazine);
+    public String create(@ModelAttribute("magazine") MagazineDetails m) {
+        service.add(m.getId(), m);
         return "redirect:/magazines";
     }
 
-    // DELETE
+    // DELETE (POST /magazines/{id}/delete)
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);

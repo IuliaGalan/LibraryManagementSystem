@@ -1,72 +1,71 @@
-[
-  {
-    "id": "B1",
-    "title": "Harry Potter and the Philosopher's Stone",
-    "genre": "Fantasy",
-    "copyIds": ["C1", "C2", "C3"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B2",
-    "title": "A Game of Thrones",
-    "genre": "Fantasy",
-    "copyIds": ["C4", "C5"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B3",
-    "title": "Kafka on the Shore",
-    "genre": "Magical Realism",
-    "copyIds": ["C6"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B4",
-    "title": "Good Omens",
-    "genre": "Comedy Fantasy",
-    "copyIds": ["C7", "C8"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B5",
-    "title": "Sapiens: A Brief History of Humankind",
-    "genre": "Non-fiction",
-    "copyIds": ["C9"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B6",
-    "title": "Normal People",
-    "genre": "Drama",
-    "copyIds": ["C10"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B7",
-    "title": "My Brilliant Friend",
-    "genre": "Fiction",
-    "copyIds": ["C11"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B8",
-    "title": "The Handmaid's Tale",
-    "genre": "Dystopian",
-    "copyIds": ["C12"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B9",
-    "title": "The Shadow of the Wind",
-    "genre": "Mystery",
-    "copyIds": ["C13", "C14"],
-    "bookAuthors": []
-  },
-  {
-    "id": "B10",
-    "title": "One Hundred Years of Solitude",
-    "genre": "Magical Realism",
-    "copyIds": ["C15"],
-    "bookAuthors": []
-  }
-]
+[ {
+  "id" : "B1",
+  "title" : "Harry Potter and the Philosopher's Stone",
+  "copyIds" : [ "C1", "C2", "C3" ],
+  "bookAuthors" : [ ],
+  "genre" : "Fantasy",
+  "authors" : [ ]
+}, {
+  "id" : "B2",
+  "title" : "A Game of Thrones",
+  "copyIds" : [ "C4", "C5" ],
+  "bookAuthors" : [ ],
+  "genre" : "Fantasy",
+  "authors" : [ ]
+}, {
+  "id" : "B3",
+  "title" : "Kafka on the Shore",
+  "copyIds" : [ "C6" ],
+  "bookAuthors" : [ ],
+  "genre" : "Magical Realism",
+  "authors" : [ ]
+}, {
+  "id" : "B4",
+  "title" : "Good Omens",
+  "copyIds" : [ "C7", "C8" ],
+  "bookAuthors" : [ ],
+  "genre" : "Comedy Fantasy",
+  "authors" : [ ]
+}, {
+  "id" : "B5",
+  "title" : "Sapiens: A Brief History of Humankind",
+  "copyIds" : [ "C9" ],
+  "bookAuthors" : [ ],
+  "genre" : "Non-fiction",
+  "authors" : [ ]
+}, {
+  "id" : "B6",
+  "title" : "Normal People",
+  "copyIds" : [ "C10" ],
+  "bookAuthors" : [ ],
+  "genre" : "Drama",
+  "authors" : [ ]
+}, {
+  "id" : "B7",
+  "title" : "My Brilliant Friend",
+  "copyIds" : [ "C11" ],
+  "bookAuthors" : [ ],
+  "genre" : "Fiction",
+  "authors" : [ ]
+}, {
+  "id" : "B8",
+  "title" : "The Handmaid's Tale",
+  "copyIds" : [ "C12" ],
+  "bookAuthors" : [ ],
+  "genre" : "Dystopian",
+  "authors" : [ ]
+}, {
+  "id" : "B9",
+  "title" : "The Shadow of the Wind",
+  "copyIds" : [ "C13", "C14" ],
+  "bookAuthors" : [ ],
+  "genre" : "Mystery",
+  "authors" : [ ]
+}, {
+  "id" : "B10",
+  "title" : "One Hundred Years of Solitude",
+  "copyIds" : [ "C15" ],
+  "bookAuthors" : [ ],
+  "genre" : "Magical Realism",
+  "authors" : [ ]
+} ]
