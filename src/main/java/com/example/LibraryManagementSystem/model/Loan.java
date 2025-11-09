@@ -32,6 +32,9 @@ public class Loan {
         this.reservations = new ArrayList<>();
         this.items = new ArrayList<>();
     }
+    public Loan(){
+    }
+
 
     // getter setter
 

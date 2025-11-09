@@ -1,0 +1,92 @@
+[
+  {
+    "id": "Loan1",
+    "memberId": "M1",
+    "date": "2025-11-01",
+    "dueDate": "2025-11-15",
+    "status": "OPEN",
+    "items": ["B1", "B2"],
+    "reservations": ["R1"]
+  },
+  {
+    "id": "Loan2",
+    "memberId": "M2",
+    "date": "2025-11-02",
+    "dueDate": "2025-11-16",
+    "status": "OPEN",
+    "items": ["B3"],
+    "reservations": []
+  },
+  {
+    "id": "Loan3",
+    "memberId": "M3",
+    "date": "2025-11-03",
+    "dueDate": "2025-11-17",
+    "status": "OPEN",
+    "items": ["B4", "B5"],
+    "reservations": ["R2"]
+  },
+  {
+    "id": "Loan4",
+    "memberId": "M4",
+    "date": "2025-11-04",
+    "dueDate": "2025-11-18",
+    "status": "OPEN",
+    "items": ["B6"],
+    "reservations": []
+  },
+  {
+    "id": "Loan5",
+    "memberId": "M5",
+    "date": "2025-11-05",
+    "dueDate": "2025-11-19",
+    "status": "CLOSED",
+    "items": ["B7"],
+    "reservations": []
+  },
+  {
+    "id": "Loan6",
+    "memberId": "M6",
+    "date": "2025-11-06",
+    "dueDate": "2025-11-20",
+    "status": "OPEN",
+    "items": ["B8", "B9"],
+    "reservations": []
+  },
+  {
+    "id": "Loan7",
+    "memberId": "M7",
+    "date": "2025-11-07",
+    "dueDate": "2025-11-21",
+    "status": "OVERDUE",
+    "items": ["B10"],
+    "reservations": ["R3"]
+  },
+  {
+    "id": "Loan8",
+    "memberId": "M8",
+    "date": "2025-11-08",
+    "dueDate": "2025-11-22",
+    "status": "OPEN",
+    "items": ["B2", "B3"],
+    "reservations": []
+  },
+  {
+    "id": "Loan9",
+    "memberId": "M9",
+    "date": "2025-11-09",
+    "dueDate": "2025-11-23",
+    "status": "CLOSED",
+    "items": ["B4"],
+    "reservations": []
+  },
+  {
+    "id": "Loan10",
+    "memberId": "M10",
+    "date": "2025-11-10",
+    "dueDate": "2025-11-24",
+    "status": "OPEN",
+    "items": ["B5", "B6"],
+    "reservations": ["R4"]
+  }
+]

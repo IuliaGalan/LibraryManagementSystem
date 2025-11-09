@@ -1,0 +1,72 @@
+[
+  {
+    "id": "M1",
+    "name": "Alice Pop",
+    "email": "alice.pop@example.com",
+    "phone": "0721000001",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M2",
+    "name": "Bogdan Ionescu",
+    "email": "bogdan.ionescu@example.com",
+    "phone": "0721000002",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M3",
+    "name": "Cezara Pitu",
+    "email": "cezara.pitu@example.com",
+    "phone": "0721000003",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M4",
+    "name": "Daria Muntean",
+    "email": "daria.muntean@example.com",
+    "phone": "0721000004",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M5",
+    "name": "Emil Radu",
+    "email": "emil.radu@example.com",
+    "phone": "0721000005",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M6",
+    "name": "Felix Matei",
+    "email": "felix.matei@example.com",
+    "phone": "0721000006",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M7",
+    "name": "Gabi Luca",
+    "email": "gabi.luca@example.com",
+    "phone": "0721000007",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M8",
+    "name": "Horea Vlad",
+    "email": "horea.vlad@example.com",
+    "phone": "0721000008",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M9",
+    "name": "Irina Sava",
+    "email": "irina.sava@example.com",
+    "phone": "0721000009",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "M10",
+    "name": "Jeni Dobre",
+    "email": "jeni.dobre@example.com",
+    "phone": "0721000010",
+    "status": "ACTIVE"
+  }
+]
