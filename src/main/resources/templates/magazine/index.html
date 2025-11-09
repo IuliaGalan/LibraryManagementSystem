@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Magazines</title>
+</head>
+<body>
+<h2>Magazines</h2>
+
+<a th:href="@{/magazines/new}">Add new</a>
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Publisher</th>
+        <th>Language</th>
+    </tr>
+
+    <tr th:each="m : ${magazines}">
+        <td th:text="${m.id}">M1</td>
+        <td th:text="${m.title}">Title</td>
+        <td th:text="${m.publisher}">Publisher</td>
+        <td th:text="${m.language}">EN</td>
+        <td>
+            <form th:action="@{'/magazines/' + ${m.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

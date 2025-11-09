@@ -31,7 +31,9 @@ public class Member {
         this.reservations = new ArrayList<>();
         this.loans = new ArrayList<>();
     }
+    public Member(){
 
+    }
 
     public String getAddress() {
         return address;

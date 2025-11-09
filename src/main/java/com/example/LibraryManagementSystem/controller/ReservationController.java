@@ -2,11 +2,13 @@ package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Reservation;
 import com.example.librarymanagementsystem.service.ReservationService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.UUID;
 
-@RestController
+@Controller
 @RequestMapping("/reservation")
 public class ReservationController {
 
@@ -16,28 +18,34 @@ public class ReservationController {
         this.service = service;
     }
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "ReservationController works!";
-    }
 
     @GetMapping
-    public List<Reservation> getAll() {
-        return service.getAll();
+    public String getAll(Model model) {
+        model.addAttribute("reservations", service.getAll());
+        return "reservation/index"; // templates/reservation/index.html
     }
 
-    @GetMapping("/{id}")
-    public Reservation getById(@PathVariable String id) {
-        return service.getById(id);
+
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("reservation", new Reservation());
+        return "reservation/form"; // templates/reservation/form.html
     }
+
 
     @PostMapping
-    public void add(@RequestBody Reservation reservation) {
+    public String create(@ModelAttribute Reservation reservation) {
+        if (reservation.getId() == null || reservation.getId().isBlank()) {
+            reservation.setId(UUID.randomUUID().toString());
+        }
         service.add(reservation.getId(), reservation);
+        return "redirect:/reservation";
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
         service.delete(id);
+        return "redirect:/reservation";
     }
 }

@@ -27,6 +27,9 @@ public class ReadableItem {
         this.barcode = barcode;
         this.status = status;
     }
+    public ReadableItem() {
+
+    }
 
 
 

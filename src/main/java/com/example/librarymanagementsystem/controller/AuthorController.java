@@ -1,43 +1,62 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Author;
+import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorService service;
-    public AuthorController(AuthorService service) { this.service = service; }
+    private final BookAuthorService bookAuthorService;
 
-    @GetMapping("/hello") @ResponseBody
-    public String hello() { return "AuthorController OK"; }
+    public AuthorController(AuthorService service, BookAuthorService bookAuthorService) {
+        this.service = service;
+        this.bookAuthorService = bookAuthorService;
+    }
 
-    @GetMapping @ResponseBody
-    public List<Author> getAll() { return service.getAll(); }
+    // Afișează toți autorii + cărțile lor (dacă există)
+    @GetMapping
+    public String index(Model model) {
+        var authors = service.getAll();
+        Map<String, List<BookDetails>> booksByAuthor = new LinkedHashMap<>();
 
-    @GetMapping("/{id}") @ResponseBody
-    public Author getOne(@PathVariable String id) { return service.getById(id); }
+        for (var a : authors) {
+            booksByAuthor.put(a.getId(), bookAuthorService.getBooksOfAuthor(a.getId()));
+        }
 
-    @PostMapping @ResponseBody
-    public Author create(@RequestBody Author author) {
+        model.addAttribute("authors", authors);
+        model.addAttribute("booksByAuthor", booksByAuthor);
+        return "author/index";
+    }
+
+    // Formular pentru adăugare autor
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("author", new Author());
+        return "author/form";
+    }
+
+    // Salvare autor nou
+    @PostMapping
+    public String create(@ModelAttribute Author author) {
         service.add(author.getId(), author);
-        return service.getById(author.getId());
+        return "redirect:/authors";
     }
 
-    @PutMapping("/{id}") @ResponseBody
-    public Author update(@PathVariable String id, @RequestBody Author body) {
-        service.update(id, body);
-        return service.getById(id);
-    }
-
-    @DeleteMapping("/{id}") @ResponseBody
+    // Ștergere autor
+    @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);
-        return "Deleted author " + id;
+        return "redirect:/authors";
     }
 }

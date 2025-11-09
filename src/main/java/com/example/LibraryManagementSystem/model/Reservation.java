@@ -24,6 +24,9 @@ public class Reservation {
         this.date = date;
         this.status = status;
     }
+    public Reservation() {
+
+    }
 
     public String getId() {
         return id;

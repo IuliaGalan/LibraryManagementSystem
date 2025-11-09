@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<body>
+<h1>Books</h1>
+
+<!-- buton pentru adăugare carte -->
+<a th:href="@{/books/new}">Add new</a>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Authors</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="b : ${books}">
+        <td th:text="${b.id}">1</td>
+        <td th:text="${b.title}">Example Title</td>
+        <td th:text="${b.genre}">Fiction</td>
+
+        <!-- Afișează toți autorii asociați (fără linkuri) -->
+        <td>
+            <ul>
+                <li th:each="a : ${authorsByBook[b.id]}" th:text="${a.name}">Author Name</li>
+            </ul>
+        </td>
+
+        <!-- Buton de ștergere -->
+        <td>
+            <form th:action="@{/books/{id}/delete(id=${b.id})}" method="post" style="display:inline">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
