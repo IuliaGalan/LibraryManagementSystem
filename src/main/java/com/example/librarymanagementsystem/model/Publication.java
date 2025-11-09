@@ -9,7 +9,7 @@ public abstract class Publication {          // ← clasa e abstractă
     private List<String> copyIds;
 
     public Publication() {                   // ← no-arg necesar pentru Jackson
-        this.id = java.util.UUID.randomUUID().toString();
+        this.id = "";
         this.title = "";
         this.copyIds = new ArrayList<>();
     }
