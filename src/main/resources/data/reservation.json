@@ -1,0 +1,72 @@
+[
+  {
+    "id": "R1",
+    "memberId": "M1",
+    "itemId": "Item2",
+    "date": "2025-10-30",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R2",
+    "memberId": "M3",
+    "itemId": "Item5",
+    "date": "2025-10-31",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R3",
+    "memberId": "M7",
+    "itemId": "Item10",
+    "date": "2025-11-01",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R4",
+    "memberId": "M10",
+    "itemId": "Item6",
+    "date": "2025-11-02",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R5",
+    "memberId": "M2",
+    "itemId": "Item3",
+    "date": "2025-11-03",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R6",
+    "memberId": "M4",
+    "itemId": "Item8",
+    "date": "2025-11-04",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R7",
+    "memberId": "M5",
+    "itemId": "Item7",
+    "date": "2025-11-05",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R8",
+    "memberId": "M6",
+    "itemId": "Item9",
+    "date": "2025-11-06",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R9",
+    "memberId": "M8",
+    "itemId": "Item1",
+    "date": "2025-11-07",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "R10",
+    "memberId": "M9",
+    "itemId": "Item4",
+    "date": "2025-11-08",
+    "status": "ACTIVE"
+  }
+]

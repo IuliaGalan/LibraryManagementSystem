@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberRepo extends InFileRepository<Member> {
     public MemberRepo() {
-        super("src/main/resources/data/reservation.json",
+        super("src/main/resources/data/member.json",
                 new TypeReference<java.util.List<Member>>() {
                 });
     }
