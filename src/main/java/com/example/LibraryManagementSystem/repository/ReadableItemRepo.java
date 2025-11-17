@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ReadableItemRepo extends InFileRepository<ReadableItem> {
     public ReadableItemRepo() {
-        super("src/main/resources/data/reservation.json",
+        super("src/main/resources/data/readableitem.json",
                 new TypeReference<java.util.List<ReadableItem>>() {
                 });
     }
