@@ -15,7 +15,7 @@ public class ReadableItem {
     private String publicationId;
     private String barcode;
     private Status status;
-    public enum Status {
+    public enum Status { //clasa separata intr-un deirectory separat
         ACTIVE,
         CANCELLED,
         COMPLETED

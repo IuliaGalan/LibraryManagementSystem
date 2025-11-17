@@ -1,0 +1,92 @@
+[
+  {
+    "id": "Item1",
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "type": "BOOK",
+    "publicationYear": 2008,
+    "libraryId": "L1",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item2",
+    "title": "Effective Java",
+    "author": "Joshua Bloch",
+    "type": "BOOK",
+    "publicationYear": 2018,
+    "libraryId": "L1",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item3",
+    "title": "Design Patterns",
+    "author": "Erich Gamma",
+    "type": "BOOK",
+    "publicationYear": 1994,
+    "libraryId": "L2",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item4",
+    "title": "Refactoring",
+    "author": "Martin Fowler",
+    "type": "BOOK",
+    "publicationYear": 2018,
+    "libraryId": "L2",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item5",
+    "title": "The Pragmatic Programmer",
+    "author": "Andrew Hunt",
+    "type": "BOOK",
+    "publicationYear": 1999,
+    "libraryId": "L3",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item6",
+    "title": "Domain-Driven Design",
+    "author": "Eric Evans",
+    "type": "BOOK",
+    "publicationYear": 2003,
+    "libraryId": "L3",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item7",
+    "title": "Working Effectively with Legacy Code",
+    "author": "Michael Feathers",
+    "type": "BOOK",
+    "publicationYear": 2004,
+    "libraryId": "L4",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item8",
+    "title": "Clean Architecture",
+    "author": "Robert C. Martin",
+    "type": "BOOK",
+    "publicationYear": 2017,
+    "libraryId": "L5",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item9",
+    "title": "Head First Design Patterns",
+    "author": "Eric Freeman",
+    "type": "BOOK",
+    "publicationYear": 2004,
+    "libraryId": "L6",
+    "status": "AVAILABLE"
+  },
+  {
+    "id": "Item10",
+    "title": "Test-Driven Development",
+    "author": "Kent Beck",
+    "type": "BOOK",
+    "publicationYear": 2002,
+    "libraryId": "L7",
+    "status": "AVAILABLE"
+  }
+]
