@@ -2,20 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Book–Author Link</title>
+    <title>Edit Book–Author Link</title>
 </head>
 <body>
 
-<h1>Add Book–Author Link</h1>
+<h1>Edit Book–Author Link</h1>
 
-<form th:action="@{/bookauthors}" method="post">
+<form th:action="@{/bookauthors/{id}(id=${link.id})}" method="post">
+
+    <p><strong>ID:</strong> <span th:text="${link.id}"></span></p>
 
     <label for="bookId">Book:</label>
     <select id="bookId" name="bookId" required>
-        <option value="" disabled selected>-- select a book --</option>
         <option th:each="b : ${books}"
                 th:value="${b.id}"
-                th:text="${b.title}">
+                th:text="${b.title}"
+                th:selected="${b.id == link.bookId}">
         </option>
     </select>
 
@@ -23,16 +25,16 @@
 
     <label for="authorId">Author:</label>
     <select id="authorId" name="authorId" required>
-        <option value="" disabled selected>-- select an author --</option>
         <option th:each="a : ${authors}"
                 th:value="${a.id}"
-                th:text="${a.name}">
+                th:text="${a.name}"
+                th:selected="${a.id == link.authorId}">
         </option>
     </select>
 
     <br><br>
 
-    <button type="submit">Save</button>
+    <button type="submit">Update</button>
     <a th:href="@{/bookauthors}">Cancel</a>
 
 </form>

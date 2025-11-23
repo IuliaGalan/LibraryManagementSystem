@@ -5,35 +5,41 @@
     <title>Book–Author Links</title>
 </head>
 <body>
+
 <h1>Book–Author Links</h1>
 
-<p><a th:href="@{/bookauthors/new}">Add link</a></p>
+<p><a th:href="@{/bookauthors/new}">Add new link</a></p>
 
 <table border="1" cellpadding="6">
     <thead>
     <tr>
-        <th>Book ID</th>
+        <th>ID</th>
         <th>Book Title</th>
-        <th>Author ID</th>
         <th>Author Name</th>
+        <th>Actions</th>
     </tr>
     </thead>
 
     <tbody>
     <tr th:each="r : ${rows}">
-        <td th:text="${r.bookId}">B1</td>
-        <td th:text="${r.bookTitle}">Title</td>
-        <td th:text="${r.authorId}">A1</td>
-        <td th:text="${r.authorName}">Author</td>
+        <td th:text="${r.id}"></td>
+        <td th:text="${r.bookTitle}"></td>
+        <td th:text="${r.authorName}"></td>
+
         <td>
-            <form th:action="@{/bookauthors/delete}" method="post" style="display:inline">
-                <input type="hidden" name="bookId" th:value="${r.bookId}">
-                <input type="hidden" name="authorId" th:value="${r.authorId}">
+            <a th:href="@{/bookauthors/{id}/details(id=${r.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/bookauthors/{id}/edit(id=${r.id})}">Edit</a>
+            &nbsp;|&nbsp;
+            <form th:action="@{/bookauthors/{id}/delete(id=${r.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
+
 </table>
 
 </body>
