@@ -1,29 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Library List</title>
+    <meta charset="UTF-8">
+    <title>Libraries</title>
 </head>
 <body>
-<h1>Libraries</h1>
 
-<p><a th:href="@{/library/new}">Add new library</a></p>
+<h1>Libraries</h1>
+<a th:href="@{/library/new}">Add new Library</a>
+<br/><br/>
 
 <table border="1">
+    <thead>
     <tr>
-        <th>ID</th><th>Name</th><th>Address</th><th>Phone</th><th>Email</th><th>Actions</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Actions</th>
     </tr>
+    </thead>
+
+    <tbody>
     <tr th:each="lib : ${libraries}">
-        <td th:text="${lib.id}"></td>
-        <td th:text="${lib.name}"></td>
-        <td th:text="${lib.address}"></td>
-        <td th:text="${lib.phoneNumber}"></td>
-        <td th:text="${lib.email}"></td>
+        <td th:text="${lib.id}">L1</td>
+        <td th:text="${lib.name}">Library Name</td>
+        <td th:text="${lib.address}">Address</td>
+        <td th:text="${lib.phoneNumber}">Phone</td>
+        <td th:text="${lib.email}">Email</td>
+
         <td>
-            <form th:action="@{'/library/' + ${lib.id} + '/delete'}" method="post">
+            <a th:href="@{/library/{id}/details(id=${lib.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/library/{id}/edit(id=${lib.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/library/{id}/delete(id=${lib.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
 
 </body>

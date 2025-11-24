@@ -16,14 +16,14 @@ public class ReadableItemController {
         this.service = service;
     }
 
+    // LIST
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("items", service.getAll());
-        return "readableitem/index"; // templates/readableitem/index.html
+        return "readableitem/index";
     }
 
-
-
+    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("item", new ReadableItem());
@@ -31,18 +31,49 @@ public class ReadableItemController {
         return "readableitem/form";
     }
 
-
+    // CREATE
     @PostMapping
     public String create(@ModelAttribute("item") ReadableItem item) {
-
         service.add(item.getId(), item);
         return "redirect:/readableitem";
     }
 
-
+    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);
         return "redirect:/readableitem";
+    }
+
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        ReadableItem item = service.getById(id);
+        if (item == null) {
+            return "redirect:/readableitem";
+        }
+        model.addAttribute("item", item);
+        model.addAttribute("statuses", ReadableItem.Status.values());
+        return "readableitem/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id,
+                         @ModelAttribute("item") ReadableItem item) {
+        item.setId(id);
+        service.update(id, item);
+        return "redirect:/readableitem";
+    }
+
+    // DETAILS
+    @GetMapping("/{id}/details")
+    public String details(@PathVariable String id, Model model) {
+        ReadableItem item = service.getById(id);
+        if (item == null) {
+            return "redirect:/readableitem";
+        }
+        model.addAttribute("item", item);
+        return "readableitem/details";
     }
 }

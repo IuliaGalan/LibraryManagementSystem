@@ -1,29 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Reservation List</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Reservations</title>
+</head>
 <body>
-<h1>Reservations</h1>
 
-<p><a th:href="@{/reservation/new}">Add new reservation</a></p>
+<h1>Reservations</h1>
+<a th:href="@{/reservation/new}">Add new Reservation</a>
+<br/><br/>
 
 <table border="1">
+    <thead>
     <tr>
-        <th>ID</th><th>Member ID</th><th>ReadableItem ID</th><th>Date</th><th>Status</th><th>Actions</th>
+        <th>ID</th>
+        <th>Member ID</th>
+        <th>Readable Item ID</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Actions</th>
     </tr>
+    </thead>
+
+    <tbody>
     <tr th:each="res : ${reservations}">
-        <td th:text="${res.id}"></td>
-        <td th:text="${res.memberId}"></td>
-        <td th:text="${res.readableItemId}"></td>
-        <td th:text="${res.date}"></td>
-        <td th:text="${res.status}"></td>
+        <td th:text="${res.id}">R1</td>
+        <td th:text="${res.memberId}">M1</td>
+        <td th:text="${res.readableItemId}">I1</td>
+        <td th:text="${res.date}">2024-01-01</td>
+        <td th:text="${res.status}">Active</td>
+
         <td>
-            <form th:action="@{'/reservation/' + ${res.id} + '/delete'}" method="post">
+            <a th:href="@{/reservation/{id}/details(id=${res.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/reservation/{id}/edit(id=${res.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/reservation/{id}/delete(id=${res.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
-
 
 </body>
 </html>

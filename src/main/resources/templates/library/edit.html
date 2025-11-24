@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Library</title>
+</head>
+<body>
+
+<h2>Edit Library</h2>
+
+<form th:action="@{/library/{id}(id=${library.id})}" th:object="${library}" method="post">
+
+    <label>ID:
+        <input th:field="*{id}" readonly/>
+    </label><br/>
+
+    <label>Name:
+        <input th:field="*{name}" required/>
+    </label><br/>
+
+    <label>Address:
+        <input th:field="*{address}"/>
+    </label><br/>
+
+    <label>Phone:
+        <input th:field="*{phoneNumber}"/>
+    </label><br/>
+
+    <label>Email:
+        <input type="email" th:field="*{email}"/>
+    </label><br/>
+
+    <button type="submit">Update</button>
+</form>
+
+<a th:href="@{/library}">Back</a>
+
+</body>
+</html>

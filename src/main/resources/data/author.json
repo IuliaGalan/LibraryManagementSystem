@@ -1,18 +1,8 @@
 [ {
-  "id" : "A1",
-  "name" : "J. K. Rowling",
-  "books" : [ ],
-  "nationality" : "UK"
-}, {
-  "id" : "A2",
-  "name" : "George R. R. Martin",
-  "books" : [ ],
-  "nationality" : "US"
-}, {
   "id" : "A3",
   "name" : "Haruki Murakami",
   "books" : [ ],
-  "nationality" : "JP"
+  "nationality" : "Japanese"
 }, {
   "id" : "A4",
   "name" : "Neil Gaiman",
@@ -58,4 +48,9 @@
   "name" : "AuthorName2",
   "books" : [ ],
   "nationality" : "Nationality2"
+}, {
+  "id" : "A13",
+  "name" : "Pop",
+  "books" : [ ],
+  "nationality" : "American"
 } ]

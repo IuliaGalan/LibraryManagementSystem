@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Loan List</title>
+    <meta charset="UTF-8">
+    <title>Loans</title>
 </head>
 <body>
-<h1>Loans</h1>
 
-<p><a th:href="@{/loan/new}">Add new loan</a></p>
+<h1>Loans</h1>
+<a th:href="@{/loan/new}">Add new Loan</a>
+<br/><br/>
 
 <table border="1">
+    <thead>
     <tr>
         <th>ID</th>
         <th>Member ID</th>
@@ -17,18 +20,30 @@
         <th>Status</th>
         <th>Actions</th>
     </tr>
-    <tr th:each="ln : ${loans}">
-        <td th:text="${ln.id}"></td>
-        <td th:text="${ln.memberId}"></td>
-        <td th:text="${ln.date}"></td>
-        <td th:text="${ln.dueDate}"></td>
-        <td th:text="${ln.status}"></td>
+    </thead>
+
+    <tbody>
+    <tr th:each="loan : ${loans}">
+        <td th:text="${loan.id}">L1</td>
+        <td th:text="${loan.memberId}">M1</td>
+        <td th:text="${#dates.format(loan.date, 'yyyy-MM-dd')}">2024-01-01</td>
+        <td th:text="${#dates.format(loan.dueDate, 'yyyy-MM-dd')}">2024-02-01</td>
+        <td th:text="${loan.status}">Active</td>
+
         <td>
-            <form th:action="@{'/loan/' + ${ln.id} + '/delete'}" method="post">
+            <a th:href="@{/loan/{id}/details(id=${loan.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/loan/{id}/edit(id=${loan.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/loan/{id}/delete(id=${loan.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
 
 </body>

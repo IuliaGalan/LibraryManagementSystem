@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Readable Items</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Readable Items</title>
+</head>
 <body>
-<h1>Readable Items</h1>
 
-<p><a th:href="@{/readableitem/new}">Add new item</a></p>
+<h1>Readable Items</h1>
+<a th:href="@{/readableitem/new}">Add new Item</a>
+<br/><br/>
 
 <table border="1">
+    <thead>
     <tr>
         <th>ID</th>
         <th>Publication ID</th>
@@ -14,19 +19,30 @@
         <th>Status</th>
         <th>Actions</th>
     </tr>
-    <tr th:each="it : ${items}">
-        <td th:text="${it.id}"></td>
-        <td th:text="${it.publicationId}"></td>
-        <td th:text="${it.barcode}"></td>
-        <td th:text="${it.status}"></td>
+    </thead>
+
+    <tbody>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.id}">I1</td>
+        <td th:text="${item.publicationId}">P1</td>
+        <td th:text="${item.barcode}">123456</td>
+        <td th:text="${item.status}">ACTIVE</td>
+
         <td>
-            <form th:action="@{'/readableitem/' + ${it.id} + '/delete'}" method="post">
+            <a th:href="@{/readableitem/{id}/details(id=${item.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/readableitem/{id}/edit(id=${item.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/readableitem/{id}/delete(id=${item.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
-
 
 </body>
 </html>

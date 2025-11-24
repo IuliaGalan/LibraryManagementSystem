@@ -1,29 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Member List</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Readable Items</title>
+</head>
 <body>
-<h1>Members</h1>
 
-<p><a th:href="@{/member/new}">Add new member</a></p>
+<h1>Readable Items</h1>
+<a th:href="@{/readableitem/new}">Add new Item</a>
+<br/><br/>
 
 <table border="1">
+    <thead>
     <tr>
-        <th>ID</th><th>Name</th><th>Library ID</th><th>Address</th><th>Email</th><th>Actions</th>
+        <th>ID</th>
+        <th>Publication ID</th>
+        <th>Barcode</th>
+        <th>Status</th>
+        <th>Actions</th>
     </tr>
-    <tr th:each="m : ${members}">
-        <td th:text="${m.id}"></td>
-        <td th:text="${m.name}"></td>
-        <td th:text="${m.libraryId}"></td>
-        <td th:text="${m.address}"></td>
-        <td th:text="${m.email}"></td>
+    </thead>
+
+    <tbody>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.id}">I1</td>
+        <td th:text="${item.publicationId}">P1</td>
+        <td th:text="${item.barcode}">123456</td>
+        <td th:text="${item.status}">ACTIVE</td>
+
         <td>
-            <form th:action="@{'/member/' + ${m.id} + '/delete'}" method="post">
+            <a th:href="@{/readableitem/{id}/details(id=${item.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/readableitem/{id}/edit(id=${item.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/readableitem/{id}/delete(id=${item.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
-
 
 </body>
 </html>

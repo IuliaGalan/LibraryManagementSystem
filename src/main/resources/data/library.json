@@ -1,112 +1,61 @@
-[
-  {
-    "id": "LIB1",
-    "name": "Biblioteca Centrală",
-    "address": "Cluj-Napoca, Str. Universității 1",
-    "phoneNumber": "0264-123456",
-    "email": "contact@bcu.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB2",
-    "name": "Biblioteca Municipală",
-    "address": "Cluj-Napoca, Str. Memorandumului 20",
-    "phoneNumber": "0264-234567",
-    "email": "info@bmcluj.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB3",
-    "name": "Biblioteca UBB",
-    "address": "Cluj-Napoca, Str. Kogălniceanu 5",
-    "phoneNumber": "0264-987654",
-    "email": "ubb.library@ubbcluj.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB4",
-    "name": "Biblioteca de Științe",
-    "address": "Cluj-Napoca, Str. Muncii 25",
-    "phoneNumber": "0264-765432",
-    "email": "stiinte@library.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB5",
-    "name": "Biblioteca de Arte",
-    "address": "Cluj-Napoca, Str. Horea 15",
-    "phoneNumber": "0264-555444",
-    "email": "arte@library.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB6",
-    "name": "Biblioteca Tehnică",
-    "address": "Cluj-Napoca, Str. Fabricii 50",
-    "phoneNumber": "0264-888777",
-    "email": "tehnic@library.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB7",
-    "name": "Biblioteca Cartierului Zorilor",
-    "address": "Cluj-Napoca, Str. Observatorului 10",
-    "phoneNumber": "0264-606060",
-    "email": "zorilor@biblioteca.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB8",
-    "name": "Biblioteca Cartierului Gheorgheni",
-    "address": "Cluj-Napoca, Str. Detunata 12",
-    "phoneNumber": "0264-707070",
-    "email": "gheorgheni@biblioteca.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB9",
-    "name": "Biblioteca Cartierului Mănăștur",
-    "address": "Cluj-Napoca, Str. Mehedinți 35",
-    "phoneNumber": "0264-909090",
-    "email": "manastur@biblioteca.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  },
-  {
-    "id": "LIB10",
-    "name": "Biblioteca Digitală Cluj",
-    "address": "Online",
-    "phoneNumber": "0264-111222",
-    "email": "digital@biblioteca.ro",
-    "authors": [],
-    "publications": [],
-    "books": [],
-    "magazines": []
-  }
-]
+[ {
+  "id" : "LIB5",
+  "name" : "Biblioteca de Arte",
+  "address" : "Cluj-Napoca, Str. Horea 15",
+  "authors" : [ ],
+  "publications" : [ ],
+  "books" : [ ],
+  "magazines" : [ ],
+  "phoneNumber" : "0264-555444",
+  "email" : "arte@library.ro"
+}, {
+  "id" : "LIB6",
+  "name" : "Biblioteca Tehnică",
+  "address" : "Cluj-Napoca, Str. Fabricii 50",
+  "authors" : [ ],
+  "publications" : [ ],
+  "books" : [ ],
+  "magazines" : [ ],
+  "phoneNumber" : "0264-888777",
+  "email" : "tehnic@library.ro"
+}, {
+  "id" : "LIB7",
+  "name" : "Biblioteca Cartierului Zorilor",
+  "address" : "Cluj-Napoca, Str. Observatorului 10",
+  "authors" : [ ],
+  "publications" : [ ],
+  "books" : [ ],
+  "magazines" : [ ],
+  "phoneNumber" : "0264-606060",
+  "email" : "zorilor@biblioteca.ro"
+}, {
+  "id" : "LIB8",
+  "name" : "Biblioteca Cartierului Gheorgheni",
+  "address" : "Cluj-Napoca, Str. Detunata 12",
+  "authors" : [ ],
+  "publications" : [ ],
+  "books" : [ ],
+  "magazines" : [ ],
+  "phoneNumber" : "0264-707070",
+  "email" : "gheorgheni@biblioteca.ro"
+}, {
+  "id" : "LIB9",
+  "name" : "Biblioteca Cartierului Mănăștur",
+  "address" : "Cluj-Napoca, Str. Mehedinți 35",
+  "authors" : [ ],
+  "publications" : [ ],
+  "books" : [ ],
+  "magazines" : [ ],
+  "phoneNumber" : "0264-909090",
+  "email" : "manastur@biblioteca.ro"
+}, {
+  "id" : "LIB10",
+  "name" : "Biblioteca Digitală Cluj",
+  "address" : "Online",
+  "authors" : [ ],
+  "publications" : [ ],
+  "books" : [ ],
+  "magazines" : [ ],
+  "phoneNumber" : "0264-111222",
+  "email" : "digital@biblioteca.ro"
+} ]

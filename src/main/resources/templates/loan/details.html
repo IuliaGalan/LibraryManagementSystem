@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Details</title>
+</head>
+<body>
+
+<h2>Loan Details</h2>
+
+<p><strong>ID:</strong> <span th:text="${loan.id}">L1</span></p>
+<p><strong>Member ID:</strong> <span th:text="${loan.memberId}">M1</span></p>
+<p><strong>Date:</strong> <span th:text="${#dates.format(loan.date, 'yyyy-MM-dd')}">2024-01-01</span></p>
+<p><strong>Due Date:</strong> <span th:text="${#dates.format(loan.dueDate, 'yyyy-MM-dd')}">2024-02-01</span></p>
+<p><strong>Status:</strong> <span th:text="${loan.status}">Active</span></p>
+
+<h3>Items in this loan:</h3>
+<ul>
+    <li th:each="item : ${loan.items}"
+        th:text="${item.id + ' - ' + item.barcode}">
+        Item info
+    </li>
+</ul>
+
+<h3>Reservations for this loan:</h3>
+<ul>
+    <li th:each="res : ${loan.reservations}"
+        th:text="${res.id + ' - ' + res.date}">
+        Reservation info
+    </li>
+</ul>
+
+<a th:href="@{/loan}">Back</a>
+
+</body>
+</html>

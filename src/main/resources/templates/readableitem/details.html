@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Reservation</title>
+</head>
+<body>
+
+<h2>Edit Reservation</h2>
+
+<form th:action="@{/reservation/{id}(id=${reservation.id})}" th:object="${reservation}" method="post">
+
+    <label>ID:
+        <input th:field="*{id}" readonly/>
+    </label><br/>
+
+    <label>Member ID:
+        <input th:field="*{memberId}"/>
+    </label><br/>
+
+    <label>Readable Item ID:
+        <input th:field="*{readableItemId}"/>
+    </label><br/>
+
+    <label>Date:
+        <input th:field="*{date}"/>
+    </label><br/>
+
+    <label>Status:
+        <input th:field="*{status}"/>
+    </label><br/>
+
+    <button type="submit">Update</button>
+</form>
+
+<a th:href="@{/reservation}">Back</a>
+
+</body>
+</html>

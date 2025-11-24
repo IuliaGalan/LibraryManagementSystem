@@ -18,18 +18,21 @@ public class MemberController {
         this.service = service;
     }
 
+    // LIST
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("members", service.getAll());
-        return "member/index"; // templates/member/index.html
+        return "member/index";
     }
 
+    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("member", new Member());
-        return "member/form"; // templates/member/form.html
+        return "member/form";
     }
 
+    // CREATE
     @PostMapping
     public String create(@ModelAttribute Member member) {
         if (member.getId() == null || member.getId().isBlank()) {
@@ -39,9 +42,41 @@ public class MemberController {
         return "redirect:/member";
     }
 
+    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);
         return "redirect:/member";
+    }
+
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        Member member = service.getById(id);
+        if (member == null) {
+            return "redirect:/member";
+        }
+        model.addAttribute("member", member);
+        return "member/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id,
+                         @ModelAttribute Member member) {
+        member.setId(id);
+        service.update(id, member);
+        return "redirect:/member";
+    }
+
+    // DETAILS
+    @GetMapping("/{id}/details")
+    public String details(@PathVariable String id, Model model) {
+        Member member = service.getById(id);
+        if (member == null) {
+            return "redirect:/member";
+        }
+        model.addAttribute("member", member);
+        return "member/details";
     }
 }
