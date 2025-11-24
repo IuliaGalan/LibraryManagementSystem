@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Book</title>
+    <title>Edit Book</title>
 </head>
 <body>
-<h2>Add new book</h2>
+<h2>Edit book</h2>
 
-<form th:action="@{/books}" th:object="${book}" method="post">
+<form th:action="@{/books/{id}(id=${book.id})}" th:object="${book}" method="post">
 
-    <!-- ID generat în BookService.newForForm(), doar afișat -->
+    <!-- ID nu se schimbă -->
     <label>ID:
         <input th:field="*{id}" readonly/>
     </label>
@@ -25,9 +25,9 @@
     </label>
     <br/>
 
-    <!-- aici poți adăuga și alte câmpuri din BookDetails -->
+    <!-- alte câmpuri din BookDetails dacă ai nevoie -->
 
-    <button type="submit">Save</button>
+    <button type="submit">Update</button>
 </form>
 
 <a th:href="@{/books}">Back to list</a>

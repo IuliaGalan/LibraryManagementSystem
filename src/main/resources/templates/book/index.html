@@ -5,11 +5,12 @@
     <title>Books</title>
 </head>
 <body>
-<h1>Books</h1>
+<h2>Books</h2>
 
-<a th:href="@{/books/new}">Add new</a>
+<a th:href="@{/books/new}">Add new book</a>
+<br/><br/>
 
-<table border="1" cellpadding="6">
+<table border="1">
     <thead>
     <tr>
         <th>ID</th>
@@ -18,14 +19,24 @@
         <th>Actions</th>
     </tr>
     </thead>
-
     <tbody>
     <tr th:each="b : ${books}">
         <td th:text="${b.id}">B1</td>
-        <td th:text="${b.title}">Example</td>
+        <td th:text="${b.title}">Example title</td>
         <td th:text="${b.genre}">Fantasy</td>
         <td>
-            <form th:action="@{/books/{id}/delete(id=${b.id})}" method="post" style="display:inline">
+            <!-- Details -->
+            <a th:href="@{/books/{id}/details(id=${b.id})}">Details</a>
+            &nbsp;|&nbsp;
+
+            <!-- Edit -->
+            <a th:href="@{/books/{id}/edit(id=${b.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <!-- Delete -->
+            <form th:action="@{/books/{id}/delete(id=${b.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>

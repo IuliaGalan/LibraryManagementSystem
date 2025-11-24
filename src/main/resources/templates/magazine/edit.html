@@ -2,12 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Magazine</title>
+    <title>Edit Magazine</title>
 </head>
 <body>
-<h2>Add Magazine</h2>
+<h2>Edit Magazine</h2>
 
-<form th:action="@{/magazines}" th:object="${magazine}" method="post">
+<form th:action="@{/magazines/{id}(id=${magazine.id})}"
+      th:object="${magazine}"
+      method="post">
+
     <label>ID:
         <input th:field="*{id}" readonly/>
     </label><br/>
@@ -24,7 +27,7 @@
         <input th:field="*{language}"/>
     </label><br/>
 
-    <button type="submit">Save</button>
+    <button type="submit">Update</button>
 </form>
 
 <a th:href="@{/magazines}">Back</a>

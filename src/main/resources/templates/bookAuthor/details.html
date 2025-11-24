@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book–Author Details</title>
+</head>
+<body>
+
+<h1>Book–Author Link Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${row.id}"></span></p>
+<p><strong>Book:</strong> <span th:text="${row.bookTitle}"></span> (ID: <span th:text="${row.bookId}"></span>)</p>
+<p><strong>Author:</strong> <span th:text="${row.authorName}"></span> (ID: <span th:text="${row.authorId}"></span>)</p>
+
+<a th:href="@{/bookauthors}">Back</a>
+
+</body>
+</html>

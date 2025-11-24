@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Author</title>
+    <title>Edit Author</title>
 </head>
 <body>
 
-<h2>Add Author</h2>
+<h2>Edit Author</h2>
 
-<form th:action="@{/authors}" th:object="${author}" method="post">
+<form th:action="@{/authors/{id}(id=${author.id})}" th:object="${author}" method="post">
 
     <label>ID:
         <input th:field="*{id}" readonly/>
@@ -22,8 +22,7 @@
         <input th:field="*{nationality}"/>
     </label><br/>
 
-    <button type="submit">Save</button>
-
+    <button type="submit">Update</button>
 </form>
 
 <a th:href="@{/authors}">Back</a>

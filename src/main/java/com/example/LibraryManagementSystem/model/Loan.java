@@ -33,6 +33,9 @@ public class Loan {
         this.items = new ArrayList<>();
     }
 
+    public Loan() {
+
+    }
     // getter setter
 
     public Date getDueDate() {

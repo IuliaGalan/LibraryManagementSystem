@@ -1,95 +1,107 @@
 package com.example.librarymanagementsystem.controller;
 
-import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.model.BookAuthor;
+import com.example.librarymanagementsystem.model.BookDetails;
+import com.example.librarymanagementsystem.model.Author;
 import com.example.librarymanagementsystem.service.BookAuthorService;
 import com.example.librarymanagementsystem.service.BookService;
+import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService.BookAuthorRow;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/bookauthors")
 public class BookAuthorController {
 
-    private final BookAuthorService bookAuthorService;
+    private final BookAuthorService linkService;
     private final BookService bookService;
     private final AuthorService authorService;
 
-    public BookAuthorController(BookAuthorService bookAuthorService,
+    public BookAuthorController(BookAuthorService linkService,
                                 BookService bookService,
                                 AuthorService authorService) {
-        this.bookAuthorService = bookAuthorService;
+        this.linkService = linkService;
         this.bookService = bookService;
         this.authorService = authorService;
     }
 
-    // LIST: GET /bookauthors – tabel cu asocierile carte–autor
+    // LIST
     @GetMapping
-    public String index(Model model) {
-        var links = bookAuthorService.getAll(); // (bookId, authorId)
-
-        List<Row> rows = new ArrayList<>();
-        for (var link : links) {
-            var b = bookService.getById(link.getBookId());
-            var a = authorService.getById(link.getAuthorId());
-            rows.add(new Row(
-                    link.getBookId(),
-                    (b != null ? b.getTitle() : "(unknown)"),
-                    link.getAuthorId(),
-                    (a != null ? a.getName() : "(unknown)")
-            ));
-        }
-        model.addAttribute("rows", rows);
-        return "bookAuthor/index"; // templates/bookAuthor/index.html
+    public String list(Model model) {
+        model.addAttribute("rows", linkService.getAllRows());
+        return "bookauthor/index";
     }
 
-    // FORM: GET /bookauthors/new  (opțional: preselectare prin query params)
+    // CREATE FORM
     @GetMapping("/new")
-    //încearcă să ia din URL valoarea lui bookId si authorId
-    public String newLinkForm(@RequestParam(required = false) String bookId,
-                              @RequestParam(required = false) String authorId,
-                              Model model) {
+    public String newForm(Model model) {
+        model.addAttribute("link", linkService.newForForm());
         model.addAttribute("books", bookService.getAll());
         model.addAttribute("authors", authorService.getAll());
-        model.addAttribute("selectedBookId", bookId);
-        model.addAttribute("selectedAuthorId", authorId);
-        return "bookAuthor/form"; // templates/bookAuthor/form.html
+        return "bookauthor/form";
     }
 
-    // CREATE: POST /bookauthors
+    // CREATE
     @PostMapping
-    public String createLink(@RequestParam String bookId, @RequestParam String authorId) {
-        bookAuthorService.link(bookId, authorId);
+    public String create(@RequestParam String bookId,
+                         @RequestParam String authorId) {
+
+        BookAuthor link = linkService.newForForm();
+        link.setBookId(bookId);
+        link.setAuthorId(authorId);
+
+        linkService.add(link.getId(), link);
         return "redirect:/bookauthors";
     }
 
-    // DELETE: POST /bookauthors/delete
-    // sterge o legatura carte-autor
-    @PostMapping("/delete")
-    public String deleteLink(@RequestParam String bookId, @RequestParam String authorId) {
-        bookAuthorService.unlink(bookId, authorId);
+    // DELETE
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+        linkService.delete(id);
         return "redirect:/bookauthors";
     }
 
-    // DTO pentru view
-    // necesar pt a trimite in view informatii combinate
-    // acest obiect tine toate informatiile impreuna
-    public static class Row {
-        private final String bookId;
-        private final String bookTitle;
-        private final String authorId;
-        private final String authorName;
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        BookAuthor link = linkService.getById(id);
+        if (link == null) return "redirect:/bookauthors";
 
-        public Row(String bookId, String bookTitle, String authorId, String authorName) {
-            this.bookId = bookId; this.bookTitle = bookTitle;
-            this.authorId = authorId; this.authorName = authorName;
-        }
-        public String getBookId() { return bookId; }
-        public String getBookTitle() { return bookTitle; }
-        public String getAuthorId() { return authorId; }
-        public String getAuthorName() { return authorName; }
+        model.addAttribute("link", link);
+        model.addAttribute("books", bookService.getAll());
+        model.addAttribute("authors", authorService.getAll());
+
+        return "bookauthor/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}")
+    public String update(@PathVariable String id,
+                         @RequestParam String bookId,
+                         @RequestParam String authorId) {
+
+        BookAuthor link = linkService.getById(id);
+        if (link == null) return "redirect:/bookauthors";
+
+        link.setBookId(bookId);
+        link.setAuthorId(authorId);
+
+        linkService.update(id, link);
+        return "redirect:/bookauthors";
+    }
+
+    // DETAILS
+    @GetMapping("/{id}/details")
+    public String details(@PathVariable String id, Model model) {
+        BookAuthorRow row = linkService.getRowById(id);
+        if (row == null) return "redirect:/bookauthors";
+
+        model.addAttribute("row", row);
+        return "bookauthor/details";
     }
 }

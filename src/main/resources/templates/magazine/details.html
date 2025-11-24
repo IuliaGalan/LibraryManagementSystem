@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Magazine Details</title>
+</head>
+<body>
+<h2>Magazine Details</h2>
+
+<p><strong>ID:</strong> <span th:text="${magazine.id}">M1</span></p>
+<p><strong>Title:</strong> <span th:text="${magazine.title}">Title</span></p>
+<p><strong>Publisher:</strong> <span th:text="${magazine.publisher}">Publisher</span></p>
+<p><strong>Language:</strong> <span th:text="${magazine.language}">EN</span></p>
+
+<a th:href="@{/magazines}">Back to list</a>
+</body>
+</html>

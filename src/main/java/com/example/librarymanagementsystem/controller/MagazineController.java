@@ -7,40 +7,71 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/magazines")  // fără method aici!
+@RequestMapping("/magazines")
 public class MagazineController {
 
-    private final MagazineService service;
+    private final MagazineService magazineService;
 
-    public MagazineController(MagazineService service) {
-        this.service = service;
+    public MagazineController(MagazineService magazineService) {
+        this.magazineService = magazineService;
     }
 
-    // LIST (GET /magazines)
+    // LIST – afișează toate revistele
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("magazines", service.getAll());
-        return "magazine/index";           // -> templates/magazine/index.html
+    public String listMagazines(Model model) {
+        model.addAttribute("magazines", magazineService.getAll());
+        return "magazine/index";
     }
 
-    // FORM (GET /magazines/new)
+    // CREATE FORM – revistă nouă, cu ID generat automat
     @GetMapping("/new")
-    public String form(Model model) {
-        model.addAttribute("magazine", new MagazineDetails());
-        return "magazine/form";            // -> templates/magazine/form.html
+    public String newMagazineForm(Model model) {
+        model.addAttribute("magazine", magazineService.newForForm());
+        return "magazine/form";
     }
 
-    // CREATE (POST /magazines)
+    // CREATE – salvează revistă nouă
     @PostMapping
-    public String create(@ModelAttribute("magazine") MagazineDetails m) {
-        service.add(m.getId(), m);
+    public String createMagazine(@ModelAttribute("magazine") MagazineDetails m) {
+        magazineService.add(m.getId(), m);
         return "redirect:/magazines";
     }
 
-    // DELETE (POST /magazines/{id}/delete)
+    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
+    public String deleteMagazine(@PathVariable String id) {
+        magazineService.delete(id);
         return "redirect:/magazines";
+    }
+
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editMagazineForm(@PathVariable String id, Model model) {
+        MagazineDetails magazine = magazineService.getById(id);
+        if (magazine == null) {
+            return "redirect:/magazines";
+        }
+        model.addAttribute("magazine", magazine);
+        return "magazine/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}")
+    public String updateMagazine(@PathVariable String id,
+                                 @ModelAttribute("magazine") MagazineDetails magazine) {
+        magazine.setId(id);
+        magazineService.update(id, magazine);
+        return "redirect:/magazines";
+    }
+
+    // DETAILS
+    @GetMapping("/{id}/details")
+    public String magazineDetails(@PathVariable String id, Model model) {
+        MagazineDetails magazine = magazineService.getById(id);
+        if (magazine == null) {
+            return "redirect:/magazines";
+        }
+        model.addAttribute("magazine", magazine);
+        return "magazine/details";
     }
 }

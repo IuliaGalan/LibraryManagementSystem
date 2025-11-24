@@ -8,26 +8,38 @@
 <h2>Magazines</h2>
 
 <a th:href="@{/magazines/new}">Add new</a>
+<br/><br/>
 
 <table border="1" cellpadding="6">
+    <thead>
     <tr>
         <th>ID</th>
         <th>Title</th>
         <th>Publisher</th>
         <th>Language</th>
+        <th>Actions</th>
     </tr>
+    </thead>
 
+    <tbody>
     <tr th:each="m : ${magazines}">
         <td th:text="${m.id}">M1</td>
         <td th:text="${m.title}">Title</td>
         <td th:text="${m.publisher}">Publisher</td>
         <td th:text="${m.language}">EN</td>
         <td>
-            <form th:action="@{'/magazines/' + ${m.id} + '/delete'}" method="post">
+            <a th:href="@{/magazines/{id}/details(id=${m.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/magazines/{id}/edit(id=${m.id})}">Edit</a>
+            &nbsp;|&nbsp;
+            <form th:action="@{/magazines/{id}/delete(id=${m.id})}"
+                  method="post"
+                  style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
 
 </body>
