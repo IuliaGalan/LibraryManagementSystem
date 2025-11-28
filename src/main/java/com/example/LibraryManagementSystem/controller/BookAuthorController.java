@@ -1,9 +1,10 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.BookAuthor;
-import com.example.librarymanagementsystem.service.BookAuthorService;
-import com.example.librarymanagementsystem.service.BookService;
 import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService.BookAuthorRow;
+import com.example.librarymanagementsystem.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,14 @@ public class BookAuthorController {
         this.authorService = authorService;
     }
 
+    // LIST
     @GetMapping
     public String list(Model model) {
         model.addAttribute("rows", linkService.getAllRows());
         return "bookauthor/index";
     }
 
+    // CREATE FORM
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("link", linkService.newForForm());
@@ -38,24 +41,26 @@ public class BookAuthorController {
         return "bookauthor/form";
     }
 
+    // CREATE
     @PostMapping
     public String create(@RequestParam String bookId,
                          @RequestParam String authorId) {
 
-        BookAuthor link = linkService.newForForm();
-        link.setBookId(bookId);
-        link.setAuthorId(authorId);
+        // generăm un ID de tip BA1, BA2, ...
+        String id = linkService.generateNextId();
+        linkService.add(id, bookId, authorId);
 
-        linkService.save(link);
         return "redirect:/bookauthors";
     }
 
+    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         linkService.delete(id);
         return "redirect:/bookauthors";
     }
 
+    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         BookAuthor link = linkService.getById(id);
@@ -68,24 +73,20 @@ public class BookAuthorController {
         return "bookauthor/edit";
     }
 
+    // UPDATE
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
                          @RequestParam String bookId,
                          @RequestParam String authorId) {
 
-        BookAuthor link = linkService.getById(id);
-        if (link == null) return "redirect:/bookauthors";
-
-        link.setBookId(bookId);
-        link.setAuthorId(authorId);
-
-        linkService.save(link);
+        linkService.update(id, bookId, authorId);
         return "redirect:/bookauthors";
     }
 
+    // DETAILS
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
-        var row = linkService.getRowById(id);
+        BookAuthorRow row = linkService.getRowById(id);
         if (row == null) return "redirect:/bookauthors";
 
         model.addAttribute("row", row);

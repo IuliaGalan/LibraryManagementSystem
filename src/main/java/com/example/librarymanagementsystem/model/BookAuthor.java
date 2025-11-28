@@ -10,26 +10,36 @@ public class BookAuthor {
     @Column(name = "id", length = 50)
     private String id;
 
-    @Column(name = "book_id", nullable = false)
-    private String bookId;
+    /**
+     * Multe legături BookAuthor pot referi aceeași carte.
+     * Coloana FK în DB va fi book_id.
+     */
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    private BookDetails book;
 
-    @Column(name = "author_id", nullable = false)
-    private String authorId;
+    /**
+     * Multe legături BookAuthor pot referi același autor.
+     * Coloana FK în DB va fi author_id.
+     */
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
 
     public BookAuthor() {}
 
-    public BookAuthor(String id, String bookId, String authorId) {
+    public BookAuthor(String id, BookDetails book, Author author) {
         this.id = id;
-        this.bookId = bookId;
-        this.authorId = authorId;
+        this.book = book;
+        this.author = author;
     }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public String getBookId() { return bookId; }
-    public void setBookId(String bookId) { this.bookId = bookId; }
+    public BookDetails getBook() { return book; }
+    public void setBook(BookDetails book) { this.book = book; }
 
-    public String getAuthorId() { return authorId; }
-    public void setAuthorId(String authorId) { this.authorId = authorId; }
+    public Author getAuthor() { return author; }
+    public void setAuthor(Author author) { this.author = author; }
 }
