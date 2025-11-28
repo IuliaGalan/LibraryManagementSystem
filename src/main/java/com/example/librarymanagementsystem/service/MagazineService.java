@@ -1,34 +1,38 @@
 package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.model.MagazineDetails;
-import com.example.librarymanagementsystem.repository.RepositoryInterface;
+import com.example.librarymanagementsystem.repository.MagazineRepo;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.List;
 
 @Service
-public class MagazineService extends BaseService<MagazineDetails> {
+public class MagazineService {
 
-    public MagazineService(RepositoryInterface<MagazineDetails> repo) {
-        super(repo);
+    private final MagazineRepo repo;
+
+    public MagazineService(MagazineRepo repo) {
+        this.repo = repo;
     }
 
-    // Generează ID-uri de forma M1, M2, M3...
+    public List<MagazineDetails> getAll() { return repo.findAll(); }
+
+    public MagazineDetails getById(String id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public MagazineDetails save(MagazineDetails m) {
+        return repo.save(m);
+    }
+
+    public void delete(String id) {
+        repo.deleteById(id);
+    }
+
     public String generateNextId() {
-        int next = repo.findAll().stream()
-                .map(MagazineDetails::getId)
-                .filter(Objects::nonNull)
-                .filter(id -> id.startsWith("M"))
-                .map(id -> id.substring(1))
-                .filter(num -> num.matches("\\d+"))
-                .mapToInt(Integer::parseInt)
-                .max()
-                .orElse(0) + 1;
-
-        return "M" + next;
+        return "M" + (repo.count() + 1);
     }
 
-    // Creează un obiect gol pentru formular, cu ID precompletat
     public MagazineDetails newForForm() {
         MagazineDetails m = new MagazineDetails();
         m.setId(generateNextId());
