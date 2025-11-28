@@ -1,10 +1,18 @@
 package com.example.librarymanagementsystem.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "magazines")
 public class MagazineDetails extends Publication {
+
+    @Column
     private String publisher;
+
+    @Column
     private String language;
 
-    public MagazineDetails() {      // ← necesar pentru new MagazineDetails()
+    public MagazineDetails() {
         super();
     }
 
@@ -14,19 +22,9 @@ public class MagazineDetails extends Publication {
         this.language = language;
     }
 
-    public String getPublisher() {
-        return publisher;
-    }
+    public String getPublisher() { return publisher; }
+    public void setPublisher(String publisher) { this.publisher = publisher; }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
+    public String getLanguage() { return language; }
+    public void setLanguage(String language) { this.language = language; }
 }

@@ -1,41 +1,47 @@
 package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.model.BookAuthor;
-import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.model.Author;
-import com.example.librarymanagementsystem.repository.RepositoryInterface;
+import com.example.librarymanagementsystem.model.BookDetails;
+import com.example.librarymanagementsystem.repository.BookAuthorRepo;
+import com.example.librarymanagementsystem.repository.BookRepo;
+import com.example.librarymanagementsystem.repository.AuthorRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
-public class BookAuthorService extends BaseService<BookAuthor> {
+public class BookAuthorService {
 
-    private final BookService bookService;
-    private final AuthorService authorService;
+    private final BookAuthorRepo repo;
+    private final BookRepo bookRepo;
+    private final AuthorRepo authorRepo;
 
-    public BookAuthorService(RepositoryInterface<BookAuthor> repo,
-                             BookService bookService,
-                             AuthorService authorService) {
-        super(repo);
-        this.bookService = bookService;
-        this.authorService = authorService;
+    public BookAuthorService(BookAuthorRepo repo, BookRepo bookRepo, AuthorRepo authorRepo) {
+        this.repo = repo;
+        this.bookRepo = bookRepo;
+        this.authorRepo = authorRepo;
     }
 
-    // Generează ID-uri: BA1, BA2, BA3, ...
-    public String generateNextId() {
-        int next = getAll().stream()
-                .map(BookAuthor::getId)
-                .filter(Objects::nonNull)
-                .filter(id -> id.startsWith("BA"))
-                .map(id -> id.substring(2))
-                .filter(num -> num.matches("\\d+"))
-                .mapToInt(Integer::parseInt)
-                .max()
-                .orElse(0) + 1;
+    public List<BookAuthor> getAll() {
+        return repo.findAll();
+    }
 
-        return "BA" + next;
+    public BookAuthor getById(String id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public BookAuthor save(BookAuthor link) {
+        return repo.save(link);
+    }
+
+    public void delete(String id) {
+        repo.deleteById(id);
+    }
+
+    public String generateNextId() {
+        return "BA" + (repo.count() + 1);
     }
 
     public BookAuthor newForForm() {
@@ -44,7 +50,9 @@ public class BookAuthorService extends BaseService<BookAuthor> {
         return ba;
     }
 
-    // DTO pentru tabelul BookAuthor
+    /**
+     * Row pentru afișarea cu numele cărții și autorului în listă/detalii.
+     */
     public static class BookAuthorRow {
         public String id;
         public String bookId;
@@ -53,57 +61,53 @@ public class BookAuthorService extends BaseService<BookAuthor> {
         public String authorName;
     }
 
-    // Rânduri pentru index.html (BookAuthor)
     public List<BookAuthorRow> getAllRows() {
-        return getAll().stream().map(link -> {
+        List<BookAuthor> links = repo.findAll();
+        List<BookAuthorRow> rows = new ArrayList<>();
+
+        for (BookAuthor l : links) {
             BookAuthorRow r = new BookAuthorRow();
-            r.id = link.getId();
-            r.bookId = link.getBookId();
-            r.authorId = link.getAuthorId();
+            r.id = l.getId();
 
-            BookDetails b = bookService.getById(r.bookId);
-            Author a = authorService.getById(r.authorId);
+            BookDetails b = bookRepo.findById(l.getBookId()).orElse(null);
+            Author a = authorRepo.findById(l.getAuthorId()).orElse(null);
 
-            r.bookTitle = (b != null ? b.getTitle() : "(unknown)");
-            r.authorName = (a != null ? a.getName() : "(unknown)");
+            if (b != null) {
+                r.bookId = b.getId();
+                r.bookTitle = b.getTitle();
+            }
 
-            return r;
-        }).toList();
+            if (a != null) {
+                r.authorId = a.getId();
+                r.authorName = a.getName();
+            }
+
+            rows.add(r);
+        }
+
+        return rows;
     }
 
     public BookAuthorRow getRowById(String id) {
-        BookAuthor link = getById(id);
-        if (link == null) return null;
+        BookAuthor l = repo.findById(id).orElse(null);
+        if (l == null) return null;
 
         BookAuthorRow r = new BookAuthorRow();
-        r.id = link.getId();
-        r.bookId = link.getBookId();
-        r.authorId = link.getAuthorId();
+        r.id = l.getId();
 
-        BookDetails b = bookService.getById(r.bookId);
-        Author a = authorService.getById(r.authorId);
+        BookDetails b = bookRepo.findById(l.getBookId()).orElse(null);
+        Author a = authorRepo.findById(l.getAuthorId()).orElse(null);
 
-        r.bookTitle = (b != null ? b.getTitle() : "(unknown)");
-        r.authorName = (a != null ? a.getName() : "(unknown)");
+        if (b != null) {
+            r.bookId = b.getId();
+            r.bookTitle = b.getTitle();
+        }
+
+        if (a != null) {
+            r.authorId = a.getId();
+            r.authorName = a.getName();
+        }
 
         return r;
-    }
-
-    // 🔹 Toate cărțile pentru un autor (folosit la Author details)
-    public List<BookDetails> getBooksForAuthor(String authorId) {
-        return getAll().stream()
-                .filter(link -> Objects.equals(authorId, link.getAuthorId()))
-                .map(link -> bookService.getById(link.getBookId()))
-                .filter(Objects::nonNull)
-                .toList();
-    }
-
-    // 🔹 Toți autorii pentru o carte (folosit la Book details)
-    public List<Author> getAuthorsForBook(String bookId) {
-        return getAll().stream()
-                .filter(link -> Objects.equals(bookId, link.getBookId()))
-                .map(link -> authorService.getById(link.getAuthorId()))
-                .filter(Objects::nonNull)
-                .toList();
     }
 }
