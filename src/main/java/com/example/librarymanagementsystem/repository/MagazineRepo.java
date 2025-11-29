@@ -1,13 +1,15 @@
 package com.example.librarymanagementsystem.repository;
 
 import com.example.librarymanagementsystem.model.MagazineDetails;
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MagazineRepo extends InFileRepository<MagazineDetails> {
-    public MagazineRepo() {
-        super("src/main/resources/data/magazine.json",
-                new TypeReference<java.util.List<MagazineDetails>>() {});
-    }
+public interface MagazineRepo extends JpaRepository<MagazineDetails, String> {
+
+    // există deja o revistă cu acest titlu? (create)
+    boolean existsByTitleIgnoreCase(String title);
+
+    // există altă revistă cu același titlu? (update)
+    boolean existsByTitleIgnoreCaseAndIdNot(String title, String id);
 }

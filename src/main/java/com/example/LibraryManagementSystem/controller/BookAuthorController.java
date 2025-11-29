@@ -1,18 +1,16 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.BookAuthor;
-import com.example.librarymanagementsystem.model.BookDetails;
-import com.example.librarymanagementsystem.model.Author;
-import com.example.librarymanagementsystem.service.BookAuthorService;
-import com.example.librarymanagementsystem.service.BookService;
 import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService;
 import com.example.librarymanagementsystem.service.BookAuthorService.BookAuthorRow;
-
+import com.example.librarymanagementsystem.service.BookService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/bookauthors")
@@ -30,6 +28,27 @@ public class BookAuthorController {
         this.authorService = authorService;
     }
 
+    // mic DTO pentru formular
+    public static class BookAuthorForm {
+
+        private String id;
+
+        @NotBlank(message = "Book is required.")
+        private String bookId;
+
+        @NotBlank(message = "Author is required.")
+        private String authorId;
+
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public String getBookId() { return bookId; }
+        public void setBookId(String bookId) { this.bookId = bookId; }
+
+        public String getAuthorId() { return authorId; }
+        public void setAuthorId(String authorId) { this.authorId = authorId; }
+    }
+
     // LIST
     @GetMapping
     public String list(Model model) {
@@ -40,7 +59,12 @@ public class BookAuthorController {
     // CREATE FORM
     @GetMapping("/new")
     public String newForm(Model model) {
-        model.addAttribute("link", linkService.newForForm());
+        BookAuthor ba = linkService.newForForm();
+
+        BookAuthorForm form = new BookAuthorForm();
+        form.setId(ba.getId());
+
+        model.addAttribute("form", form);
         model.addAttribute("books", bookService.getAll());
         model.addAttribute("authors", authorService.getAll());
         return "bookauthor/form";
@@ -48,14 +72,31 @@ public class BookAuthorController {
 
     // CREATE
     @PostMapping
-    public String create(@RequestParam String bookId,
-                         @RequestParam String authorId) {
+    public String create(@ModelAttribute("form") @Valid BookAuthorForm form,
+                         BindingResult bindingResult,
+                         Model model) {
 
-        BookAuthor link = linkService.newForForm();
-        link.setBookId(bookId);
-        link.setAuthorId(authorId);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("books", bookService.getAll());
+            model.addAttribute("authors", authorService.getAll());
+            return "bookauthor/form";
+        }
 
-        linkService.add(link.getId(), link);
+        try {
+            // folosim ID-ul din form (BA1, BA2, ...) sau generăm altul dacă vrei
+            String id = (form.getId() != null && !form.getId().isBlank())
+                    ? form.getId()
+                    : linkService.generateNextId();
+
+            linkService.add(id, form.getBookId(), form.getAuthorId());
+        } catch (IllegalArgumentException ex) {
+            // eroare de business: link duplicat sau book/author invalid
+            bindingResult.reject("linkError", ex.getMessage());
+            model.addAttribute("books", bookService.getAll());
+            model.addAttribute("authors", authorService.getAll());
+            return "bookauthor/form";
+        }
+
         return "redirect:/bookauthors";
     }
 
@@ -72,7 +113,12 @@ public class BookAuthorController {
         BookAuthor link = linkService.getById(id);
         if (link == null) return "redirect:/bookauthors";
 
-        model.addAttribute("link", link);
+        BookAuthorForm form = new BookAuthorForm();
+        form.setId(link.getId());
+        form.setBookId(link.getBook().getId());
+        form.setAuthorId(link.getAuthor().getId());
+
+        model.addAttribute("form", form);
         model.addAttribute("books", bookService.getAll());
         model.addAttribute("authors", authorService.getAll());
 
@@ -82,16 +128,25 @@ public class BookAuthorController {
     // UPDATE
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
-                         @RequestParam String bookId,
-                         @RequestParam String authorId) {
+                         @ModelAttribute("form") @Valid BookAuthorForm form,
+                         BindingResult bindingResult,
+                         Model model) {
 
-        BookAuthor link = linkService.getById(id);
-        if (link == null) return "redirect:/bookauthors";
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("books", bookService.getAll());
+            model.addAttribute("authors", authorService.getAll());
+            return "bookauthor/edit";
+        }
 
-        link.setBookId(bookId);
-        link.setAuthorId(authorId);
+        try {
+            linkService.update(id, form.getBookId(), form.getAuthorId());
+        } catch (IllegalArgumentException ex) {
+            bindingResult.reject("linkError", ex.getMessage());
+            model.addAttribute("books", bookService.getAll());
+            model.addAttribute("authors", authorService.getAll());
+            return "bookauthor/edit";
+        }
 
-        linkService.update(id, link);
         return "redirect:/bookauthors";
     }
 

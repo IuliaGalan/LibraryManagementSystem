@@ -2,76 +2,95 @@ package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.MagazineDetails;
 import com.example.librarymanagementsystem.service.MagazineService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/magazines")
 public class MagazineController {
 
-    private final MagazineService magazineService;
+    private final MagazineService service;
 
-    public MagazineController(MagazineService magazineService) {
-        this.magazineService = magazineService;
+    public MagazineController(MagazineService service) {
+        this.service = service;
     }
 
-    // LIST – afișează toate revistele
+    // LIST
     @GetMapping
-    public String listMagazines(Model model) {
-        model.addAttribute("magazines", magazineService.getAll());
+    public String list(Model model) {
+        model.addAttribute("magazines", service.getAll());
         return "magazine/index";
     }
 
-    // CREATE FORM – revistă nouă, cu ID generat automat
+    // FORM CREATE
     @GetMapping("/new")
-    public String newMagazineForm(Model model) {
-        model.addAttribute("magazine", magazineService.newForForm());
+    public String newForm(Model model) {
+        model.addAttribute("magazine", service.newForForm());
         return "magazine/form";
     }
 
-    // CREATE – salvează revistă nouă
+    // CREATE
     @PostMapping
-    public String createMagazine(@ModelAttribute("magazine") MagazineDetails m) {
-        magazineService.add(m.getId(), m);
+    public String create(@Valid @ModelAttribute("magazine") MagazineDetails m,
+                         BindingResult bindingResult,
+                         Model model) {
+
+        if (bindingResult.hasErrors()) {
+            // rămânem pe formular și afișăm erorile
+            return "magazine/form";
+        }
+
+        service.save(m);
         return "redirect:/magazines";
     }
 
     // DELETE
     @PostMapping("/{id}/delete")
-    public String deleteMagazine(@PathVariable String id) {
-        magazineService.delete(id);
+    public String delete(@PathVariable String id) {
+        service.delete(id);
         return "redirect:/magazines";
     }
 
-    // EDIT FORM
+    // FORM EDIT
     @GetMapping("/{id}/edit")
-    public String editMagazineForm(@PathVariable String id, Model model) {
-        MagazineDetails magazine = magazineService.getById(id);
-        if (magazine == null) {
-            return "redirect:/magazines";
-        }
+    public String editForm(@PathVariable String id, Model model) {
+        MagazineDetails magazine = service.getById(id);
+        if (magazine == null) return "redirect:/magazines";
+
         model.addAttribute("magazine", magazine);
         return "magazine/edit";
     }
 
     // UPDATE
     @PostMapping("/{id}")
-    public String updateMagazine(@PathVariable String id,
-                                 @ModelAttribute("magazine") MagazineDetails magazine) {
-        magazine.setId(id);
-        magazineService.update(id, magazine);
+    public String update(@PathVariable String id,
+                         @Valid @ModelAttribute("magazine") MagazineDetails m,
+                         BindingResult bindingResult,
+                         Model model) {
+
+        m.setId(id); // siguranță: ID-ul vine din URL
+
+        if (bindingResult.hasErrors()) {
+            // rămânem pe formularul de edit cu erori
+            return "magazine/edit";
+        }
+
+        service.save(m);
         return "redirect:/magazines";
     }
 
     // DETAILS
     @GetMapping("/{id}/details")
-    public String magazineDetails(@PathVariable String id, Model model) {
-        MagazineDetails magazine = magazineService.getById(id);
-        if (magazine == null) {
-            return "redirect:/magazines";
-        }
-        model.addAttribute("magazine", magazine);
+    public String details(@PathVariable String id, Model model) {
+        MagazineDetails m = service.getById(id);
+        if (m == null) return "redirect:/magazines";
+
+        model.addAttribute("magazine", m);
+        model.addAttribute("author", m.getAuthor()); // 👈 aici trimitem și autorul (poate fi null)
+
         return "magazine/details";
     }
 }

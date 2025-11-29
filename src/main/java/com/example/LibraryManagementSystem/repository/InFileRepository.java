@@ -32,7 +32,6 @@ public class InFileRepository<T> implements RepositoryInterface<T> {
             List<T> list = mapper.readValue(f, listTypeRef);
 
             data.clear();
-
             for (T item : list) {
                 String id = extractId(item);
 

@@ -1,31 +1,135 @@
 package com.example.librarymanagementsystem.service;
 
+import com.example.librarymanagementsystem.model.Author;
 import com.example.librarymanagementsystem.model.BookAuthor;
 import com.example.librarymanagementsystem.model.BookDetails;
-import com.example.librarymanagementsystem.model.Author;
-import com.example.librarymanagementsystem.repository.RepositoryInterface;
+import com.example.librarymanagementsystem.repository.AuthorRepo;
+import com.example.librarymanagementsystem.repository.BookAuthorRepo;
+import com.example.librarymanagementsystem.repository.BookRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class BookAuthorService extends BaseService<BookAuthor> {
+public class BookAuthorService {
 
-    private final BookService bookService;
-    private final AuthorService authorService;
+    private final BookAuthorRepo repo;
+    private final BookRepo bookRepo;
+    private final AuthorRepo authorRepo;
 
-    public BookAuthorService(RepositoryInterface<BookAuthor> repo,
-                             BookService bookService,
-                             AuthorService authorService) {
-        super(repo);
-        this.bookService = bookService;
-        this.authorService = authorService;
+    public BookAuthorService(BookAuthorRepo repo,
+                             BookRepo bookRepo,
+                             AuthorRepo authorRepo) {
+        this.repo = repo;
+        this.bookRepo = bookRepo;
+        this.authorRepo = authorRepo;
     }
 
-    // Generează ID-uri: BA1, BA2, BA3, ...
+    // 🔹 listă pentru /bookauthors (index)
+    public List<BookAuthorRow> getAllRows() {
+        return repo.findAll().stream()
+                .map(ba -> new BookAuthorRow(
+                        ba.getId(),
+                        ba.getBook().getId(),
+                        ba.getBook().getTitle(),
+                        ba.getAuthor().getId(),
+                        ba.getAuthor().getName()
+                ))
+                .toList();
+    }
+
+    // 🔹 un singur "row" pentru pagina de details
+    public BookAuthorRow getRowById(String id) {
+        return repo.findById(id)
+                .map(ba -> new BookAuthorRow(
+                        ba.getId(),
+                        ba.getBook().getId(),
+                        ba.getBook().getTitle(),
+                        ba.getAuthor().getId(),
+                        ba.getAuthor().getName()
+                ))
+                .orElse(null);
+    }
+
+    // 🔹 pentru editForm / update
+    public BookAuthor getById(String id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    // 🔹 toți autorii unei cărți
+    public List<Author> getAuthorsForBook(String bookId) {
+        return repo.findByBook_Id(bookId)
+                .stream()
+                .map(BookAuthor::getAuthor)
+                .toList();
+    }
+
+    // 🔹 toate cărțile unui autor
+    public List<BookDetails> getBooksForAuthor(String authorId) {
+        return repo.findByAuthor_Id(authorId)
+                .stream()
+                .map(BookAuthor::getBook)
+                .toList();
+    }
+
+    // 🔹 CREATE – creează legătura carte–autor
+    public void add(String id, String bookId, String authorId) {
+        BookDetails book = bookRepo.findById(bookId).orElse(null);
+        Author author = authorRepo.findById(authorId).orElse(null);
+
+        if (book == null || author == null) {
+            throw new IllegalArgumentException("Invalid book or author.");
+        }
+
+        if (repo.existsByBook_IdAndAuthor_Id(bookId, authorId)) {
+            throw new IllegalArgumentException("This author is already linked to this book.");
+        }
+
+        if (repo.existsById(id)) {
+            throw new IllegalArgumentException("A link with this ID already exists.");
+        }
+
+        BookAuthor link = new BookAuthor(id, book, author);
+        repo.save(link);
+    }
+
+    // 🔹 UPDATE – modifică legătura carte–autor
+    public void update(String id, String bookId, String authorId) {
+        BookAuthor existing = repo.findById(id).orElse(null);
+        if (existing == null) {
+            throw new IllegalArgumentException("The link does not exist.");
+        }
+
+        BookDetails book = bookRepo.findById(bookId).orElse(null);
+        Author author = authorRepo.findById(authorId).orElse(null);
+
+        if (book == null || author == null) {
+            throw new IllegalArgumentException("Invalid book or author.");
+        }
+
+        // dacă se schimbă perechea, verificăm să nu existe deja altă legătură cu aceeași pereche
+        if (repo.existsByBook_IdAndAuthor_Id(bookId, authorId)) {
+            // dacă e aceeași înregistrare, e ok; dacă e altă legătură, nu e ok
+            if (!existing.getBook().getId().equals(bookId) ||
+                    !existing.getAuthor().getId().equals(authorId)) {
+                throw new IllegalArgumentException("This author is already linked to this book.");
+            }
+        }
+
+        existing.setBook(book);
+        existing.setAuthor(author);
+        repo.save(existing);
+    }
+
+    // 🔹 DELETE
+    public void delete(String id) {
+        repo.deleteById(id);
+    }
+
+    // 🔹 generează ID-uri BA1, BA2, BA3...
     public String generateNextId() {
-        int next = getAll().stream()
+        int next = repo.findAll().stream()
                 .map(BookAuthor::getId)
                 .filter(Objects::nonNull)
                 .filter(id -> id.startsWith("BA"))
@@ -38,72 +142,71 @@ public class BookAuthorService extends BaseService<BookAuthor> {
         return "BA" + next;
     }
 
+    // 🔹 pentru formularul /new – doar ID pre-generat
     public BookAuthor newForForm() {
         BookAuthor ba = new BookAuthor();
         ba.setId(generateNextId());
         return ba;
     }
 
-    // DTO pentru tabelul BookAuthor
+    // 🔹 DTO folosit în index/details
     public static class BookAuthorRow {
-        public String id;
-        public String bookId;
-        public String bookTitle;
-        public String authorId;
-        public String authorName;
-    }
+        private String id;
+        private String bookId;
+        private String bookTitle;
+        private String authorId;
+        private String authorName;
 
-    // Rânduri pentru index.html (BookAuthor)
-    public List<BookAuthorRow> getAllRows() {
-        return getAll().stream().map(link -> {
-            BookAuthorRow r = new BookAuthorRow();
-            r.id = link.getId();
-            r.bookId = link.getBookId();
-            r.authorId = link.getAuthorId();
+        public BookAuthorRow(String id,
+                             String bookId,
+                             String bookTitle,
+                             String authorId,
+                             String authorName) {
+            this.id = id;
+            this.bookId = bookId;
+            this.bookTitle = bookTitle;
+            this.authorId = authorId;
+            this.authorName = authorName;
+        }
 
-            BookDetails b = bookService.getById(r.bookId);
-            Author a = authorService.getById(r.authorId);
+        public String getId() {
+            return id;
+        }
 
-            r.bookTitle = (b != null ? b.getTitle() : "(unknown)");
-            r.authorName = (a != null ? a.getName() : "(unknown)");
+        public String getBookId() {
+            return bookId;
+        }
 
-            return r;
-        }).toList();
-    }
+        public String getBookTitle() {
+            return bookTitle;
+        }
 
-    public BookAuthorRow getRowById(String id) {
-        BookAuthor link = getById(id);
-        if (link == null) return null;
+        public String getAuthorId() {
+            return authorId;
+        }
 
-        BookAuthorRow r = new BookAuthorRow();
-        r.id = link.getId();
-        r.bookId = link.getBookId();
-        r.authorId = link.getAuthorId();
+        public String getAuthorName() {
+            return authorName;
+        }
 
-        BookDetails b = bookService.getById(r.bookId);
-        Author a = authorService.getById(r.authorId);
+        public void setId(String id) {
+            this.id = id;
+        }
 
-        r.bookTitle = (b != null ? b.getTitle() : "(unknown)");
-        r.authorName = (a != null ? a.getName() : "(unknown)");
+        public void setBookId(String bookId) {
+            this.bookId = bookId;
+        }
 
-        return r;
-    }
+        public void setBookTitle(String bookTitle) {
+            this.bookTitle = bookTitle;
+        }
 
-    // 🔹 Toate cărțile pentru un autor (folosit la Author details)
-    public List<BookDetails> getBooksForAuthor(String authorId) {
-        return getAll().stream()
-                .filter(link -> Objects.equals(authorId, link.getAuthorId()))
-                .map(link -> bookService.getById(link.getBookId()))
-                .filter(Objects::nonNull)
-                .toList();
-    }
+        public void setAuthorId(String authorId) {
+            this.authorId = authorId;
+        }
 
-    // 🔹 Toți autorii pentru o carte (folosit la Book details)
-    public List<Author> getAuthorsForBook(String bookId) {
-        return getAll().stream()
-                .filter(link -> Objects.equals(bookId, link.getBookId()))
-                .map(link -> authorService.getById(link.getAuthorId()))
-                .filter(Objects::nonNull)
-                .toList();
+        public void setAuthorName(String authorName) {
+            this.authorName = authorName;
+        }
     }
 }

@@ -1,13 +1,15 @@
 package com.example.librarymanagementsystem.repository;
 
 import com.example.librarymanagementsystem.model.BookDetails;
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BookRepo extends InFileRepository<BookDetails> {
-    public BookRepo() {
-        super("src/main/resources/data/book.json",
-                new TypeReference<java.util.List<BookDetails>>() {});
-    }
+public interface BookRepo extends JpaRepository<BookDetails, String> {
+
+    // există deja o carte cu acest titlu? (pentru create)
+    boolean existsByTitleIgnoreCase(String title);
+
+    // există altă carte cu acest titlu? (pentru update)
+    boolean existsByTitleIgnoreCaseAndIdNot(String title, String id);
 }

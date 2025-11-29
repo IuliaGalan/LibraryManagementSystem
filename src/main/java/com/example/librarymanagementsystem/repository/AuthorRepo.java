@@ -1,13 +1,13 @@
 package com.example.librarymanagementsystem.repository;
 
 import com.example.librarymanagementsystem.model.Author;
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class AuthorRepo extends InFileRepository<Author> {
-    public AuthorRepo() {
-        super("src/main/resources/data/author.json",
-                new TypeReference<java.util.List<Author>>() {});
-    }
+public interface AuthorRepo extends JpaRepository<Author, String> {
+
+    // pentru create: există deja un autor cu acest nume?
+    boolean existsByNameIgnoreCase(String name);
+
+    // pentru update: există alt autor cu acest nume (alt id)?
+    boolean existsByNameIgnoreCaseAndIdNot(String name, String id);
 }

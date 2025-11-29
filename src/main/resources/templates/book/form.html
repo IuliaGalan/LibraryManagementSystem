@@ -7,6 +7,12 @@
 <body>
 <h2>Add new book</h2>
 
+<!-- erori globale, dacă există -->
+<div th:if="${#fields.hasGlobalErrors()}">
+    <p th:each="err : ${#fields.globalErrors()}"
+       th:text="${err}"></p>
+</div>
+
 <form th:action="@{/books}" th:object="${book}" method="post">
 
     <!-- ID generat în BookService.newForForm(), doar afișat -->
@@ -18,14 +24,18 @@
     <label>Title:
         <input th:field="*{title}"/>
     </label>
+    <div th:if="${#fields.hasErrors('title')}"
+         th:errors="*{title}"></div>
     <br/>
 
     <label>Genre:
         <input th:field="*{genre}"/>
     </label>
+    <div th:if="${#fields.hasErrors('genre')}"
+         th:errors="*{genre}"></div>
     <br/>
 
-    <!-- aici poți adăuga și alte câmpuri din BookDetails -->
+    <!-- alte câmpuri din BookDetails dacă ai nevoie -->
 
     <button type="submit">Save</button>
 </form>

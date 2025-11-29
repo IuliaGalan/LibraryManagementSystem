@@ -5,28 +5,45 @@
     <title>Add Magazine</title>
 </head>
 <body>
+
 <h2>Add Magazine</h2>
 
 <form th:action="@{/magazines}" th:object="${magazine}" method="post">
-    <label>ID:
-        <input th:field="*{id}" readonly/>
-    </label><br/>
 
-    <label>Title:
-        <input th:field="*{title}"/>
-    </label><br/>
+    <p>
+        <label>ID:
+            <input th:field="*{id}" readonly/>
+        </label>
+    </p>
 
-    <label>Publisher:
-        <input th:field="*{publisher}"/>
-    </label><br/>
+    <p>
+        <label>Title:
+            <input th:field="*{title}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('title')}"
+              th:errors="*{title}"></span>
+    </p>
 
-    <label>Language:
-        <input th:field="*{language}"/>
-    </label><br/>
+    <p>
+        <label>Publisher:
+            <input th:field="*{publisher}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('publisher')}"
+              th:errors="*{publisher}"></span>
+    </p>
+
+    <p>
+        <label>Language:
+            <input th:field="*{language}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('language')}"
+              th:errors="*{language}"></span>
+    </p>
 
     <button type="submit">Save</button>
 </form>
 
-<a th:href="@{/magazines}">Back</a>
+<p><a th:href="@{/magazines}">Back to list</a></p>
+
 </body>
 </html>

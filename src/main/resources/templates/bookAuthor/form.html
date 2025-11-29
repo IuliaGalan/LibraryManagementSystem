@@ -8,27 +8,42 @@
 
 <h1>Add Book–Author Link</h1>
 
-<form th:action="@{/bookauthors}" method="post">
+<!-- erori globale (link duplicat etc.) -->
+<div th:if="${#fields.hasGlobalErrors()}">
+    <p th:each="err : ${#fields.globalErrors()}"
+       th:text="${err}"></p>
+</div>
+
+<form th:action="@{/bookauthors}" th:object="${form}" method="post">
+
+    <p>
+        <strong>ID:</strong>
+        <input th:field="*{id}" readonly="readonly"/>
+    </p>
 
     <label for="bookId">Book:</label>
-    <select id="bookId" name="bookId" required>
-        <option value="" disabled selected>-- select a book --</option>
+    <select id="bookId" th:field="*{bookId}">
+        <option value="">-- select a book --</option>
         <option th:each="b : ${books}"
                 th:value="${b.id}"
                 th:text="${b.title}">
         </option>
     </select>
+    <div th:if="${#fields.hasErrors('bookId')}"
+         th:errors="*{bookId}"></div>
 
     <br><br>
 
     <label for="authorId">Author:</label>
-    <select id="authorId" name="authorId" required>
-        <option value="" disabled selected>-- select an author --</option>
+    <select id="authorId" th:field="*{authorId}">
+        <option value="">-- select an author --</option>
         <option th:each="a : ${authors}"
                 th:value="${a.id}"
                 th:text="${a.name}">
         </option>
     </select>
+    <div th:if="${#fields.hasErrors('authorId')}"
+         th:errors="*{authorId}"></div>
 
     <br><br>
 

@@ -1,29 +1,50 @@
 package com.example.librarymanagementsystem.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "book_authors")
 public class BookAuthor {
+
+    @Id
+    @Column(name = "id", length = 50)
+    @NotBlank(message = "ID is required.")
     private String id;
-    private String bookId;
-    private String authorId;
 
-    public BookAuthor() {} // necesar pt formular (new BookAuthor())
+    /**
+     * Multe legături BookAuthor pot referi aceeași carte.
+     * Coloana FK în DB va fi book_id.
+     */
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    @NotNull(message = "Book is required.")
+    private BookDetails book;
 
-    public BookAuthor(String id, String bookId, String authorId) {
+    /**
+     * Multe legături BookAuthor pot referi același autor.
+     * Coloana FK în DB va fi author_id.
+     */
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    @NotNull(message = "Author is required.")
+    private Author author;
+
+    public BookAuthor() {}
+
+    public BookAuthor(String id, BookDetails book, Author author) {
         this.id = id;
-        this.bookId = bookId;
-        this.authorId = authorId;
+        this.book = book;
+        this.author = author;
     }
 
-    public String getId() {
-        return id;
-    }
-    public String getBookId() {
-        return bookId;
-    }
-    public String getAuthorId() {
-        return authorId;
-    }
-
+    public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-    public void setBookId(String bookId) { this.bookId = bookId; }
-    public void setAuthorId(String authorId) { this.authorId = authorId; }
+
+    public BookDetails getBook() { return book; }
+    public void setBook(BookDetails book) { this.book = book; }
+
+    public Author getAuthor() { return author; }
+    public void setAuthor(Author author) { this.author = author; }
 }
