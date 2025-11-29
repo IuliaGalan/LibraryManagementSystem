@@ -1,38 +1,79 @@
 package com.example.librarymanagementsystem.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Member: aparține unei biblioteci (libraryId) și are împrumuturi + rezervări.
+ * Member: aparține unei biblioteci și are împrumuturi + rezervări.
  *
  * Relații:
- *  - Library 1 → N Member
- *  - Member 1 → N Loan
- *  - Member 1 → N Reservation
+ *  - Member 1 → N Loan (un membru poate avea mai multe împrumuturi)
+ *  - Member 1 → N Reservation (un membru poate avea mai multe rezervări)
  */
+@Entity
+@Table(name = "members")
 public class Member {
 
+    @Id
+    @Column(length = 50)
     private String id;
+
+    @NotBlank(message = "Name is required.")
+    @Size(max = 255, message = "Name must have at most 255 characters.")
+    @Column(nullable = false)
     private String name;
-    private String libraryId;
 
-    private List<Reservation> reservations;
-    private List<Loan> loans;
+    @Size(max = 500, message = "Address must have at most 500 characters.")
+    @Column(length = 500)
     private String address;
-    private String email; //de uitat peste
 
-    // Constructor minim
-    public Member(String id, String name, String libraryId) {
+    @Email(message = "Invalid email format.")
+    @Size(max = 255)
+    @Column(length = 255)
+    private String email;
+
+    /**
+     * Relația 1:N cu Loan.
+     * Un membru poate avea mai multe împrumuturi.
+     */
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Loan> loans = new ArrayList<>();
+
+    /**
+     * Relația 1:N cu Reservation.
+     * Un membru poate avea mai multe rezervări.
+     */
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Reservation> reservations = new ArrayList<>();
+
+    // Constructori
+    public Member() {}
+
+    public Member(String id, String name) {
         this.id = id;
         this.name = name;
-        this.libraryId = libraryId;
-        this.reservations = new ArrayList<>();
-        this.loans = new ArrayList<>();
     }
-    public Member(){
 
+    // Getters & Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {
@@ -51,28 +92,12 @@ public class Member {
         this.email = email;
     }
 
-    public String getId() {
-        return id;
+    public List<Loan> getLoans() {
+        return loans;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLibraryId() {
-        return libraryId;
-    }
-
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public void setLoans(List<Loan> loans) {
+        this.loans = loans;
     }
 
     public List<Reservation> getReservations() {
@@ -83,36 +108,34 @@ public class Member {
         this.reservations = reservations;
     }
 
-    public List<Loan> getLoans() {
-        return loans;
-    }
-
-    public void setLoans(List<Loan> loans) {
-        this.loans = loans;
-    }
-
-
-
-    public void addReservation(Reservation reservation) {
-        if (reservation != null && !reservations.contains(reservation)) {
-            reservations.add(reservation);
-        }
-    }
-
-    public void removeReservation(Reservation reservation) {
-        reservations.remove(reservation);
-    }
-
+    // Helper methods
     public void addLoan(Loan loan) {
-        if (loan != null && !loans.contains(loan)) {
+        if (loan == null) return;
+        if (!loans.contains(loan)) {
             loans.add(loan);
+            loan.setMember(this);
         }
     }
 
     public void removeLoan(Loan loan) {
-        loans.remove(loan);
+        if (loan == null) return;
+        if (loans.remove(loan)) {
+            loan.setMember(null);
+        }
     }
 
+    public void addReservation(Reservation reservation) {
+        if (reservation == null) return;
+        if (!reservations.contains(reservation)) {
+            reservations.add(reservation);
+            reservation.setMember(this);
+        }
+    }
 
+    public void removeReservation(Reservation reservation) {
+        if (reservation == null) return;
+        if (reservations.remove(reservation)) {
+            reservation.setMember(null);
+        }
+    }
 }
-

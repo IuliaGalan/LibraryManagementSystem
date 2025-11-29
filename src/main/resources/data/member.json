@@ -1,305 +1,328 @@
-[
-  {
-    "id": "M1",
-    "name": "Ana Popescu",
-    "libraryId": "LIB1",
-    "address": "Str. Viilor 1, Cluj-Napoca",
-    "email": "ana.popescu@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R1",
-        "memberId": "M1",
-        "readableItemId": "Item2",
-        "date": "2025-10-30",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan1",
-        "memberId": "M1",
-        "date": "2025-11-01",
-        "dueDate": "2025-11-15",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item1", "publicationId": "P1", "barcode": "BC001", "status": "ACTIVE" },
-          { "id": "Item2", "publicationId": "P2", "barcode": "BC002", "status": "ACTIVE" }
-        ],
-        "reservations": [
-          { "id": "R1", "readableItemId": "Item1", "memberId": "M1", "date": "2025-11-01", "status": "ACTIVE" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "M2",
-    "name": "Ion Ionescu",
-    "libraryId": "LIB1",
-    "address": "B-dul Eroilor 5, Cluj-Napoca",
-    "email": "ion.ionescu@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R5",
-        "memberId": "M2",
-        "readableItemId": "Item3",
-        "date": "2025-11-03",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan2",
-        "memberId": "M2",
-        "date": "2025-11-02",
-        "dueDate": "2025-11-16",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item3", "publicationId": "P3", "barcode": "BC003", "status": "ACTIVE" }
-        ],
-        "reservations": []
-      }
-    ]
-  },
-  {
-    "id": "M3",
-    "name": "Maria Vasile",
-    "libraryId": "LIB2",
-    "address": "Str. Florilor 10, Cluj-Napoca",
-    "email": "maria.vasile@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R2",
-        "memberId": "M3",
-        "readableItemId": "Item5",
-        "date": "2025-10-31",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan3",
-        "memberId": "M3",
-        "date": "2025-11-03",
-        "dueDate": "2025-11-17",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item4", "publicationId": "P4", "barcode": "BC004", "status": "ACTIVE" },
-          { "id": "Item5", "publicationId": "P5", "barcode": "BC005", "status": "ACTIVE" }
-        ],
-        "reservations": [
-          { "id": "R2", "readableItemId": "Item4", "memberId": "M3", "date": "2025-11-03", "status": "ACTIVE" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "M4",
-    "name": "George Dima",
-    "libraryId": "LIB2",
-    "address": "Calea Turzii 3, Cluj-Napoca",
-    "email": "george.dima@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R6",
-        "memberId": "M4",
-        "readableItemId": "Item8",
-        "date": "2025-11-04",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan4",
-        "memberId": "M4",
-        "date": "2025-11-04",
-        "dueDate": "2025-11-18",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item6", "publicationId": "P6", "barcode": "BC006", "status": "ACTIVE" }
-        ],
-        "reservations": []
-      }
-    ]
-  },
-  {
-    "id": "M5",
-    "name": "Elena Radu",
-    "libraryId": "LIB1",
-    "address": "Piața Unirii 2, Cluj-Napoca",
-    "email": "elena.radu@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R7",
-        "memberId": "M5",
-        "readableItemId": "Item7",
-        "date": "2025-11-05",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan5",
-        "memberId": "M5",
-        "date": "2025-11-05",
-        "dueDate": "2025-11-19",
-        "status": "CLOSED",
-        "items": [
-          { "id": "Item7", "publicationId": "P7", "barcode": "BC007", "status": "ACTIVE" }
-        ],
-        "reservations": []
-      }
-    ]
-  },
-  {
-    "id": "M6",
-    "name": "Andrei Munteanu",
-    "libraryId": "LIB1",
-    "address": "Str. Observatorului 15, Cluj-Napoca",
-    "email": "andrei.munteanu@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R8",
-        "memberId": "M6",
-        "readableItemId": "Item9",
-        "date": "2025-11-06",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan6",
-        "memberId": "M6",
-        "date": "2025-11-06",
-        "dueDate": "2025-11-20",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item8", "publicationId": "P8", "barcode": "BC008", "status": "ACTIVE" },
-          { "id": "Item9", "publicationId": "P9", "barcode": "BC009", "status": "ACTIVE" }
-        ],
-        "reservations": []
-      }
-    ]
-  },
-  {
-    "id": "M7",
-    "name": "Cristina Luca",
-    "libraryId": "LIB2",
-    "address": "Str. Mehedinți 7, Cluj-Napoca",
-    "email": "cristina.luca@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R3",
-        "memberId": "M7",
-        "readableItemId": "Item10",
-        "date": "2025-11-01",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan7",
-        "memberId": "M7",
-        "date": "2025-11-07",
-        "dueDate": "2025-11-21",
-        "status": "OVERDUE",
-        "items": [
-          { "id": "Item10", "publicationId": "P10", "barcode": "BC010", "status": "ACTIVE" }
-        ],
-        "reservations": [
-          { "id": "R3", "readableItemId": "Item10", "memberId": "M7", "date": "2025-11-07", "status": "ACTIVE" }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "M8",
-    "name": "Bogdan Stoica",
-    "libraryId": "LIB2",
-    "address": "Str. Dorobanților 22, Cluj-Napoca",
-    "email": "bogdan.stoica@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R9",
-        "memberId": "M8",
-        "readableItemId": "Item1",
-        "date": "2025-11-07",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan8",
-        "memberId": "M8",
-        "date": "2025-11-08",
-        "dueDate": "2025-11-22",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item2", "publicationId": "P2", "barcode": "BC002", "status": "ACTIVE" },
-          { "id": "Item3", "publicationId": "P3", "barcode": "BC003", "status": "ACTIVE" }
-        ],
-        "reservations": []
-      }
-    ]
-  },
-  {
-    "id": "M9",
-    "name": "Diana Neagu",
-    "libraryId": "LIB1",
-    "address": "B-dul 1 Decembrie 1918, Cluj-Napoca",
-    "email": "diana.neagu@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R10",
-        "memberId": "M9",
-        "readableItemId": "Item4",
-        "date": "2025-11-08",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan9",
-        "memberId": "M9",
-        "date": "2025-11-09",
-        "dueDate": "2025-11-23",
-        "status": "CLOSED",
-        "items": [
-          { "id": "Item4", "publicationId": "P4", "barcode": "BC004", "status": "ACTIVE" }
-        ],
-        "reservations": []
-      }
-    ]
-  },
-  {
-    "id": "M10",
-    "name": "Tudor Mihai",
-    "libraryId": "LIB1",
-    "address": "Str. Fabricii 50, Cluj-Napoca",
-    "email": "tudor.mihai@exemplu.ro",
-    "reservations": [
-      {
-        "id": "R4",
-        "memberId": "M10",
-        "readableItemId": "Item6",
-        "date": "2025-11-02",
-        "status": "ACTIVE"
-      }
-    ],
-    "loans": [
-      {
-        "id": "Loan10",
-        "memberId": "M10",
-        "date": "2025-11-10",
-        "dueDate": "2025-11-24",
-        "status": "OPEN",
-        "items": [
-          { "id": "Item5", "publicationId": "P5", "barcode": "BC005", "status": "ACTIVE" },
-          { "id": "Item6", "publicationId": "P6", "barcode": "BC006", "status": "ACTIVE" }
-        ],
-        "reservations": [
-          { "id": "R4", "readableItemId": "Item6", "memberId": "M10", "date": "2025-11-10", "status": "ACTIVE" }
-        ]
-      }
-    ]
-  }
-]
+[ {
+  "id" : "M1",
+  "name" : "Ana Popescu",
+  "libraryId" : "LIB1",
+  "reservations" : [ {
+    "id" : "R1",
+    "memberId" : "M1",
+    "readableItemId" : "Item2",
+    "date" : "2025-10-30",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan1",
+    "memberId" : "M1",
+    "date" : 1761955200000,
+    "reservations" : [ {
+      "id" : "R1",
+      "memberId" : "M1",
+      "readableItemId" : "Item1",
+      "date" : "2025-11-01",
+      "status" : "ACTIVE"
+    } ],
+    "items" : [ {
+      "id" : "Item1",
+      "publicationId" : "P1",
+      "barcode" : "BC001",
+      "status" : "ACTIVE"
+    }, {
+      "id" : "Item2",
+      "publicationId" : "P2",
+      "barcode" : "BC002",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763164800000,
+    "status" : "OPEN"
+  } ],
+  "address" : "Str. Viilor 1, Cluj-Napoca",
+  "email" : "ana.popescu@exemplu.ro"
+}, {
+  "id" : "M2",
+  "name" : "Ion Ionescu",
+  "libraryId" : "LIB1",
+  "reservations" : [ {
+    "id" : "R5",
+    "memberId" : "M2",
+    "readableItemId" : "Item3",
+    "date" : "2025-11-03",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan2",
+    "memberId" : "M2",
+    "date" : 1762041600000,
+    "reservations" : [ ],
+    "items" : [ {
+      "id" : "Item3",
+      "publicationId" : "P3",
+      "barcode" : "BC003",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763251200000,
+    "status" : "OPEN"
+  } ],
+  "address" : "B-dul Eroilor 5, Cluj-Napoca",
+  "email" : "ion.ionescu@exemplu.ro"
+}, {
+  "id" : "M3",
+  "name" : "Maria Vasile",
+  "libraryId" : "LIB2",
+  "reservations" : [ {
+    "id" : "R2",
+    "memberId" : "M3",
+    "readableItemId" : "Item5",
+    "date" : "2025-10-31",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan3",
+    "memberId" : "M3",
+    "date" : 1762128000000,
+    "reservations" : [ {
+      "id" : "R2",
+      "memberId" : "M3",
+      "readableItemId" : "Item4",
+      "date" : "2025-11-03",
+      "status" : "ACTIVE"
+    } ],
+    "items" : [ {
+      "id" : "Item4",
+      "publicationId" : "P4",
+      "barcode" : "BC004",
+      "status" : "ACTIVE"
+    }, {
+      "id" : "Item5",
+      "publicationId" : "P5",
+      "barcode" : "BC005",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763337600000,
+    "status" : "OPEN"
+  } ],
+  "address" : "Str. Florilor 10, Cluj-Napoca",
+  "email" : "maria.vasile@exemplu.ro"
+}, {
+  "id" : "M4",
+  "name" : "George Dima",
+  "libraryId" : "LIB2",
+  "reservations" : [ {
+    "id" : "R6",
+    "memberId" : "M4",
+    "readableItemId" : "Item8",
+    "date" : "2025-11-04",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan4",
+    "memberId" : "M4",
+    "date" : 1762214400000,
+    "reservations" : [ ],
+    "items" : [ {
+      "id" : "Item6",
+      "publicationId" : "P6",
+      "barcode" : "BC006",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763424000000,
+    "status" : "OPEN"
+  } ],
+  "address" : "Calea Turzii 3, Cluj-Napoca",
+  "email" : "george.dima@exemplu.ro"
+}, {
+  "id" : "M5",
+  "name" : "Elena Radu",
+  "libraryId" : "LIB1",
+  "reservations" : [ {
+    "id" : "R7",
+    "memberId" : "M5",
+    "readableItemId" : "Item7",
+    "date" : "2025-11-05",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan5",
+    "memberId" : "M5",
+    "date" : 1762300800000,
+    "reservations" : [ ],
+    "items" : [ {
+      "id" : "Item7",
+      "publicationId" : "P7",
+      "barcode" : "BC007",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763510400000,
+    "status" : "CLOSED"
+  } ],
+  "address" : "Piața Unirii 2, Cluj-Napoca",
+  "email" : "elena.radu@exemplu.ro"
+}, {
+  "id" : "M6",
+  "name" : "Andrei Munteanu",
+  "libraryId" : "LIB1",
+  "reservations" : [ {
+    "id" : "R8",
+    "memberId" : "M6",
+    "readableItemId" : "Item9",
+    "date" : "2025-11-06",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan6",
+    "memberId" : "M6",
+    "date" : 1762387200000,
+    "reservations" : [ ],
+    "items" : [ {
+      "id" : "Item8",
+      "publicationId" : "P8",
+      "barcode" : "BC008",
+      "status" : "ACTIVE"
+    }, {
+      "id" : "Item9",
+      "publicationId" : "P9",
+      "barcode" : "BC009",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763596800000,
+    "status" : "OPEN"
+  } ],
+  "address" : "Str. Observatorului 15, Cluj-Napoca",
+  "email" : "andrei.munteanu@exemplu.ro"
+}, {
+  "id" : "M7",
+  "name" : "Cristina Luca",
+  "libraryId" : "LIB2",
+  "reservations" : [ {
+    "id" : "R3",
+    "memberId" : "M7",
+    "readableItemId" : "Item10",
+    "date" : "2025-11-01",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan7",
+    "memberId" : "M7",
+    "date" : 1762473600000,
+    "reservations" : [ {
+      "id" : "R3",
+      "memberId" : "M7",
+      "readableItemId" : "Item10",
+      "date" : "2025-11-07",
+      "status" : "ACTIVE"
+    } ],
+    "items" : [ {
+      "id" : "Item10",
+      "publicationId" : "P10",
+      "barcode" : "BC010",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763683200000,
+    "status" : "OVERDUE"
+  } ],
+  "address" : "Str. Mehedinți 7, Cluj-Napoca",
+  "email" : "cristina.luca@exemplu.ro"
+}, {
+  "id" : "M8",
+  "name" : "Bogdan Stoica",
+  "libraryId" : "LIB2",
+  "reservations" : [ {
+    "id" : "R9",
+    "memberId" : "M8",
+    "readableItemId" : "Item1",
+    "date" : "2025-11-07",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan8",
+    "memberId" : "M8",
+    "date" : 1762560000000,
+    "reservations" : [ ],
+    "items" : [ {
+      "id" : "Item2",
+      "publicationId" : "P2",
+      "barcode" : "BC002",
+      "status" : "ACTIVE"
+    }, {
+      "id" : "Item3",
+      "publicationId" : "P3",
+      "barcode" : "BC003",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763769600000,
+    "status" : "OPEN"
+  } ],
+  "address" : "Str. Dorobanților 22, Cluj-Napoca",
+  "email" : "bogdan.stoica@exemplu.ro"
+}, {
+  "id" : "M9",
+  "name" : "Diana Neagu",
+  "libraryId" : "LIB1",
+  "reservations" : [ {
+    "id" : "R10",
+    "memberId" : "M9",
+    "readableItemId" : "Item4",
+    "date" : "2025-11-08",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan9",
+    "memberId" : "M9",
+    "date" : 1762646400000,
+    "reservations" : [ ],
+    "items" : [ {
+      "id" : "Item4",
+      "publicationId" : "P4",
+      "barcode" : "BC004",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763856000000,
+    "status" : "CLOSED"
+  } ],
+  "address" : "B-dul 1 Decembrie 1918, Cluj-Napoca",
+  "email" : "diana.neagu@exemplu.ro"
+}, {
+  "id" : "M10",
+  "name" : "Tudor Mihai",
+  "libraryId" : "LIB1",
+  "reservations" : [ {
+    "id" : "R4",
+    "memberId" : "M10",
+    "readableItemId" : "Item6",
+    "date" : "2025-11-02",
+    "status" : "ACTIVE"
+  } ],
+  "loans" : [ {
+    "id" : "Loan10",
+    "memberId" : "M10",
+    "date" : 1762732800000,
+    "reservations" : [ {
+      "id" : "R4",
+      "memberId" : "M10",
+      "readableItemId" : "Item6",
+      "date" : "2025-11-10",
+      "status" : "ACTIVE"
+    } ],
+    "items" : [ {
+      "id" : "Item5",
+      "publicationId" : "P5",
+      "barcode" : "BC005",
+      "status" : "ACTIVE"
+    }, {
+      "id" : "Item6",
+      "publicationId" : "P6",
+      "barcode" : "BC006",
+      "status" : "ACTIVE"
+    } ],
+    "dueDate" : 1763942400000,
+    "status" : "OPEN"
+  } ],
+  "address" : "Str. Fabricii 50, Cluj-Napoca",
+  "email" : "tudor.mihai@exemplu.ro"
+}, {
+  "id" : "M11",
+  "name" : "Madalina",
+  "libraryId" : "LIB15",
+  "reservations" : null,
+  "loans" : null,
+  "address" : "Maresal Averescu",
+  "email" : "cezarapitu91@gmail.com"
+} ]

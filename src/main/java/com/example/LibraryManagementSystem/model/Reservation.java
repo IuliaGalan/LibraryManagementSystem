@@ -1,33 +1,61 @@
 package com.example.librarymanagementsystem.model;
 
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
+ * Reservation: o rezervare efectuată de un membru pentru un exemplar.
  *
- * Relații (prin ID-uri):
- *  - Library 1 → N Reservation
- *  - Member  1 → N Reservation
- *  - ReadableItem 1 → N Reservation
+ * Relații:
+ *  - Reservation N → 1 Member (o rezervare aparține unui membru)
+ *  - Reservation N → 1 ReadableItem (o rezervare se referă la un item)
  */
+@Entity
+@Table(name = "reservations")
 public class Reservation {
 
+    @Id
+    @Column(length = 50)
     private String id;
-    private String memberId;
-    private String readableItemId;
+
+    /**
+     * Relația N:1 cu Member.
+     * O rezervare este făcută de un singur membru.
+     */
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    @NotNull(message = "Member is required.")
+    private Member member;
+
+    /**
+     * Relația N:1 cu ReadableItem.
+     * O rezervare se referă la un singur exemplar.
+     */
+    @ManyToOne
+    @JoinColumn(name = "readable_item_id", nullable = false)
+    @NotNull(message = "Readable item is required.")
+    private ReadableItem readableItem;
+
+    @NotBlank(message = "Date is required.")
+    @Column(length = 50)
     private String date;
+
+    @Column(length = 50)
     private String status;
 
-    public Reservation(String id, String memberId, String readableItemId, String date, String status) {
+    // Constructori
+    public Reservation() {}
+
+    public Reservation(String id, Member member, ReadableItem readableItem, String date, String status) {
         this.id = id;
-        this.memberId = memberId;
-        this.readableItemId = readableItemId;
+        this.member = member;
+        this.readableItem = readableItem;
         this.date = date;
         this.status = status;
     }
-    public Reservation() {
 
-    }
-
+    // Getters & Setters
     public String getId() {
         return id;
     }
@@ -36,20 +64,20 @@ public class Reservation {
         this.id = id;
     }
 
-    public String getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public String getReadableItemId() {
-        return readableItemId;
+    public ReadableItem getReadableItem() {
+        return readableItem;
     }
 
-    public void setReadableItemId(String readableItemId) {
-        this.readableItemId = readableItemId;
+    public void setReadableItem(ReadableItem readableItem) {
+        this.readableItem = readableItem;
     }
 
     public String getDate() {

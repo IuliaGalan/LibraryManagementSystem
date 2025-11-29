@@ -1,41 +1,85 @@
 package com.example.librarymanagementsystem.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
-//* Relații:
-// *  - Library 1 → N Member (o bibliotecă are mai mulți membri)
-// *  - Library 1 → N ReadableItem (o bibliotecă deține mai multe exemplare de publicații)
-// */
+
+/**
+ * Library - reprezintă o bibliotecă ce conține membri și publicații
+ *
+ * Relații:
+ *  - Library 1 → N ReadableItem (o bibliotecă deține mai multe exemplare)
+ */
+@Entity
+@Table(name = "libraries")
 public class Library {
 
+    @Id
+    @Column(length = 50)
     private String id;
+
+    @NotBlank(message = "Name is required.")
+    @Size(max = 255, message = "Name must have at most 255 characters.")
+    @Column(nullable = false)
     private String name;
+
+    @Size(max = 500, message = "Address must have at most 500 characters.")
+    @Column(length = 500)
     private String address;
 
-    private List<Author> authors;
-    private List<Publication> publications;
-    private List<BookDetails> books;
-    private List<MagazineDetails> magazines;
+    @Size(max = 20, message = "Phone number must have at most 20 characters.")
+    @Column(name = "phone_number", length = 20)
     private String phoneNumber;
+
+    @Email(message = "Invalid email format.")
+    @Size(max = 255)
+    @Column(length = 255)
     private String email;
+
+    /**
+     * Relația 1:N cu ReadableItem.
+     * O bibliotecă poate avea mai multe exemplare de publicații.
+     */
+    @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<ReadableItem> items = new ArrayList<>();
+
+    // Constructori
+    public Library() {}
 
     public Library(String id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;
-
-        this.authors = new ArrayList<>();
-        this.publications = new ArrayList<>();
-        this.books = new ArrayList<>();
-        this.magazines = new ArrayList<>();
     }
 
-    public Library() {
-
+    // Getters & Setters
+    public String getId() {
+        return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    //getter si setter
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -53,100 +97,27 @@ public class Library {
         this.email = email;
     }
 
-    public String getId() {
-        return id;
+    public List<ReadableItem> getItems() {
+        return items;
     }
 
-    public String getName() {
-        return name;
+    public void setItems(List<ReadableItem> items) {
+        this.items = items;
     }
 
-    public List<Author> getAuthors() {
-        return authors;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public List<Publication> getPublications() {
-        return publications;
-    }
-
-    public List<BookDetails> getBooks() {
-        return books;
-    }
-
-    public List<MagazineDetails> getMagazines() {
-        return magazines;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
-    }
-
-    public void setPublications(List<Publication> publications) {
-        this.publications = publications;
-    }
-
-    public void setBooks(List<BookDetails> books) {
-        this.books = books;
-    }
-
-    public void setMagazines(List<MagazineDetails> magazines) {
-        this.magazines = magazines;
-    }
-
-    //  metode pentru adaugare/ștergere
-    public void addAuthor(Author author) {
-        if (author != null && !authors.contains(author)) {
-            authors.add(author);
+    // Helper methods
+    public void addItem(ReadableItem item) {
+        if (item == null) return;
+        if (!items.contains(item)) {
+            items.add(item);
+            item.setLibrary(this);
         }
     }
 
-    public void removeAuthor(Author author) {
-        authors.remove(author);
-    }
-
-    public void addPublication(Publication publication) {
-        if (publication != null && !publications.contains(publication)) {
-            publications.add(publication);
+    public void removeItem(ReadableItem item) {
+        if (item == null) return;
+        if (items.remove(item)) {
+            item.setLibrary(null);
         }
-    }
-
-    public void removePublication(Publication publication) {
-        publications.remove(publication);
-    }
-
-    public void addBook(BookDetails book) {
-        if (book != null && !books.contains(book)) {
-            books.add(book);
-        }
-    }
-
-    public void removeBook(BookDetails book) {
-        books.remove(book);
-    }
-
-    public void addMagazine(MagazineDetails magazine) {
-        if (magazine != null && !magazines.contains(magazine)) {
-            magazines.add(magazine);
-        }
-    }
-
-    public void removeMagazine(MagazineDetails magazine) {
-        magazines.remove(magazine);
     }
 }
