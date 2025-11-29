@@ -38,4 +38,16 @@ public class BookService {
         book.setId(generateNextId());
         return book;
     }
+
+    // --- Business validation helpers ---
+
+    public boolean existsByTitle(String title) {
+        if (title == null) return false;
+        return repo.existsByTitleIgnoreCase(title.trim());
+    }
+
+    public boolean existsByTitleForOtherBook(String title, String excludedId) {
+        if (title == null) return false;
+        return repo.existsByTitleIgnoreCaseAndIdNot(title.trim(), excludedId);
+    }
 }

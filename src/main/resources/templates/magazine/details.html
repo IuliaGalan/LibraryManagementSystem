@@ -12,6 +12,14 @@
 <p><strong>Publisher:</strong> <span th:text="${magazine.publisher}">Publisher</span></p>
 <p><strong>Language:</strong> <span th:text="${magazine.language}">EN</span></p>
 
-<a th:href="@{/magazines}">Back to list</a>
+<h3>Author:</h3>
+<p th:if="${author != null}">
+    <span th:text="${author.name}">Author Name</span>
+</p>
+<p th:if="${author == null}">
+    No author assigned.
+</p>
+
+<p><a th:href="@{/magazines}">Back to list</a></p>
 </body>
 </html>

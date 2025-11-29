@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Author;
 import com.example.librarymanagementsystem.service.AuthorService;
+import com.example.librarymanagementsystem.service.BookAuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,39 +11,42 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/authors")
 public class AuthorController {
 
-    private final AuthorService service;
+    private final AuthorService authorService;
+    private final BookAuthorService bookAuthorService;
 
-    public AuthorController(AuthorService service) {
-        this.service = service;
+    public AuthorController(AuthorService authorService,
+                            BookAuthorService bookAuthorService) {
+        this.authorService = authorService;
+        this.bookAuthorService = bookAuthorService;
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("authors", service.getAll());
+        model.addAttribute("authors", authorService.getAll());
         return "author/index";
     }
 
     @GetMapping("/new")
     public String newForm(Model model) {
-        model.addAttribute("author", service.newForForm());
+        model.addAttribute("author", authorService.newForForm());
         return "author/form";
     }
 
     @PostMapping
     public String create(@ModelAttribute Author a) {
-        service.save(a);
+        authorService.save(a);
         return "redirect:/authors";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        service.delete(id);
+        authorService.delete(id);
         return "redirect:/authors";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
-        Author author = service.getById(id);
+        Author author = authorService.getById(id);
         if (author == null) return "redirect:/authors";
 
         model.addAttribute("author", author);
@@ -52,16 +56,22 @@ public class AuthorController {
     @PostMapping("/{id}")
     public String update(@PathVariable String id, @ModelAttribute Author a) {
         a.setId(id);
-        service.save(a);
+        authorService.save(a);
         return "redirect:/authors";
     }
 
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
-        Author a = service.getById(id);
+        Author a = authorService.getById(id);
         if (a == null) return "redirect:/authors";
 
+        // cărțile autorului (many-to-many via BookAuthor)
         model.addAttribute("author", a);
+        model.addAttribute("books", bookAuthorService.getBooksForAuthor(id));
+
+        // revista 1:1 (poate fi null)
+        model.addAttribute("magazine", a.getMagazine());
+
         return "author/details";
     }
 }

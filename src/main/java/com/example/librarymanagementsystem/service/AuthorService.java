@@ -40,4 +40,16 @@ public class AuthorService {
         a.setId(generateNextId());
         return a;
     }
+
+    // --- Business validation helpers ---
+
+    public boolean existsByName(String name) {
+        if (name == null) return false;
+        return repo.existsByNameIgnoreCase(name.trim());
+    }
+
+    public boolean existsByNameForOtherAuthor(String name, String excludedId) {
+        if (name == null) return false;
+        return repo.existsByNameIgnoreCaseAndIdNot(name.trim(), excludedId);
+    }
 }

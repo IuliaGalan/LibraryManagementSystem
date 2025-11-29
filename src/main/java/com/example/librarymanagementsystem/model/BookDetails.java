@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,8 @@ import java.util.List;
 @Table(name = "books")
 public class BookDetails extends Publication {
 
-    @NotBlank(message = "Genul este obligatoriu.")
+    @NotBlank(message = "Genre is required.")
+    @Size(max = 255, message = "Genre must have at most 255 characters.")
     @Column(name = "genre")
     private String genre;
 

@@ -8,19 +8,33 @@
 
 <h2>Add Author</h2>
 
+<!-- Afișare erori globale, dacă există -->
+<div th:if="${#fields.hasGlobalErrors()}">
+    <p th:each="err : ${#fields.globalErrors()}"
+       th:text="${err}"></p>
+</div>
+
 <form th:action="@{/authors}" th:object="${author}" method="post">
 
     <label>ID:
         <input th:field="*{id}" readonly/>
-    </label><br/>
+    </label>
+    <br/>
 
     <label>Name:
         <input th:field="*{name}"/>
-    </label><br/>
+    </label>
+    <!-- eroare specifică pentru name -->
+    <div th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}"></div>
+    <br/>
 
     <label>Nationality:
         <input th:field="*{nationality}"/>
-    </label><br/>
+    </label>
+    <div th:if="${#fields.hasErrors('nationality')}"
+         th:errors="*{nationality}"></div>
+    <br/>
 
     <button type="submit">Save</button>
 

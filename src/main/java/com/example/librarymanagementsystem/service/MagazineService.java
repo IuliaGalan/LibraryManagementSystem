@@ -38,4 +38,16 @@ public class MagazineService {
         m.setId(generateNextId());
         return m;
     }
+
+    // --- Business validation helpers ---
+
+    public boolean existsByTitle(String title) {
+        if (title == null) return false;
+        return repo.existsByTitleIgnoreCase(title.trim());
+    }
+
+    public boolean existsByTitleForOtherMagazine(String title, String excludedId) {
+        if (title == null) return false;
+        return repo.existsByTitleIgnoreCaseAndIdNot(title.trim(), excludedId);
+    }
 }

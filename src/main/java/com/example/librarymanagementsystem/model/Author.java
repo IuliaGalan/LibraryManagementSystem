@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,12 @@ public class Author {
     @Column(length = 50)
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Name is required.")
+    @Size(max = 255, message = "Name must have at most 255 characters.")
     @Column(nullable = false)
     private String name;
 
+    @Size(max = 255, message = "Nationality must have at most 255 characters.")
     @Column
     private String nationality;
 

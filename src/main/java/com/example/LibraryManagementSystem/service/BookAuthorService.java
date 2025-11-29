@@ -79,11 +79,15 @@ public class BookAuthorService {
         Author author = authorRepo.findById(authorId).orElse(null);
 
         if (book == null || author == null) {
-            throw new IllegalArgumentException("Book sau Author invalid");
+            throw new IllegalArgumentException("Invalid book or author.");
+        }
+
+        if (repo.existsByBook_IdAndAuthor_Id(bookId, authorId)) {
+            throw new IllegalArgumentException("This author is already linked to this book.");
         }
 
         if (repo.existsById(id)) {
-            throw new IllegalArgumentException("Există deja o legătură cu ID-ul " + id);
+            throw new IllegalArgumentException("A link with this ID already exists.");
         }
 
         BookAuthor link = new BookAuthor(id, book, author);
@@ -94,14 +98,23 @@ public class BookAuthorService {
     public void update(String id, String bookId, String authorId) {
         BookAuthor existing = repo.findById(id).orElse(null);
         if (existing == null) {
-            throw new IllegalArgumentException("Legătura nu există.");
+            throw new IllegalArgumentException("The link does not exist.");
         }
 
         BookDetails book = bookRepo.findById(bookId).orElse(null);
         Author author = authorRepo.findById(authorId).orElse(null);
 
         if (book == null || author == null) {
-            throw new IllegalArgumentException("Book sau Author invalid");
+            throw new IllegalArgumentException("Invalid book or author.");
+        }
+
+        // dacă se schimbă perechea, verificăm să nu existe deja altă legătură cu aceeași pereche
+        if (repo.existsByBook_IdAndAuthor_Id(bookId, authorId)) {
+            // dacă e aceeași înregistrare, e ok; dacă e altă legătură, nu e ok
+            if (!existing.getBook().getId().equals(bookId) ||
+                    !existing.getAuthor().getId().equals(authorId)) {
+                throw new IllegalArgumentException("This author is already linked to this book.");
+            }
         }
 
         existing.setBook(book);
