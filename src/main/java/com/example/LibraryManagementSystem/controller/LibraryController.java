@@ -6,8 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/library")
+@RequestMapping("/libraries")
 public class LibraryController {
 
     private final LibraryService service;
@@ -16,62 +18,64 @@ public class LibraryController {
         this.service = service;
     }
 
-    // LIST
+    // READ - toate bibliotecile
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("libraries", service.getAll());
-        return "library/index";
+        List<Library> libraries = service.getAll();
+        model.addAttribute("libraries", libraries);
+        return "library/list";
     }
 
-    // CREATE FORM
+    // CREATE - afișează formularul
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("library", new Library());
+        Library library = service.newForForm();
+        model.addAttribute("library", library);
         return "library/form";
     }
 
-    // CREATE
+    // CREATE - salvează biblioteca nouă
     @PostMapping
     public String create(@ModelAttribute Library library) {
-        service.add(library.getId(), library);
-        return "redirect:/library";
+        service.save(library);
+        return "redirect:/libraries";
     }
 
-    // DELETE
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "redirect:/library";
+    // READ - detalii bibliotecă
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        Library library = service.getById(id);
+        if (library == null) {
+            return "redirect:/libraries";
+        }
+        model.addAttribute("library", library);
+        return "library/details";
     }
 
-    // EDIT FORM
+    // UPDATE - afișează formularul de editare
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Library library = service.getById(id);
         if (library == null) {
-            return "redirect:/library";
+            return "redirect:/libraries";
         }
         model.addAttribute("library", library);
-        return "library/edit";
+        return "library/form";
     }
 
-    // UPDATE
+    // UPDATE - salvează modificările
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
                          @ModelAttribute Library library) {
         library.setId(id);
-        service.update(id, library);
-        return "redirect:/library";
+        service.save(library);
+        return "redirect:/libraries";
     }
 
-    // DETAILS
-    @GetMapping("/{id}/details")
-    public String details(@PathVariable String id, Model model) {
-        Library library = service.getById(id);
-        if (library == null) {
-            return "redirect:/library";
-        }
-        model.addAttribute("library", library);
-        return "library/details";
+    // DELETE - șterge biblioteca
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+        service.delete(id);
+        return "redirect:/libraries";
     }
 }

@@ -1,77 +1,118 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Loan;
+import com.example.librarymanagementsystem.model.Member;
+import com.example.librarymanagementsystem.model.ReadableItem;
 import com.example.librarymanagementsystem.service.LoanService;
+import com.example.librarymanagementsystem.service.MemberService;
+import com.example.librarymanagementsystem.service.ReadableItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/loan")
+@RequestMapping("/loans")
 public class LoanController {
 
     private final LoanService service;
+    private final MemberService memberService;
+    private final ReadableItemService itemService;
 
-    public LoanController(LoanService service) {
+    public LoanController(LoanService service,
+                          MemberService memberService,
+                          ReadableItemService itemService) {
         this.service = service;
+        this.memberService = memberService;
+        this.itemService = itemService;
     }
 
-    // LIST
+    // READ - toate împrumuturile
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("loans", service.getAll());
-        return "loan/index";
+        List<Loan> loans = service.getAll();
+        model.addAttribute("loans", loans);
+        return "loan/list";
     }
 
-    // CREATE FORM
+    // CREATE - afișează formularul
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("loan", new Loan(null, null, null));
+        Loan loan = service.newForForm();
+        List<Member> members = memberService.getAll();
+        List<ReadableItem> items = itemService.getAll();
+
+        model.addAttribute("loan", loan);
+        model.addAttribute("members", members);
+        model.addAttribute("items", items);
         return "loan/form";
     }
 
-    // CREATE
+    // CREATE - salvează împrumutul nou
     @PostMapping
     public String create(@ModelAttribute Loan loan) {
-        service.add(loan.getId(), loan);
-        return "redirect:/loan";
+        service.save(loan);
+        return "redirect:/loans";
     }
 
-    // DELETE
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "redirect:/loan";
+    // READ - detalii împrumut
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        Loan loan = service.getById(id);
+        if (loan == null) {
+            return "redirect:/loans";
+        }
+        model.addAttribute("loan", loan);
+        return "loan/details";
     }
 
-    // EDIT FORM
+    // UPDATE - afișează formularul de editare
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Loan loan = service.getById(id);
         if (loan == null) {
-            return "redirect:/loan";
+            return "redirect:/loans";
         }
+
+        List<Member> members = memberService.getAll();
+        List<ReadableItem> items = itemService.getAll();
+
         model.addAttribute("loan", loan);
-        return "loan/edit";
+        model.addAttribute("members", members);
+        model.addAttribute("items", items);
+        return "loan/form";
     }
 
-    // UPDATE
+    // UPDATE - salvează modificările
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
                          @ModelAttribute Loan loan) {
         loan.setId(id);
-        service.update(id, loan);
-        return "redirect:/loan";
+        service.save(loan);
+        return "redirect:/loans";
     }
 
-    // DETAILS
-    @GetMapping("/{id}/details")
-    public String details(@PathVariable String id, Model model) {
-        Loan loan = service.getById(id);
-        if (loan == null) {
-            return "redirect:/loan";
-        }
-        model.addAttribute("loan", loan);
-        return "loan/details";
+    // DELETE - șterge împrumutul
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+        service.delete(id);
+        return "redirect:/loans";
+    }
+
+    // Filtrare împrumuturi după membru
+    @GetMapping("/member/{memberId}")
+    public String getByMember(@PathVariable String memberId, Model model) {
+        List<Loan> loans = service.getLoansByMember(memberId);
+        model.addAttribute("loans", loans);
+        return "loan/list";
+    }
+
+    // Filtrare împrumuturi după status
+    @GetMapping("/status/{status}")
+    public String getByStatus(@PathVariable String status, Model model) {
+        List<Loan> loans = service.getLoansByStatus(status);
+        model.addAttribute("loans", loans);
+        return "loan/list";
     }
 }

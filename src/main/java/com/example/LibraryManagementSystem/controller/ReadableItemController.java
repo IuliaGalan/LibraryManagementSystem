@@ -1,79 +1,128 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.ReadableItem;
+import com.example.librarymanagementsystem.model.Publication;
+import com.example.librarymanagementsystem.model.Library;
 import com.example.librarymanagementsystem.service.ReadableItemService;
+import com.example.librarymanagementsystem.service.PublicationService;
+import com.example.librarymanagementsystem.service.LibraryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/readableitem")
+@RequestMapping("/items")
 public class ReadableItemController {
 
     private final ReadableItemService service;
+    private final PublicationService publicationService;
+    private final LibraryService libraryService;
 
-    public ReadableItemController(ReadableItemService service) {
+    public ReadableItemController(ReadableItemService service,
+                                  PublicationService publicationService,
+                                  LibraryService libraryService) {
         this.service = service;
+        this.publicationService = publicationService;
+        this.libraryService = libraryService;
     }
 
-    // LIST
+    // READ - toate itemele
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("items", service.getAll());
-        return "readableitem/index";
+        List<ReadableItem> items = service.getAll();
+        model.addAttribute("items", items);
+        return "item/list";
     }
 
-    // CREATE FORM
+    // CREATE - afișează formularul
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("item", new ReadableItem());
+        ReadableItem item = service.newForForm();
+        List<Publication> publications = publicationService.getAll();
+        List<Library> libraries = libraryService.getAll();
+
+        model.addAttribute("item", item);
+        model.addAttribute("publications", publications);
+        model.addAttribute("libraries", libraries);
         model.addAttribute("statuses", ReadableItem.Status.values());
-        return "readableitem/form";
+        return "item/form";
     }
 
-    // CREATE
+    // CREATE - salvează itemul nou
     @PostMapping
-    public String create(@ModelAttribute("item") ReadableItem item) {
-        service.add(item.getId(), item);
-        return "redirect:/readableitem";
+    public String create(@ModelAttribute ReadableItem item) {
+        service.save(item);
+        return "redirect:/items";
     }
 
-    // DELETE
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "redirect:/readableitem";
+    // READ - detalii item
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        ReadableItem item = service.getById(id);
+        if (item == null) {
+            return "redirect:/items";
+        }
+        model.addAttribute("item", item);
+        return "item/details";
     }
 
-    // EDIT FORM
+    // UPDATE - afișează formularul de editare
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         ReadableItem item = service.getById(id);
         if (item == null) {
-            return "redirect:/readableitem";
+            return "redirect:/items";
         }
+
+        List<Publication> publications = publicationService.getAll();
+        List<Library> libraries = libraryService.getAll();
+
         model.addAttribute("item", item);
+        model.addAttribute("publications", publications);
+        model.addAttribute("libraries", libraries);
         model.addAttribute("statuses", ReadableItem.Status.values());
-        return "readableitem/edit";
+        return "item/form";
     }
 
-    // UPDATE
+    // UPDATE - salvează modificările
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
-                         @ModelAttribute("item") ReadableItem item) {
+                         @ModelAttribute ReadableItem item) {
         item.setId(id);
-        service.update(id, item);
-        return "redirect:/readableitem";
+        service.save(item);
+        return "redirect:/items";
     }
 
-    // DETAILS
-    @GetMapping("/{id}/details")
-    public String details(@PathVariable String id, Model model) {
-        ReadableItem item = service.getById(id);
-        if (item == null) {
-            return "redirect:/readableitem";
-        }
-        model.addAttribute("item", item);
-        return "readableitem/details";
+    // DELETE - șterge itemul
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+        service.delete(id);
+        return "redirect:/items";
+    }
+
+    // Filtrare iteme după bibliotecă
+    @GetMapping("/library/{libraryId}")
+    public String getByLibrary(@PathVariable String libraryId, Model model) {
+        List<ReadableItem> items = service.getItemsByLibrary(libraryId);
+        model.addAttribute("items", items);
+        return "item/list";
+    }
+
+    // Filtrare iteme după publicație
+    @GetMapping("/publication/{publicationId}")
+    public String getByPublication(@PathVariable String publicationId, Model model) {
+        List<ReadableItem> items = service.getItemsByPublication(publicationId);
+        model.addAttribute("items", items);
+        return "item/list";
+    }
+
+    // Filtrare iteme după status
+    @GetMapping("/status/{status}")
+    public String getByStatus(@PathVariable ReadableItem.Status status, Model model) {
+        List<ReadableItem> items = service.getItemsByStatus(status);
+        model.addAttribute("items", items);
+        return "item/list";
     }
 }

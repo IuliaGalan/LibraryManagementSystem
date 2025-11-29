@@ -6,10 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.util.List;
 
 @Controller
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService service;
@@ -18,65 +18,64 @@ public class MemberController {
         this.service = service;
     }
 
-    // LIST
+    // READ - toți membrii
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("members", service.getAll());
-        return "member/index";
+        List<Member> members = service.getAll();
+        model.addAttribute("members", members);
+        return "member/list";
     }
 
-    // CREATE FORM
+    // CREATE - afișează formularul
     @GetMapping("/new")
     public String form(Model model) {
-        model.addAttribute("member", new Member());
+        Member member = service.newForForm();
+        model.addAttribute("member", member);
         return "member/form";
     }
 
-    // CREATE
+    // CREATE - salvează membrul nou
     @PostMapping
     public String create(@ModelAttribute Member member) {
-        if (member.getId() == null || member.getId().isBlank()) {
-            member.setId(UUID.randomUUID().toString());
+        service.save(member);
+        return "redirect:/members";
+    }
+
+    // READ - detalii membru
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        Member member = service.getById(id);
+        if (member == null) {
+            return "redirect:/members";
         }
-        service.add(member.getId(), member);
-        return "redirect:/member";
+        model.addAttribute("member", member);
+        return "member/details";
     }
 
-    // DELETE
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "redirect:/member";
-    }
-
-    // EDIT FORM
+    // UPDATE - afișează formularul de editare
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Member member = service.getById(id);
         if (member == null) {
-            return "redirect:/member";
+            return "redirect:/members";
         }
         model.addAttribute("member", member);
-        return "member/edit";
+        return "member/form";
     }
 
-    // UPDATE
+    // UPDATE - salvează modificările
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
                          @ModelAttribute Member member) {
         member.setId(id);
-        service.update(id, member);
-        return "redirect:/member";
+        service.save(member);
+        return "redirect:/members";
     }
 
-    // DETAILS
-    @GetMapping("/{id}/details")
-    public String details(@PathVariable String id, Model model) {
-        Member member = service.getById(id);
-        if (member == null) {
-            return "redirect:/member";
-        }
-        model.addAttribute("member", member);
-        return "member/details";
+    // DELETE - șterge membrul
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+        service.delete(id);
+        return "redirect:/members";
     }
 }
