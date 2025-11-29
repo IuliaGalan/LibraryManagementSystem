@@ -8,29 +8,42 @@
 
 <h1>Edit Book–Author Link</h1>
 
-<form th:action="@{/bookauthors/{id}(id=${link.id})}" method="post">
+<!-- erori globale (link duplicat etc.) -->
+<div th:if="${#fields.hasGlobalErrors()}">
+    <p th:each="err : ${#fields.globalErrors()}"
+       th:text="${err}"></p>
+</div>
 
-    <p><strong>ID:</strong> <span th:text="${link.id}"></span></p>
+<form th:action="@{/bookauthors/{id}(id=${form.id})}"
+      th:object="${form}"
+      method="post">
+
+    <p>
+        <strong>ID:</strong>
+        <input th:field="*{id}" readonly="readonly"/>
+    </p>
 
     <label for="bookId">Book:</label>
-    <select id="bookId" name="bookId" required>
+    <select id="bookId" th:field="*{bookId}">
         <option th:each="b : ${books}"
                 th:value="${b.id}"
-                th:text="${b.title}"
-                th:selected="${b.id == link.bookId}">
+                th:text="${b.title}">
         </option>
     </select>
+    <div th:if="${#fields.hasErrors('bookId')}"
+         th:errors="*{bookId}"></div>
 
     <br><br>
 
     <label for="authorId">Author:</label>
-    <select id="authorId" name="authorId" required>
+    <select id="authorId" th:field="*{authorId}">
         <option th:each="a : ${authors}"
                 th:value="${a.id}"
-                th:text="${a.name}"
-                th:selected="${a.id == link.authorId}">
+                th:text="${a.name}">
         </option>
     </select>
+    <div th:if="${#fields.hasErrors('authorId')}"
+         th:errors="*{authorId}"></div>
 
     <br><br>
 

@@ -12,4 +12,7 @@ public interface BookAuthorRepo extends JpaRepository<BookAuthor, String> {
 
     // toate legăturile pentru un autor (după id-ul autorului)
     List<BookAuthor> findByAuthor_Id(String authorId);
+
+    // verifică dacă există deja o legătură pentru aceeași pereche carte–autor
+    boolean existsByBook_IdAndAuthor_Id(String bookId, String authorId);
 }

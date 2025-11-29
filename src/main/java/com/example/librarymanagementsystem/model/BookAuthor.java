@@ -1,6 +1,8 @@
 package com.example.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "book_authors")
@@ -8,6 +10,7 @@ public class BookAuthor {
 
     @Id
     @Column(name = "id", length = 50)
+    @NotBlank(message = "ID is required.")
     private String id;
 
     /**
@@ -16,6 +19,7 @@ public class BookAuthor {
      */
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
+    @NotNull(message = "Book is required.")
     private BookDetails book;
 
     /**
@@ -24,6 +28,7 @@ public class BookAuthor {
      */
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
+    @NotNull(message = "Author is required.")
     private Author author;
 
     public BookAuthor() {}
