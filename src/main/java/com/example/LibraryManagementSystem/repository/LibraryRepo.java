@@ -1,13 +1,15 @@
 package com.example.librarymanagementsystem.repository;
+
 import com.example.librarymanagementsystem.model.Library;
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LibraryRepo extends InFileRepository<Library> {
-    public LibraryRepo() {
-        super("src/main/resources/data/library.json",
-                new TypeReference<java.util.List<Library>>() {
-                });
-    }
+public interface LibraryRepo extends JpaRepository<Library, String> {
+
+    // Verifică dacă există o bibliotecă cu acest nume (pentru CREATE)
+    boolean existsByNameIgnoreCase(String name);
+
+    // Verifică dacă există altă bibliotecă cu acest nume (pentru UPDATE)
+    boolean existsByNameIgnoreCaseAndIdNot(String name, String id);
 }
