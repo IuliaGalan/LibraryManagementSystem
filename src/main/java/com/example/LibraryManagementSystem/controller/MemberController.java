@@ -23,7 +23,7 @@ public class MemberController {
     public String getAll(Model model) {
         List<Member> members = service.getAll();
         model.addAttribute("members", members);
-        return "member/list";
+        return "member/index";
     }
 
     // CREATE - afișează formularul

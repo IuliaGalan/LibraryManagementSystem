@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Loans</title>
@@ -7,41 +8,30 @@
 <body>
 
 <h1>Loans</h1>
-<a th:href="@{/loan/new}">Add new Loan</a>
-<br/><br/>
+
+<a th:href="@{/loans/new}">Add new loan</a>
 
 <table border="1">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Member ID</th>
-        <th>Date</th>
-        <th>Due Date</th>
+        <th>Loan date</th>
+        <th>Due date</th>
         <th>Status</th>
-        <th>Actions</th>
+        <th>Member ID</th>
+        <th>Member name</th>
     </tr>
     </thead>
-
     <tbody>
     <tr th:each="loan : ${loans}">
-        <td th:text="${loan.id}">L1</td>
-        <td th:text="${loan.memberId}">M1</td>
-        <td th:text="${#dates.format(loan.date, 'yyyy-MM-dd')}">2024-01-01</td>
-        <td th:text="${#dates.format(loan.dueDate, 'yyyy-MM-dd')}">2024-02-01</td>
-        <td th:text="${loan.status}">Active</td>
+        <td th:text="${loan.id}">Loan1</td>
+        <td th:text="${loan.date}">2025-11-01</td>
+        <td th:text="${loan.dueDate}">2025-11-15</td>
+        <td th:text="${loan.status}">OPEN</td>
 
-        <td>
-            <a th:href="@{/loan/{id}/details(id=${loan.id})}">Details</a>
-            &nbsp;|&nbsp;
-            <a th:href="@{/loan/{id}/edit(id=${loan.id})}">Edit</a>
-            &nbsp;|&nbsp;
-
-            <form th:action="@{/loan/{id}/delete(id=${loan.id})}"
-                  method="post"
-                  style="display:inline">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
+        <!-- aici era eroarea: înainte probabil aveai ${loan.memberId} -->
+        <td th:text="${loan.member.id}">M1</td>
+        <td th:text="${loan.member.name}">John Doe</td>
     </tr>
     </tbody>
 </table>

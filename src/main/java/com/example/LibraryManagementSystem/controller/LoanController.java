@@ -33,7 +33,7 @@ public class LoanController {
     public String getAll(Model model) {
         List<Loan> loans = service.getAll();
         model.addAttribute("loans", loans);
-        return "loan/list";
+        return "loan/index";
     }
 
     // CREATE - afișează formularul
@@ -105,7 +105,7 @@ public class LoanController {
     public String getByMember(@PathVariable String memberId, Model model) {
         List<Loan> loans = service.getLoansByMember(memberId);
         model.addAttribute("loans", loans);
-        return "loan/list";
+        return "loan/index";
     }
 
     // Filtrare împrumuturi după status
@@ -113,6 +113,6 @@ public class LoanController {
     public String getByStatus(@PathVariable String status, Model model) {
         List<Loan> loans = service.getLoansByStatus(status);
         model.addAttribute("loans", loans);
-        return "loan/list";
+        return "loan/index";
     }
 }

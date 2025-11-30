@@ -105,7 +105,7 @@ public class ReservationController {
     public String getByMember(@PathVariable String memberId, Model model) {
         List<Reservation> reservations = service.getReservationsByMember(memberId);
         model.addAttribute("reservations", reservations);
-        return "reservation/list";
+        return "reservation/index";
     }
 
     // Filtrare rezervări după item

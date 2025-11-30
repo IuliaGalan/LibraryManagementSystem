@@ -33,7 +33,7 @@ public class ReadableItemController {
     public String getAll(Model model) {
         List<ReadableItem> items = service.getAll();
         model.addAttribute("items", items);
-        return "item/list";
+        return "item/index";
     }
 
     // CREATE - afișează formularul
