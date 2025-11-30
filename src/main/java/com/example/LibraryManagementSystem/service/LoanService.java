@@ -15,19 +15,31 @@ public class LoanService {
         this.repo = repo;
     }
 
-    // READ - toate împrumuturile
+    // LIST cu sortare naturală
     public List<Loan> getAll() {
-        return repo.findAll();
+        return repo.findAllSorted();
     }
 
-    // READ - un împrumut după ID
+    // GET BY ID
     public Loan getById(String id) {
         return repo.findById(id).orElse(null);
     }
 
-    // CREATE & UPDATE
+    // CREATE
     public Loan save(Loan loan) {
         return repo.save(loan);
+    }
+
+    // CREATE cu ID explicit
+    public void add(String id, Loan loan) {
+        loan.setId(id);
+        repo.save(loan);
+    }
+
+    // UPDATE
+    public void update(String id, Loan loan) {
+        loan.setId(id);
+        repo.save(loan);
     }
 
     // DELETE
@@ -35,32 +47,15 @@ public class LoanService {
         repo.deleteById(id);
     }
 
-    // Generare ID automat
+    // GENERATE NEXT ID
     public String generateNextId() {
-        return "LOAN" + (repo.count() + 1);
+        return "Loan" + (repo.count() + 1);
     }
 
-    // Helper pentru formular nou
+    // FOR FORM
     public Loan newForForm() {
         Loan loan = new Loan();
         loan.setId(generateNextId());
         return loan;
-    }
-
-    // --- Metode pentru relații ---
-
-    // Găsește toate împrumuturile unui membru
-    public List<Loan> getLoansByMember(String memberId) {
-        return repo.findByMember_Id(memberId);
-    }
-
-    // Găsește împrumuturile după status
-    public List<Loan> getLoansByStatus(String status) {
-        return repo.findByStatus(status);
-    }
-
-    // Găsește împrumuturile unui membru cu un anumit status
-    public List<Loan> getLoansByMemberAndStatus(String memberId, String status) {
-        return repo.findByMember_IdAndStatus(memberId, status);
     }
 }

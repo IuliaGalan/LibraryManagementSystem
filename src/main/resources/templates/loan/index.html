@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Loans</title>
@@ -8,30 +7,41 @@
 <body>
 
 <h1>Loans</h1>
-
-<a th:href="@{/loans/new}">Add new loan</a>
+<a th:href="@{/loans/new}">Add new Loan</a>
+<br/><br/>
 
 <table border="1">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Loan date</th>
-        <th>Due date</th>
+        <th>Member</th>
+        <th>Loan Date</th>
+        <th>Due Date</th>
         <th>Status</th>
-        <th>Member ID</th>
-        <th>Member name</th>
+        <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="loan : ${loans}">
         <td th:text="${loan.id}">Loan1</td>
-        <td th:text="${loan.date}">2025-11-01</td>
-        <td th:text="${loan.dueDate}">2025-11-15</td>
+        <td th:text="${loan.member != null ? loan.member.name : 'N/A'}">Member Name</td>
+        <td th:text="${loan.loanDate}">2024-01-01</td>
+        <td th:text="${loan.dueDate}">2024-02-01</td>
         <td th:text="${loan.status}">OPEN</td>
 
-        <!-- aici era eroarea: înainte probabil aveai ${loan.memberId} -->
-        <td th:text="${loan.member.id}">M1</td>
-        <td th:text="${loan.member.name}">John Doe</td>
+        <td>
+            <a th:href="@{/loans/{id}/details(id=${loan.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/loans/{id}/edit(id=${loan.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/loans/{id}/delete(id=${loan.id})}"
+                  method="post"
+                  style="display:inline">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
