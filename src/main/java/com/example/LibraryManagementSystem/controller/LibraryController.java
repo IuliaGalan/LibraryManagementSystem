@@ -23,7 +23,7 @@ public class LibraryController {
     public String getAll(Model model) {
         List<Library> libraries = service.getAll();
         model.addAttribute("libraries", libraries);
-        return "library/list";
+        return "library/index";
     }
 
     // CREATE - afișează formularul

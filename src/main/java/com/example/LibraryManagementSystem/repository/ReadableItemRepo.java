@@ -12,15 +12,14 @@ public interface ReadableItemRepo extends JpaRepository<ReadableItem, String> {
     // Găsește toate itemele dintr-o bibliotecă
     List<ReadableItem> findByLibrary_Id(String libraryId);
 
-    // Găsește toate itemele unei publicații
-    List<ReadableItem> findByPublication_Id(String publicationId);
 
-    // Găsește itemele după status
-    List<ReadableItem> findByStatus(ReadableItem.Status status);
+    List<ReadableItem> findByPublicationId(String publicationId);
 
-    // Găsește un item după barcode
+    // ✅ CORECT - caută după status
+    List<ReadableItem> findByStatus(ReadableItem.ItemStatus status);
+
+    // ✅ CORECT - caută după barcode
     ReadableItem findByBarcode(String barcode);
-
     // Verifică dacă există un item cu acest barcode
     boolean existsByBarcode(String barcode);
 

@@ -56,11 +56,11 @@ public class ReadableItemService {
 
     // Găsește toate itemele unei publicații
     public List<ReadableItem> getItemsByPublication(String publicationId) {
-        return repo.findByPublication_Id(publicationId);
+        return repo.findByPublicationId(publicationId);
     }
 
     // Găsește itemele după status
-    public List<ReadableItem> getItemsByStatus(ReadableItem.Status status) {
+    public List<ReadableItem> getItemsByStatus(ReadableItem.ItemStatus status) {
         return repo.findByStatus(status);
     }
 

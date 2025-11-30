@@ -46,7 +46,7 @@ public class ReadableItemController {
         model.addAttribute("item", item);
         model.addAttribute("publications", publications);
         model.addAttribute("libraries", libraries);
-        model.addAttribute("statuses", ReadableItem.Status.values());
+        model.addAttribute("statuses", ReadableItem.ItemStatus.values());
         return "item/form";
     }
 
@@ -82,7 +82,7 @@ public class ReadableItemController {
         model.addAttribute("item", item);
         model.addAttribute("publications", publications);
         model.addAttribute("libraries", libraries);
-        model.addAttribute("statuses", ReadableItem.Status.values());
+        model.addAttribute("statuses", ReadableItem.ItemStatus.values());
         return "item/form";
     }
 
@@ -120,7 +120,7 @@ public class ReadableItemController {
 
     // Filtrare iteme după status
     @GetMapping("/status/{status}")
-    public String getByStatus(@PathVariable ReadableItem.Status status, Model model) {
+    public String getByStatus(@PathVariable ReadableItem.ItemStatus status, Model model) {
         List<ReadableItem> items = service.getItemsByStatus(status);
         model.addAttribute("items", items);
         return "item/list";
