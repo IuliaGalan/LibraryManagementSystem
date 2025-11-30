@@ -8,37 +8,15 @@
 
 <h2>Library Details</h2>
 
-<p><strong>ID:</strong> <span th:text="${library.id}">L1</span></p>
+<p><strong>ID:</strong> <span th:text="${library.id}">LIB1</span></p>
 <p><strong>Name:</strong> <span th:text="${library.name}">Library Name</span></p>
 <p><strong>Address:</strong> <span th:text="${library.address}">Address</span></p>
 <p><strong>Phone:</strong> <span th:text="${library.phoneNumber}">Phone</span></p>
 <p><strong>Email:</strong> <span th:text="${library.email}">Email</span></p>
 
-<h3>Authors in this library:</h3>
-<ul>
-    <li th:each="author : ${library.authors}"
-        th:text="${author.name}">
-        Author name
-    </li>
-</ul>
+<!-- Dacă ai relații cu Members sau Books, le poți afișa aici -->
 
-<h3>Books in this library:</h3>
-<ul>
-    <li th:each="book : ${library.books}"
-        th:text="${book.title}">
-        Book title
-    </li>
-</ul>
-
-<h3>Magazines in this library:</h3>
-<ul>
-    <li th:each="mag : ${library.magazines}"
-        th:text="${mag.title}">
-        Magazine title
-    </li>
-</ul>
-
-<a th:href="@{/library}">Back</a>
+<p><a th:href="@{/libraries}">Back</a></p>
 
 </body>
 </html>

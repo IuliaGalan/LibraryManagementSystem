@@ -8,32 +8,48 @@
 
 <h2>Edit Library</h2>
 
-<form th:action="@{/library/{id}(id=${library.id})}" th:object="${library}" method="post">
+<form th:action="@{/libraries/{id}(id=${library.id})}"
+      th:object="${library}"
+      method="post">
 
-    <label>ID:
-        <input th:field="*{id}" readonly/>
-    </label><br/>
+    <p>
+        <label>ID:
+            <input th:field="*{id}" readonly/>
+        </label>
+    </p>
 
-    <label>Name:
-        <input th:field="*{name}" required/>
-    </label><br/>
+    <p>
+        <label>Name:
+            <input th:field="*{name}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </p>
 
-    <label>Address:
-        <input th:field="*{address}"/>
-    </label><br/>
+    <p>
+        <label>Address:
+            <input th:field="*{address}"/>
+        </label>
+    </p>
 
-    <label>Phone:
-        <input th:field="*{phoneNumber}"/>
-    </label><br/>
+    <p>
+        <label>Phone:
+            <input th:field="*{phoneNumber}"/>
+        </label>
+    </p>
 
-    <label>Email:
-        <input type="email" th:field="*{email}"/>
-    </label><br/>
+    <p>
+        <label>Email:
+            <input type="email" th:field="*{email}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"></span>
+    </p>
 
     <button type="submit">Update</button>
 </form>
 
-<a th:href="@{/library}">Back</a>
+<p><a th:href="@{/libraries}">Back</a></p>
 
 </body>
 </html>

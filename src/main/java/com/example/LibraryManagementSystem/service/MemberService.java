@@ -4,6 +4,7 @@ import com.example.librarymanagementsystem.model.Member;
 import com.example.librarymanagementsystem.repository.MemberRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -16,7 +17,22 @@ public class MemberService {
     }
 
     public List<Member> getAll() {
-        return repo.findAll();
+        List<Member> members = repo.findAll();
+
+        // Sortare naturală pentru ID-uri (M1, M2, ..., M10)
+        members.sort(Comparator.comparing(Member::getId, (id1, id2) -> {
+            // Extrage partea numerică din ID
+            String num1 = id1.replaceAll("\\D+", "");
+            String num2 = id2.replaceAll("\\D+", "");
+
+            if (num1.isEmpty() || num2.isEmpty()) {
+                return id1.compareTo(id2); // fallback la sortare alfabetică
+            }
+
+            return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
+        }));
+
+        return members;
     }
 
     public Member getById(String id) {
