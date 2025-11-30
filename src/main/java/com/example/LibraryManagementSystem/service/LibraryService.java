@@ -32,7 +32,16 @@ public class LibraryService {
     }
 
     public String generateNextId() {
-        return "LIB" + (repo.count() + 1);
+        int maxNumber = repo.findAll().stream()
+                .map(Library::getId)
+                .filter(id -> id != null && id.startsWith("LIB"))
+                .map(id -> id.substring(3))
+                .filter(num -> num.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+
+        return "LIB" + (maxNumber + 1);
     }
 
     public Library newForForm() {

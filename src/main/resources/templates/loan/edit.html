@@ -16,6 +16,16 @@
         <input th:field="*{id}" readonly/>
     </label><br/>
 
+    <!-- ✅ DROPDOWN PENTRU MEMBER -->
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}"
+                th:selected="${loan.member != null && loan.member.id == m.id}">
+        </option>
+    </select><br/>
+
     <label>Loan Date:
         <input type="date" th:field="*{loanDate}" required/>
     </label><br/>

@@ -47,9 +47,18 @@ public class LoanService {
         repo.deleteById(id);
     }
 
-    // GENERATE NEXT ID
+    // ✅ GENERATE NEXT ID (CORECTAT)
     public String generateNextId() {
-        return "Loan" + (repo.count() + 1);
+        int maxNumber = repo.findAll().stream()
+                .map(Loan::getId)
+                .filter(id -> id != null && id.startsWith("Loan"))
+                .map(id -> id.substring(4))  // Elimină "Loan"
+                .filter(num -> num.matches("\\d+"))  // Doar cifre
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);  // Dacă nu există niciun loan, începe de la 0
+
+        return "Loan" + (maxNumber + 1);
     }
 
     // FOR FORM

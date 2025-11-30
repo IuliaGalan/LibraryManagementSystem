@@ -49,7 +49,16 @@ public class ReservationService {
 
     // GENERATE NEXT ID
     public String generateNextId() {
-        return "R" + (repo.count() + 1);
+        int maxNumber = repo.findAll().stream()
+                .map(Reservation::getId)
+                .filter(id -> id != null && id.startsWith("R"))
+                .map(id -> id.substring(1))
+                .filter(num -> num.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+
+        return "R" + (maxNumber + 1);
     }
 
     // FOR FORM

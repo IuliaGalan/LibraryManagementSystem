@@ -13,6 +13,16 @@
     <label>ID:</label>
     <input type="text" th:field="*{id}" readonly/><br>
 
+    <!-- ✅ DROPDOWN PENTRU MEMBER -->
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option value="">-- Select a member --</option>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}">
+        </option>
+    </select><br>
+
     <label>Loan Date:</label>
     <input type="date" th:field="*{loanDate}" required/><br>
 

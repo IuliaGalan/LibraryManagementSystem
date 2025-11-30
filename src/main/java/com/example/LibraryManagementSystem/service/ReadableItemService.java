@@ -49,7 +49,16 @@ public class ReadableItemService {
 
     // GENERATE NEXT ID
     public String generateNextId() {
-        return "ITEM" + String.format("%03d", repo.count() + 1);
+        int maxNumber = repo.findAll().stream()
+                .map(ReadableItem::getId)
+                .filter(id -> id != null && id.startsWith("Item"))
+                .map(id -> id.substring(4))
+                .filter(num -> num.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+
+        return "Item" + (maxNumber + 1);
     }
 
     // FOR FORM

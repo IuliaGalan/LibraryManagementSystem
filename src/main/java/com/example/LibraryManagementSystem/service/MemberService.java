@@ -48,7 +48,16 @@ public class MemberService {
     }
 
     public String generateNextId() {
-        return "M" + (repo.count() + 1);
+        int maxNumber = repo.findAll().stream()
+                .map(Member::getId)
+                .filter(id -> id != null && id.startsWith("M"))
+                .map(id -> id.substring(1))
+                .filter(num -> num.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+
+        return "M" + (maxNumber + 1);
     }
 
     public Member newForForm() {
