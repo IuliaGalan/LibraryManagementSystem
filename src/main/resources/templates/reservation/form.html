@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Add Reservation</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Reservation</title>
+</head>
 <body>
+
 <h1>Add New Reservation</h1>
 
-<form th:action="@{/reservation}" method="post" th:object="${reservation}">
+<form th:action="@{/reservations}" method="post" th:object="${reservation}">
+
     <label>ID:</label>
-    <input type="text" th:field="*{id}" /><br>
-
-    <label>Member ID:</label>
-    <input type="text" th:field="*{memberId}" required /><br>
-
-    <label>ReadableItem ID:</label>
-    <input type="text" th:field="*{readableItemId}" required /><br>
+    <input type="text" th:field="*{id}" readonly/><br>
 
     <label>Date:</label>
-    <input type="text" th:field="*{date}" placeholder="YYYY-MM-DD" /><br>
+    <input type="date" th:field="*{date}" required/><br>
 
     <label>Status:</label>
-    <input type="text" th:field="*{status}" placeholder="PENDING/ACTIVE/etc." /><br>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}"
+                th:value="${s}"
+                th:text="${s}">
+        </option>
+    </select><br>
 
     <button type="submit">Save</button>
 </form>
 
-<p><a th:href="@{/reservation}">Back to list</a></p>
+<p><a th:href="@{/reservations}">Back to list</a></p>
+
 </body>
 </html>

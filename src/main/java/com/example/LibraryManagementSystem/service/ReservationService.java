@@ -15,19 +15,31 @@ public class ReservationService {
         this.repo = repo;
     }
 
-    // READ - toate rezervările
+    // LIST cu sortare naturală
     public List<Reservation> getAll() {
-        return repo.findAll();
+        return repo.findAllSorted();
     }
 
-    // READ - o rezervare după ID
+    // GET BY ID
     public Reservation getById(String id) {
         return repo.findById(id).orElse(null);
     }
 
-    // CREATE & UPDATE
+    // CREATE
     public Reservation save(Reservation reservation) {
         return repo.save(reservation);
+    }
+
+    // CREATE cu ID explicit
+    public void add(String id, Reservation reservation) {
+        reservation.setId(id);
+        repo.save(reservation);
+    }
+
+    // UPDATE
+    public void update(String id, Reservation reservation) {
+        reservation.setId(id);
+        repo.save(reservation);
     }
 
     // DELETE
@@ -35,40 +47,15 @@ public class ReservationService {
         repo.deleteById(id);
     }
 
-    // Generare ID automat
+    // GENERATE NEXT ID
     public String generateNextId() {
         return "R" + (repo.count() + 1);
     }
 
-    // Helper pentru formular nou
+    // FOR FORM
     public Reservation newForForm() {
-        Reservation reservation = new Reservation();
-        reservation.setId(generateNextId());
-        return reservation;
-    }
-
-    // --- Metode pentru relații ---
-
-    // Găsește toate rezervările unui membru
-    public List<Reservation> getReservationsByMember(String memberId) {
-        return repo.findByMember_Id(memberId);
-    }
-
-    // Găsește toate rezervările pentru un item
-    public List<Reservation> getReservationsByItem(String readableItemId) {
-        return repo.findByReadableItem_Id(readableItemId);
-    }
-
-    // Găsește rezervările după status
-    public List<Reservation> getReservationsByStatus(String status) {
-        return repo.findByStatus(status);
-    }
-
-    // Găsește rezervările unui membru cu un anumit status
-    public List<Reservation> getReservationsByMemberAndStatus(String memberId, String status) {
-        return repo.findByMember_IdAndStatus(memberId, status);
-    }
-
-    public void add(String id, Reservation reservation) {
+        Reservation res = new Reservation();
+        res.setId(generateNextId());
+        return res;
     }
 }

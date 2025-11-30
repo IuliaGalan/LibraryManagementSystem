@@ -4,16 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Loan: un împrumut efectuat de un membru al bibliotecii.
+ * Loan reprezintă un împrumut efectuat de un membru.
  *
- * Relații:
+ * Relații JPA:
  *  - Loan N → 1 Member (un împrumut aparține unui membru)
  *  - Loan 1 → N ReadableItem (un împrumut poate conține mai multe iteme)
+ *  - Loan 1 → N Reservation (un împrumut poate avea rezervări asociate)
  */
 @Entity
 @Table(name = "loans")
@@ -23,95 +24,83 @@ public class Loan {
     @Column(length = 50)
     private String id;
 
+    @NotNull
+    @Column(name = "loan_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate loanDate;
+
+    @NotNull
+    @Column(name = "due_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dueDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LoanStatus status;
+
     /**
-     * Relația N:1 cu Member.
-     * Un împrumut este făcut de un singur membru.
+     * Relație N → 1 cu Member
+     * Mai multe împrumuturi pot aparține aceluiași membru
      */
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    @NotNull(message = "Member is required.")
     private Member member;
 
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Date is required.")
-    @Column(nullable = false)
-    private Date date;
-
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "due_date")
-    private Date dueDate;
-
-    @Column(length = 50)
-    private String status;
-
     /**
-     * Relația 1:N cu ReadableItem.
-     * Un împrumut poate conține mai multe exemplare.
+     * Relație 1 → N cu ReadableItem
+     * Un împrumut poate conține mai multe iteme
+     * mappedBy="loan" înseamnă că ReadableItem.loan este owner-ul relației
      */
-    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadableItem> items = new ArrayList<>();
 
-    // Constructori
+    /**
+     * Relație 1 → N cu Reservation
+     * Un împrumut poate avea mai multe rezervări
+     */
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
+
+    // ENUM pentru status
+    public enum LoanStatus {
+        OPEN,
+        CLOSED,
+        OVERDUE
+    }
+
+    // CONSTRUCTORS
     public Loan() {}
 
-    public Loan(String id, Member member, Date date) {
+    public Loan(String id, LocalDate loanDate, LocalDate dueDate, LoanStatus status) {
         this.id = id;
-        this.member = member;
-        this.date = date;
-    }
-
-    // Getters & Setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
+        this.loanDate = loanDate;
         this.dueDate = dueDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
     }
 
-    public List<ReadableItem> getItems() {
-        return items;
-    }
+    // GETTERS & SETTERS
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setItems(List<ReadableItem> items) {
-        this.items = items;
-    }
+    public LocalDate getLoanDate() { return loanDate; }
+    public void setLoanDate(LocalDate loanDate) { this.loanDate = loanDate; }
 
-    // Helper methods
+    public LocalDate getDueDate() { return dueDate; }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+
+    public LoanStatus getStatus() { return status; }
+    public void setStatus(LoanStatus status) { this.status = status; }
+
+    public Member getMember() { return member; }
+    public void setMember(Member member) { this.member = member; }
+
+    public List<ReadableItem> getItems() { return items; }
+    public void setItems(List<ReadableItem> items) { this.items = items; }
+
+    public List<Reservation> getReservations() { return reservations; }
+    public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+
+    // HELPER METHODS pentru relația cu ReadableItem
     public void addItem(ReadableItem item) {
         if (item == null) return;
         if (!items.contains(item)) {
@@ -124,6 +113,22 @@ public class Loan {
         if (item == null) return;
         if (items.remove(item)) {
             item.setLoan(null);
+        }
+    }
+
+    // HELPER METHODS pentru relația cu Reservation
+    public void addReservation(Reservation reservation) {
+        if (reservation == null) return;
+        if (!reservations.contains(reservation)) {
+            reservations.add(reservation);
+            reservation.setLoan(this);
+        }
+    }
+
+    public void removeReservation(Reservation reservation) {
+        if (reservation == null) return;
+        if (reservations.remove(reservation)) {
+            reservation.setLoan(null);
         }
     }
 }
