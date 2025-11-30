@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepo extends JpaRepository<Member, String> {
 
-    // Verifică dacă există un membru cu acest email
     boolean existsByEmailIgnoreCase(String email);
-
-    // Verifică dacă există alt membru cu acest email
     boolean existsByEmailIgnoreCaseAndIdNot(String email, String id);
 }

@@ -2,38 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Loan</title>
+    <title>Edit Member</title>
 </head>
 <body>
 
-<h2>Edit Loan</h2>
+<h2>Edit Member</h2>
 
-<form th:action="@{/loan/{id}(id=${loan.id})}" th:object="${loan}" method="post">
+<form th:action="@{/members/{id}(id=${member.id})}"
+      th:object="${member}"
+      method="post">
 
-    <label>ID:
-        <input th:field="*{id}" readonly/>
-    </label><br/>
+    <p>
+        <label>ID:
+            <input th:field="*{id}" readonly/>
+        </label>
+    </p>
 
-    <label>Member ID:
-        <input th:field="*{memberId}"/>
-    </label><br/>
+    <p>
+        <label>Name:
+            <input th:field="*{name}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"></span>
+    </p>
 
-    <label>Date:
-        <input type="date" th:field="*{date}"/>
-    </label><br/>
+    <p>
+        <label>Library ID:
+            <input th:field="*{libraryId}"/>
+        </label>
+    </p>
 
-    <label>Due Date:
-        <input type="date" th:field="*{dueDate}"/>
-    </label><br/>
+    <p>
+        <label>Address:
+            <input th:field="*{address}"/>
+        </label>
+    </p>
 
-    <label>Status:
-        <input th:field="*{status}"/>
-    </label><br/>
+    <p>
+        <label>Email:
+            <input type="email" th:field="*{email}"/>
+        </label>
+        <span th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"></span>
+    </p>
 
     <button type="submit">Update</button>
 </form>
 
-<a th:href="@{/loan}">Back</a>
+<p><a th:href="@{/members}">Back</a></p>
 
 </body>
 </html>

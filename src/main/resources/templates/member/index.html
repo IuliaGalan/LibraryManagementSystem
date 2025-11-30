@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Members</title>
@@ -8,8 +7,8 @@
 <body>
 
 <h1>Members</h1>
-
-<a th:href="@{/members/new}">Add new member</a>
+<a th:href="@{/members/new}">Add new Member</a>
+<br/><br/>
 
 <table border="1">
     <thead>
@@ -18,14 +17,31 @@
         <th>Name</th>
         <th>Email</th>
         <th>Address</th>
+        <th>Library ID</th>
+        <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="member : ${members}">
         <td th:text="${member.id}">M1</td>
-        <td th:text="${member.name}">John Doe</td>
-        <td th:text="${member.email}">john@example.com</td>
-        <td th:text="${member.address}">Str. Exemplu 1</td>
+        <td th:text="${member.name}">Ana Popescu</td>
+        <td th:text="${member.email}">ana@example.com</td>
+        <td th:text="${member.address}">Address</td>
+        <td th:text="${member.libraryId}">LIB1</td>
+
+        <td>
+            <a th:href="@{/members/{id}/details(id=${member.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/members/{id}/edit(id=${member.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/members/{id}/delete(id=${member.id})}"
+                  method="post"
+                  style="display:inline">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>

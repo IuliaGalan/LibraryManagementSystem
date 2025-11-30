@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/members")
 public class MemberController {
@@ -18,31 +16,29 @@ public class MemberController {
         this.service = service;
     }
 
-    // READ - toți membrii
+    // LIST
     @GetMapping
-    public String getAll(Model model) {
-        List<Member> members = service.getAll();
-        model.addAttribute("members", members);
+    public String list(Model model) {
+        model.addAttribute("members", service.getAll());
         return "member/index";
     }
 
-    // CREATE - afișează formularul
+    // CREATE FORM
     @GetMapping("/new")
-    public String form(Model model) {
-        Member member = service.newForForm();
-        model.addAttribute("member", member);
+    public String newForm(Model model) {
+        model.addAttribute("member", service.newForForm());
         return "member/form";
     }
 
-    // CREATE - salvează membrul nou
+    // CREATE
     @PostMapping
     public String create(@ModelAttribute Member member) {
         service.save(member);
         return "redirect:/members";
     }
 
-    // READ - detalii membru
-    @GetMapping("/{id}")
+    // DETAILS
+    @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
         Member member = service.getById(id);
         if (member == null) {
@@ -52,7 +48,7 @@ public class MemberController {
         return "member/details";
     }
 
-    // UPDATE - afișează formularul de editare
+    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Member member = service.getById(id);
@@ -60,20 +56,19 @@ public class MemberController {
             return "redirect:/members";
         }
         model.addAttribute("member", member);
-        return "member/form";
+        return "member/edit";
     }
 
-    // UPDATE - salvează modificările
+    // UPDATE
     @PostMapping("/{id}")
-    public String update(@PathVariable String id,
-                         @ModelAttribute Member member) {
+    public String update(@PathVariable String id, @ModelAttribute Member member) {
         member.setId(id);
         service.save(member);
         return "redirect:/members";
     }
 
-    // DELETE - șterge membrul
-    @GetMapping("/{id}/delete")
+    // DELETE
+    @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);
         return "redirect:/members";
