@@ -7,15 +7,15 @@
 <body>
 
 <h1>Reservations</h1>
-<a th:href="@{/reservation/new}">Add new Reservation</a>
+<a th:href="@{/reservations/new}">Add new Reservation</a>
 <br/><br/>
 
 <table border="1">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Member ID</th>
-        <th>Readable Item ID</th>
+        <th>Member</th>
+        <th>Readable Item</th>
         <th>Date</th>
         <th>Status</th>
         <th>Actions</th>
@@ -25,18 +25,18 @@
     <tbody>
     <tr th:each="res : ${reservations}">
         <td th:text="${res.id}">R1</td>
-        <td th:text="${res.memberId}">M1</td>
-        <td th:text="${res.readableItemId}">I1</td>
+        <td th:text="${res.member != null ? res.member.name : 'N/A'}">Member Name</td>
+        <td th:text="${res.readableItem != null ? res.readableItem.id : 'N/A'}">Item ID</td>
         <td th:text="${res.date}">2024-01-01</td>
-        <td th:text="${res.status}">Active</td>
+        <td th:text="${res.status}">ACTIVE</td>
 
         <td>
-            <a th:href="@{/reservation/{id}/details(id=${res.id})}">Details</a>
+            <a th:href="@{/reservations/{id}/details(id=${res.id})}">Details</a>
             &nbsp;|&nbsp;
-            <a th:href="@{/reservation/{id}/edit(id=${res.id})}">Edit</a>
+            <a th:href="@{/reservations/{id}/edit(id=${res.id})}">Edit</a>
             &nbsp;|&nbsp;
 
-            <form th:action="@{/reservation/{id}/delete(id=${res.id})}"
+            <form th:action="@{/reservations/{id}/delete(id=${res.id})}"
                   method="post"
                   style="display:inline">
                 <button type="submit">Delete</button>

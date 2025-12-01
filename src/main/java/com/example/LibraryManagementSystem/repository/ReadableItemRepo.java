@@ -1,14 +1,20 @@
 package com.example.librarymanagementsystem.repository;
 
-import com.example.librarymanagementsystem.model.ReadableItem ;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.example.librarymanagementsystem.model.ReadableItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public class ReadableItemRepo extends InFileRepository<ReadableItem> {
-    public ReadableItemRepo() {
-        super("src/main/resources/data/readableitem.json",
-                new TypeReference<java.util.List<ReadableItem>>() {
-                });
-    }
+public interface ReadableItemRepo extends JpaRepository<ReadableItem, String> {
+
+    List<ReadableItem> findByPublicationId(String publicationId);
+    List<ReadableItem> findByStatus(ReadableItem.ItemStatus status);
+    ReadableItem findByBarcode(String barcode);
+
+    // Sortare naturală: Item1, Item2, ..., Item10, Item11
+    @Query("SELECT i FROM ReadableItem i ORDER BY CAST(SUBSTRING(i.id, 5) AS int)")
+    List<ReadableItem> findAllSorted();
 }

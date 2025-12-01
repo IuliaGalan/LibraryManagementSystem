@@ -7,15 +7,15 @@
 <body>
 
 <h1>Loans</h1>
-<a th:href="@{/loan/new}">Add new Loan</a>
+<a th:href="@{/loans/new}">Add new Loan</a>
 <br/><br/>
 
 <table border="1">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Member ID</th>
-        <th>Date</th>
+        <th>Member</th>
+        <th>Loan Date</th>
         <th>Due Date</th>
         <th>Status</th>
         <th>Actions</th>
@@ -24,19 +24,19 @@
 
     <tbody>
     <tr th:each="loan : ${loans}">
-        <td th:text="${loan.id}">L1</td>
-        <td th:text="${loan.memberId}">M1</td>
-        <td th:text="${#dates.format(loan.date, 'yyyy-MM-dd')}">2024-01-01</td>
-        <td th:text="${#dates.format(loan.dueDate, 'yyyy-MM-dd')}">2024-02-01</td>
-        <td th:text="${loan.status}">Active</td>
+        <td th:text="${loan.id}">Loan1</td>
+        <td th:text="${loan.member != null ? loan.member.name : 'N/A'}">Member Name</td>
+        <td th:text="${loan.loanDate}">2024-01-01</td>
+        <td th:text="${loan.dueDate}">2024-02-01</td>
+        <td th:text="${loan.status}">OPEN</td>
 
         <td>
-            <a th:href="@{/loan/{id}/details(id=${loan.id})}">Details</a>
+            <a th:href="@{/loans/{id}/details(id=${loan.id})}">Details</a>
             &nbsp;|&nbsp;
-            <a th:href="@{/loan/{id}/edit(id=${loan.id})}">Edit</a>
+            <a th:href="@{/loans/{id}/edit(id=${loan.id})}">Edit</a>
             &nbsp;|&nbsp;
 
-            <form th:action="@{/loan/{id}/delete(id=${loan.id})}"
+            <form th:action="@{/loans/{id}/delete(id=${loan.id})}"
                   method="post"
                   style="display:inline">
                 <button type="submit">Delete</button>

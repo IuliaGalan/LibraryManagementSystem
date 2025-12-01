@@ -9,28 +9,30 @@
 <h2>Member Details</h2>
 
 <p><strong>ID:</strong> <span th:text="${member.id}">M1</span></p>
-<p><strong>Name:</strong> <span th:text="${member.name}">Member Name</span></p>
-<p><strong>Library ID:</strong> <span th:text="${member.libraryId}">L1</span></p>
-<p><strong>Address:</strong> <span th:text="${member.address}">Address</span></p>
-<p><strong>Email:</strong> <span th:text="${member.email}">Email</span></p>
+<p><strong>Name:</strong> <span th:text="${member.name}">Ana Popescu</span></p>
+<p><strong>Library ID:</strong> <span th:text="${member.libraryId}">LIB1</span></p>
+<p><strong>Address:</strong> <span th:text="${member.address}">Str. Viilor 1</span></p>
+<p><strong>Email:</strong> <span th:text="${member.email}">ana@example.com</span></p>
 
 <h3>Loans:</h3>
 <ul>
     <li th:each="loan : ${member.loans}"
-        th:text="${loan.id + ' - ' + #dates.format(loan.date, 'yyyy-MM-dd')}">
+        th:text="${loan.id + ' - Status: ' + loan.status}">
         Loan info
     </li>
 </ul>
+<p th:if="${#lists.isEmpty(member.loans)}">No loans.</p>
 
 <h3>Reservations:</h3>
 <ul>
     <li th:each="res : ${member.reservations}"
-        th:text="${res.id + ' - ' + res.date}">
+        th:text="${res.id + ' - Date: ' + res.date}">
         Reservation info
     </li>
 </ul>
+<p th:if="${#lists.isEmpty(member.reservations)}">No reservations.</p>
 
-<a th:href="@{/member}">Back</a>
+<p><a th:href="@{/members}">Back</a></p>
 
 </body>
 </html>

@@ -8,32 +8,45 @@
 
 <h2>Edit Loan</h2>
 
-<form th:action="@{/loan/{id}(id=${loan.id})}" th:object="${loan}" method="post">
+<form th:action="@{/loans/{id}(id=${loan.id})}"
+      th:object="${loan}"
+      method="post">
 
     <label>ID:
         <input th:field="*{id}" readonly/>
     </label><br/>
 
-    <label>Member ID:
-        <input th:field="*{memberId}"/>
-    </label><br/>
+    <!-- ✅ DROPDOWN PENTRU MEMBER -->
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}"
+                th:selected="${loan.member != null && loan.member.id == m.id}">
+        </option>
+    </select><br/>
 
-    <label>Date:
-        <input type="date" th:field="*{date}"/>
+    <label>Loan Date:
+        <input type="date" th:field="*{loanDate}" required/>
     </label><br/>
 
     <label>Due Date:
-        <input type="date" th:field="*{dueDate}"/>
+        <input type="date" th:field="*{dueDate}" required/>
     </label><br/>
 
     <label>Status:
-        <input th:field="*{status}"/>
+        <select th:field="*{status}">
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s}">
+            </option>
+        </select>
     </label><br/>
 
     <button type="submit">Update</button>
 </form>
 
-<a th:href="@{/loan}">Back</a>
+<a th:href="@{/loans}">Back</a>
 
 </body>
 </html>

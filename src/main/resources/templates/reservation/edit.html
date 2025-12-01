@@ -8,32 +8,49 @@
 
 <h2>Edit Reservation</h2>
 
-<form th:action="@{/reservation/{id}(id=${reservation.id})}" th:object="${reservation}" method="post">
+<form th:action="@{/reservations/{id}(id=${reservation.id})}"
+      th:object="${reservation}"
+      method="post">
 
     <label>ID:
         <input th:field="*{id}" readonly/>
     </label><br/>
 
-    <label>Member ID:
-        <input th:field="*{memberId}"/>
-    </label><br/>
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}"
+                th:selected="${reservation.member != null && reservation.member.id == m.id}">
+        </option>
+    </select><br/>
 
-    <label>Readable Item ID:
-        <input th:field="*{readableItemId}"/>
-    </label><br/>
+    <label>Readable Item:</label>
+    <select name="readableItemId" required>
+        <option th:each="it : ${items}"
+                th:value="${it.id}"
+                th:text="${it.id + ' - ' + it.barcode}"
+                th:selected="${reservation.readableItem != null && reservation.readableItem.id == it.id}">
+        </option>
+    </select><br/>
 
     <label>Date:
-        <input th:field="*{date}"/>
+        <input type="date" th:field="*{date}" required/>
     </label><br/>
 
     <label>Status:
-        <input th:field="*{status}"/>
+        <select th:field="*{status}">
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s}">
+            </option>
+        </select>
     </label><br/>
 
     <button type="submit">Update</button>
 </form>
 
-<a th:href="@{/reservation}">Back</a>
+<a th:href="@{/reservations}">Back</a>
 
 </body>
 </html>

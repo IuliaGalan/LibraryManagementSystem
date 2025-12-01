@@ -4,10 +4,67 @@ import com.example.librarymanagementsystem.model.ReadableItem;
 import com.example.librarymanagementsystem.repository.ReadableItemRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class ReadableItemService extends BaseService<ReadableItem> {
+public class ReadableItemService {
+
+    private final ReadableItemRepo repo;
 
     public ReadableItemService(ReadableItemRepo repo) {
-        super(repo);
+        this.repo = repo;
+    }
+
+    // LIST
+    public List<ReadableItem> getAll() {
+        return repo.findAll();
+    }
+
+    // GET BY ID
+    public ReadableItem getById(String id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    // CREATE
+    public ReadableItem save(ReadableItem item) {
+        return repo.save(item);
+    }
+
+    // CREATE cu ID explicit
+    public void add(String id, ReadableItem item) {
+        item.setId(id);
+        repo.save(item);
+    }
+
+    // UPDATE
+    public void update(String id, ReadableItem item) {
+        item.setId(id);
+        repo.save(item);
+    }
+
+    // DELETE
+    public void delete(String id) {
+        repo.deleteById(id);
+    }
+
+    // GENERATE NEXT ID
+    public String generateNextId() {
+        int maxNumber = repo.findAll().stream()
+                .map(ReadableItem::getId)
+                .filter(id -> id != null && id.startsWith("Item"))
+                .map(id -> id.substring(4))
+                .filter(num -> num.matches("\\d+"))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+
+        return "Item" + (maxNumber + 1);
+    }
+
+    // FOR FORM
+    public ReadableItem newForForm() {
+        ReadableItem item = new ReadableItem();
+        item.setId(generateNextId());
+        return item;
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/readableitem")
+@RequestMapping("/readableitems")  // ✅ PLURAL
 public class ReadableItemController {
 
     private final ReadableItemService service;
@@ -27,7 +27,7 @@ public class ReadableItemController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("item", new ReadableItem());
-        model.addAttribute("statuses", ReadableItem.Status.values());
+        model.addAttribute("statuses", ReadableItem.ItemStatus.values());
         return "readableitem/form";
     }
 
@@ -35,14 +35,18 @@ public class ReadableItemController {
     @PostMapping
     public String create(@ModelAttribute("item") ReadableItem item) {
         service.add(item.getId(), item);
-        return "redirect:/readableitem";
+        return "redirect:/readableitems";  // ✅ PLURAL
     }
 
-    // DELETE
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "redirect:/readableitem";
+    // DETAILS
+    @GetMapping("/{id}/details")
+    public String details(@PathVariable String id, Model model) {
+        ReadableItem item = service.getById(id);
+        if (item == null) {
+            return "redirect:/readableitems";  // ✅ PLURAL
+        }
+        model.addAttribute("item", item);
+        return "readableitem/details";
     }
 
     // EDIT FORM
@@ -50,10 +54,10 @@ public class ReadableItemController {
     public String editForm(@PathVariable String id, Model model) {
         ReadableItem item = service.getById(id);
         if (item == null) {
-            return "redirect:/readableitem";
+            return "redirect:/readableitems";  // ✅ PLURAL
         }
         model.addAttribute("item", item);
-        model.addAttribute("statuses", ReadableItem.Status.values());
+        model.addAttribute("statuses", ReadableItem.ItemStatus.values());
         return "readableitem/edit";
     }
 
@@ -63,17 +67,13 @@ public class ReadableItemController {
                          @ModelAttribute("item") ReadableItem item) {
         item.setId(id);
         service.update(id, item);
-        return "redirect:/readableitem";
+        return "redirect:/readableitems";  // ✅ PLURAL
     }
 
-    // DETAILS
-    @GetMapping("/{id}/details")
-    public String details(@PathVariable String id, Model model) {
-        ReadableItem item = service.getById(id);
-        if (item == null) {
-            return "redirect:/readableitem";
-        }
-        model.addAttribute("item", item);
-        return "readableitem/details";
+    // DELETE
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
+        service.delete(id);
+        return "redirect:/readableitems";  // ✅ PLURAL
     }
 }

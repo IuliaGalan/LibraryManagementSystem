@@ -2,18 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Readable Item Details</title>
+    <title>Reservation Details</title>
 </head>
 <body>
 
-<h2>Readable Item Details</h2>
+<h2>Reservation Details</h2>
 
-<p><strong>ID:</strong> <span th:text="${item.id}">I1</span></p>
-<p><strong>Publication ID:</strong> <span th:text="${item.publicationId}">P1</span></p>
-<p><strong>Barcode:</strong> <span th:text="${item.barcode}">123456</span></p>
-<p><strong>Status:</strong> <span th:text="${item.status}">ACTIVE</span></p>
+<p><strong>ID:</strong> <span th:text="${reservation.id}">R1</span></p>
+<p><strong>Date:</strong> <span th:text="${reservation.date}">2024-01-01</span></p>
+<p><strong>Status:</strong> <span th:text="${reservation.status}">ACTIVE</span></p>
+<p><strong>Member:</strong> <span th:text="${reservation.member != null ? reservation.member.name : 'N/A'}">Member Name</span></p>
+<p><strong>Readable Item:</strong> <span th:text="${reservation.readableItem != null ? reservation.readableItem.id : 'N/A'}">Item ID</span></p>
+<p><strong>Loan:</strong> <span th:text="${reservation.loan != null ? reservation.loan.id : 'N/A'}">Loan ID</span></p>
 
-<a th:href="@{/readableitem}">Back</a>
+<a th:href="@{/reservations}">Back</a>
 
 </body>
 </html>
