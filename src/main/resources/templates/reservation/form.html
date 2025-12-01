@@ -13,6 +13,24 @@
     <label>ID:</label>
     <input type="text" th:field="*{id}" readonly/><br>
 
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option value="">-- Select a member --</option>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}">
+        </option>
+    </select><br>
+
+    <label>Readable Item:</label>
+    <select name="readableItemId" required>
+        <option value="">-- Select an item --</option>
+        <option th:each="it : ${items}"
+                th:value="${it.id}"
+                th:text="${it.id + ' - ' + it.barcode}">
+        </option>
+    </select><br>
+
     <label>Date:</label>
     <input type="date" th:field="*{date}" required/><br>
 

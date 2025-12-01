@@ -16,6 +16,24 @@
         <input th:field="*{id}" readonly/>
     </label><br/>
 
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}"
+                th:selected="${reservation.member != null && reservation.member.id == m.id}">
+        </option>
+    </select><br/>
+
+    <label>Readable Item:</label>
+    <select name="readableItemId" required>
+        <option th:each="it : ${items}"
+                th:value="${it.id}"
+                th:text="${it.id + ' - ' + it.barcode}"
+                th:selected="${reservation.readableItem != null && reservation.readableItem.id == it.id}">
+        </option>
+    </select><br/>
+
     <label>Date:
         <input type="date" th:field="*{date}" required/>
     </label><br/>
