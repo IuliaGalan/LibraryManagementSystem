@@ -8,13 +8,13 @@
 
 <h1>Add Book–Author Link</h1>
 
-<!-- erori globale (link duplicat etc.) -->
-<div th:if="${#fields.hasGlobalErrors()}">
-    <p th:each="err : ${#fields.globalErrors()}"
-       th:text="${err}"></p>
-</div>
-
 <form th:action="@{/bookauthors}" th:object="${form}" method="post">
+
+    <!-- erori globale (link duplicat etc.) -->
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}"></p>
+    </div>
 
     <p>
         <strong>ID:</strong>
@@ -32,7 +32,7 @@
     <div th:if="${#fields.hasErrors('bookId')}"
          th:errors="*{bookId}"></div>
 
-    <br><br>
+    <br/><br/>
 
     <label for="authorId">Author:</label>
     <select id="authorId" th:field="*{authorId}">
@@ -45,7 +45,7 @@
     <div th:if="${#fields.hasErrors('authorId')}"
          th:errors="*{authorId}"></div>
 
-    <br><br>
+    <br/><br/>
 
     <button type="submit">Save</button>
     <a th:href="@{/bookauthors}">Cancel</a>

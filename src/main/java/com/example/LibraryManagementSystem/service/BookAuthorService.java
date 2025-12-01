@@ -26,9 +26,9 @@ public class BookAuthorService {
         this.authorRepo = authorRepo;
     }
 
-    // 🔹 listă pentru /bookauthors (index)
+    // 🔹 listă pentru /bookauthors (index) — SORTATĂ după id BA1, BA2, ... BA10
     public List<BookAuthorRow> getAllRows() {
-        return repo.findAll().stream()
+        return repo.findAllSorted().stream()
                 .map(ba -> new BookAuthorRow(
                         ba.getId(),
                         ba.getBook().getId(),

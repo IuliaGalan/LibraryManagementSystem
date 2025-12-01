@@ -7,29 +7,29 @@
 <body>
 <h2>Edit book</h2>
 
-<!-- erori globale -->
-<div th:if="${#fields.hasGlobalErrors()}">
-    <p th:each="err : ${#fields.globalErrors()}"
-       th:text="${err}"></p>
-</div>
-
 <form th:action="@{/books/{id}(id=${book.id})}" th:object="${book}" method="post">
+
+    <!-- erori globale -->
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}"></p>
+    </div>
 
     <!-- ID nu se schimbă -->
     <label>ID:
-        <input th:field="*{id}" readonly/>
+        <input th:field="*{id}" readonly />
     </label>
     <br/>
 
     <label>Title:
-        <input th:field="*{title}"/>
+        <input th:field="*{title}" />
     </label>
     <div th:if="${#fields.hasErrors('title')}"
          th:errors="*{title}"></div>
     <br/>
 
     <label>Genre:
-        <input th:field="*{genre}"/>
+        <input th:field="*{genre}" />
     </label>
     <div th:if="${#fields.hasErrors('genre')}"
          th:errors="*{genre}"></div>

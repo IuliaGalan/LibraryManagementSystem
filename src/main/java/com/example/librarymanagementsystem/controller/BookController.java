@@ -20,6 +20,7 @@ public class BookController {
         this.bookAuthorService = bookAuthorService;
     }
 
+    // LISTA — primit direct sortată din service
     @GetMapping
     public String list(Model model) {
         model.addAttribute("books", bookService.getAll());

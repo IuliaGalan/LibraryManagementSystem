@@ -89,7 +89,7 @@ public class MagazineController {
         if (m == null) return "redirect:/magazines";
 
         model.addAttribute("magazine", m);
-        model.addAttribute("author", m.getAuthor()); // 👈 aici trimitem și autorul (poate fi null)
+        model.addAttribute("author", m.getAuthor()); // poate fi null
 
         return "magazine/details";
     }

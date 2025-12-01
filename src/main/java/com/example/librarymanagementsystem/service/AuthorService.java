@@ -15,8 +15,9 @@ public class AuthorService {
         this.repo = repo;
     }
 
+    // RETURNĂM AUTORII SORTAȚI NATURAL (A1, A2, .. A10)
     public List<Author> getAll() {
-        return repo.findAll();
+        return repo.findAllSorted();
     }
 
     public Author getById(String id) {
@@ -31,6 +32,7 @@ public class AuthorService {
         repo.deleteById(id);
     }
 
+    // GENERARE ID: A1, A2, A3, ...
     public String generateNextId() {
         return "A" + (repo.count() + 1);
     }
@@ -41,7 +43,7 @@ public class AuthorService {
         return a;
     }
 
-    // --- Business validation helpers ---
+    // --- VALIDĂRI ---
 
     public boolean existsByName(String name) {
         if (name == null) return false;

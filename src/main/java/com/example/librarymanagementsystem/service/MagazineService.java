@@ -15,7 +15,10 @@ public class MagazineService {
         this.repo = repo;
     }
 
-    public List<MagazineDetails> getAll() { return repo.findAll(); }
+    // LISTĂ SORTATĂ NATURAL: M1, M2, ..., M10
+    public List<MagazineDetails> getAll() {
+        return repo.findAllSorted();
+    }
 
     public MagazineDetails getById(String id) {
         return repo.findById(id).orElse(null);

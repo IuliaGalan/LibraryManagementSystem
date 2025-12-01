@@ -20,6 +20,7 @@ public class AuthorController {
         this.bookAuthorService = bookAuthorService;
     }
 
+    // LISTA AUTORILOR — deja sortați corect prin service
     @GetMapping
     public String list(Model model) {
         model.addAttribute("authors", authorService.getAll());
@@ -62,15 +63,12 @@ public class AuthorController {
 
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
-        Author a = authorService.getById(id);
-        if (a == null) return "redirect:/authors";
+        Author author = authorService.getById(id);
+        if (author == null) return "redirect:/authors";
 
-        // cărțile autorului (many-to-many via BookAuthor)
-        model.addAttribute("author", a);
+        model.addAttribute("author", author);
         model.addAttribute("books", bookAuthorService.getBooksForAuthor(id));
-
-        // revista 1:1 (poate fi null)
-        model.addAttribute("magazine", a.getMagazine());
+        model.addAttribute("magazine", author.getMagazine()); // poate fi null
 
         return "author/details";
     }

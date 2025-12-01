@@ -15,7 +15,10 @@ public class BookService {
         this.repo = repo;
     }
 
-    public List<BookDetails> getAll() { return repo.findAll(); }
+    // RETURNĂ LISTA SORTATĂ NATURAL
+    public List<BookDetails> getAll() {
+        return repo.findAllSorted();
+    }
 
     public BookDetails getById(String id) {
         return repo.findById(id).orElse(null);
@@ -29,6 +32,7 @@ public class BookService {
         repo.deleteById(id);
     }
 
+    // GENERARE ID: B1, B2, B3, ...
     public String generateNextId() {
         return "B" + (repo.count() + 1);
     }
@@ -39,8 +43,7 @@ public class BookService {
         return book;
     }
 
-    // --- Business validation helpers ---
-
+    // --- VALIDĂRI ---
     public boolean existsByTitle(String title) {
         if (title == null) return false;
         return repo.existsByTitleIgnoreCase(title.trim());
