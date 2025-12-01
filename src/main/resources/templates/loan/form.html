@@ -5,39 +5,42 @@
     <title>Add New Loan</title>
 </head>
 <body>
+
 <h1>Add New Loan</h1>
 
-<form th:action="@{/loan}" method="post" th:object="${loan}">
-    <div>
-        <label for="id">ID (optional):</label>
-        <input type="text" id="id" th:field="*{id}" />
-    </div>
+<form th:action="@{/loans}" method="post" th:object="${loan}">
 
-    <div>
-        <label for="memberId">Member ID:</label>
-        <input type="text" id="memberId" th:field="*{memberId}" required />
-    </div>
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" readonly/><br>
 
-    <div>
-        <label for="date">Date:</label>
-        <input type="date" id="date" th:field="*{date}" required />
-    </div>
+    <!-- ✅ DROPDOWN PENTRU MEMBER -->
+    <label>Member:</label>
+    <select name="memberId" required>
+        <option value="">-- Select a member --</option>
+        <option th:each="m : ${members}"
+                th:value="${m.id}"
+                th:text="${m.name}">
+        </option>
+    </select><br>
 
-    <div>
-        <label for="dueDate">Due Date:</label>
-        <input type="date" id="dueDate" th:field="*{dueDate}" required />
-    </div>
+    <label>Loan Date:</label>
+    <input type="date" th:field="*{loanDate}" required/><br>
 
-    <div>
-        <label for="status">Status:</label>
-        <input type="text" id="status" th:field="*{status}" required />
-    </div>
+    <label>Due Date:</label>
+    <input type="date" th:field="*{dueDate}" required/><br>
 
-    <div>
-        <button type="submit">Save</button>
-    </div>
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}"
+                th:value="${s}"
+                th:text="${s}">
+        </option>
+    </select><br>
+
+    <button type="submit">Save</button>
 </form>
 
-<p><a th:href="@{/loan}">Back to list</a></p>
+<p><a th:href="@{/loans}">Back to list</a></p>
+
 </body>
 </html>

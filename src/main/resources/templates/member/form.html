@@ -1,31 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Add Member</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Member</title>
+</head>
 <body>
-<h1>Add New Member</h1>
 
-<form th:action="@{/member}" method="post" th:object="${member}">
-    <!-- Dacă folosești Spring Security, DECOMENTEAZĂ linia de mai jos -->
-    <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+<h2>Add Member</h2>
 
-    <label>ID (optional):</label>
-    <input type="text" th:field="*{id}"/><br>
+<form th:action="@{/members}" th:object="${member}" method="post">
 
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required/><br>
+    <label>ID:
+        <input th:field="*{id}" readonly/>
+    </label>
+    <br/>
 
-    <label>Library ID:</label>
-    <input type="text" th:field="*{libraryId}" required/><br>
+    <label>Name:
+        <input th:field="*{name}"/>
+    </label>
+    <div th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}"></div>
+    <br/>
 
-    <label>Address:</label>
-    <input type="text" th:field="*{address}"/><br>
+    <label>Library ID:
+        <input th:field="*{libraryId}"/>
+    </label>
+    <br/>
 
-    <label>Email:</label>
-    <input type="email" th:field="*{email}"/><br>
+    <label>Address:
+        <input th:field="*{address}"/>
+    </label>
+    <br/>
+
+    <label>Email:
+        <input type="email" th:field="*{email}"/>
+    </label>
+    <div th:if="${#fields.hasErrors('email')}"
+         th:errors="*{email}"></div>
+    <br/>
 
     <button type="submit">Save</button>
 </form>
 
-<p><a th:href="@{/member}">Back to list</a></p>
+<a th:href="@{/members}">Back</a>
+
 </body>
 </html>

@@ -7,7 +7,7 @@
 <body>
 
 <h1>Members</h1>
-<a th:href="@{/member/new}">Add new Member</a>
+<a th:href="@{/members/new}">Add new Member</a>
 <br/><br/>
 
 <table border="1">
@@ -15,9 +15,9 @@
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Library ID</th>
         <th>Email</th>
         <th>Address</th>
+        <th>Library ID</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -25,18 +25,18 @@
     <tbody>
     <tr th:each="member : ${members}">
         <td th:text="${member.id}">M1</td>
-        <td th:text="${member.name}">John Doe</td>
-        <td th:text="${member.libraryId}">L1</td>
-        <td th:text="${member.email}">john@example.com</td>
-        <td th:text="${member.address}">123 Main St</td>
+        <td th:text="${member.name}">Ana Popescu</td>
+        <td th:text="${member.email}">ana@example.com</td>
+        <td th:text="${member.address}">Address</td>
+        <td th:text="${member.libraryId}">LIB1</td>
 
         <td>
-            <a th:href="@{/member/{id}/details(id=${member.id})}">Details</a>
+            <a th:href="@{/members/{id}/details(id=${member.id})}">Details</a>
             &nbsp;|&nbsp;
-            <a th:href="@{/member/{id}/edit(id=${member.id})}">Edit</a>
+            <a th:href="@{/members/{id}/edit(id=${member.id})}">Edit</a>
             &nbsp;|&nbsp;
 
-            <form th:action="@{/member/{id}/delete(id=${member.id})}"
+            <form th:action="@{/members/{id}/delete(id=${member.id})}"
                   method="post"
                   style="display:inline">
                 <button type="submit">Delete</button>

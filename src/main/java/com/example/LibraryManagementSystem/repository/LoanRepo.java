@@ -1,13 +1,16 @@
 package com.example.librarymanagementsystem.repository;
 
 import com.example.librarymanagementsystem.model.Loan;
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public class LoanRepo extends InFileRepository<Loan> {
-    public LoanRepo() {
-        super("src/main/resources/data/loan.json",
-                new TypeReference<java.util.List<Loan>>() {});
-    }
+public interface LoanRepo extends JpaRepository<Loan, String> {
+
+    // Sortare naturală: Loan1, Loan2, Loan3, ..., Loan10, Loan11
+    @Query("SELECT l FROM Loan l ORDER BY CAST(SUBSTRING(l.id, 5) AS int)")
+    List<Loan> findAllSorted();
 }

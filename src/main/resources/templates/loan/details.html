@@ -8,11 +8,11 @@
 
 <h2>Loan Details</h2>
 
-<p><strong>ID:</strong> <span th:text="${loan.id}">L1</span></p>
-<p><strong>Member ID:</strong> <span th:text="${loan.memberId}">M1</span></p>
-<p><strong>Date:</strong> <span th:text="${#dates.format(loan.date, 'yyyy-MM-dd')}">2024-01-01</span></p>
-<p><strong>Due Date:</strong> <span th:text="${#dates.format(loan.dueDate, 'yyyy-MM-dd')}">2024-02-01</span></p>
-<p><strong>Status:</strong> <span th:text="${loan.status}">Active</span></p>
+<p><strong>ID:</strong> <span th:text="${loan.id}">Loan1</span></p>
+<p><strong>Member:</strong> <span th:text="${loan.member != null ? loan.member.name : 'N/A'}">Member Name</span></p>
+<p><strong>Loan Date:</strong> <span th:text="${loan.loanDate}">2024-01-01</span></p>
+<p><strong>Due Date:</strong> <span th:text="${loan.dueDate}">2024-02-01</span></p>
+<p><strong>Status:</strong> <span th:text="${loan.status}">OPEN</span></p>
 
 <h3>Items in this loan:</h3>
 <ul>
@@ -21,6 +21,7 @@
         Item info
     </li>
 </ul>
+<p th:if="${#lists.isEmpty(loan.items)}">No items.</p>
 
 <h3>Reservations for this loan:</h3>
 <ul>
@@ -29,8 +30,9 @@
         Reservation info
     </li>
 </ul>
+<p th:if="${#lists.isEmpty(loan.reservations)}">No reservations.</p>
 
-<a th:href="@{/loan}">Back</a>
+<a th:href="@{/loans}">Back</a>
 
 </body>
 </html>

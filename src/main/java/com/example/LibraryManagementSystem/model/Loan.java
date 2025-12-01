@@ -1,118 +1,134 @@
 package com.example.librarymanagementsystem.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
-
 
 /**
- * Clasa Loan e un imprumut efectuat de un membru al bibliotecii
+ * Loan reprezintă un împrumut efectuat de un membru.
  *
- * Relații:
+ * Relații JPA:
+ *  - Loan N → 1 Member (un împrumut aparține unui membru)
  *  - Loan 1 → N ReadableItem (un împrumut poate conține mai multe iteme)
- *  - Loan 1 → N Reservation  (un împrumut poate fi asociat cu una sau mai multe rezervări)
+ *  - Loan 1 → N Reservation (un împrumut poate avea rezervări asociate)
  */
+@Entity
+@Table(name = "loans")
 public class Loan {
 
+    @Id
+    @Column(length = 50)
     private String id;
-    private String memberId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date date;
 
-    private List<Reservation> reservations;
-    private List<ReadableItem> items;
+    @NotNull
+    @Column(name = "loan_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dueDate;
-    private String status;
+    private LocalDate loanDate;
 
-    public Loan(String id, String memberId, Date date) {
+    @NotNull
+    @Column(name = "due_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dueDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LoanStatus status;
+
+    /**
+     * Relație N → 1 cu Member
+     * Mai multe împrumuturi pot aparține aceluiași membru
+     */
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    /**
+     * Relație 1 → N cu ReadableItem
+     * Un împrumut poate conține mai multe iteme
+     * mappedBy="loan" înseamnă că ReadableItem.loan este owner-ul relației
+     */
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReadableItem> items = new ArrayList<>();
+
+    /**
+     * Relație 1 → N cu Reservation
+     * Un împrumut poate avea mai multe rezervări
+     */
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
+
+    // ENUM pentru status
+    public enum LoanStatus {
+        OPEN,
+        CLOSED,
+        OVERDUE
+    }
+
+    // CONSTRUCTORS
+    public Loan() {}
+
+    public Loan(String id, LocalDate loanDate, LocalDate dueDate, LoanStatus status) {
         this.id = id;
-        this.memberId = memberId;
-        this.date = date;
-        this.reservations = new ArrayList<>();
-        this.items = new ArrayList<>();
-    }
-
-    public Loan() {
-
-    }
-    // getter setter
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
+        this.loanDate = loanDate;
         this.dueDate = dueDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getMemberId() {
-        return memberId;
-    }
+    // GETTERS & SETTERS
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public String getId() {
-        return id;
-    }
+    public LocalDate getLoanDate() { return loanDate; }
+    public void setLoanDate(LocalDate loanDate) { this.loanDate = loanDate; }
 
-    public Date getDate() {
-        return date;
-    }
+    public LocalDate getDueDate() { return dueDate; }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
+    public LoanStatus getStatus() { return status; }
+    public void setStatus(LoanStatus status) { this.status = status; }
 
-    public List<ReadableItem> getItems() {
-        return items;
-    }
+    public Member getMember() { return member; }
+    public void setMember(Member member) { this.member = member; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public List<ReadableItem> getItems() { return items; }
+    public void setItems(List<ReadableItem> items) { this.items = items; }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
+    public List<Reservation> getReservations() { return reservations; }
+    public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
-    public void setItems(List<ReadableItem> items) {
-        this.items = items;
-    }
-
-    //metode
-    public void addReservation(Reservation reservation) {
-        if (reservation != null && !reservations.contains(reservation)) {
-            reservations.add(reservation);
-        }
-    }
-
-    public void removeReservation(Reservation reservation) {
-        reservations.remove(reservation);
-    }
-
+    // HELPER METHODS pentru relația cu ReadableItem
     public void addItem(ReadableItem item) {
-        if (item != null && !items.contains(item)) {
+        if (item == null) return;
+        if (!items.contains(item)) {
             items.add(item);
+            item.setLoan(this);
         }
     }
 
     public void removeItem(ReadableItem item) {
-        items.remove(item);
+        if (item == null) return;
+        if (items.remove(item)) {
+            item.setLoan(null);
+        }
+    }
+
+    // HELPER METHODS pentru relația cu Reservation
+    public void addReservation(Reservation reservation) {
+        if (reservation == null) return;
+        if (!reservations.contains(reservation)) {
+            reservations.add(reservation);
+            reservation.setLoan(this);
+        }
+    }
+
+    public void removeReservation(Reservation reservation) {
+        if (reservation == null) return;
+        if (reservations.remove(reservation)) {
+            reservation.setLoan(null);
+        }
     }
 }
-

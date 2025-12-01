@@ -2,38 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Reservation</title>
+    <title>Edit Readable Item</title>
 </head>
 <body>
 
-<h2>Edit Reservation</h2>
+<h2>Edit Readable Item</h2>
 
-<form th:action="@{/reservation/{id}(id=${reservation.id})}" th:object="${reservation}" method="post">
+<form th:action="@{/readableitems/{id}(id=${item.id})}"
+      th:object="${item}"
+      method="post">
 
     <label>ID:
         <input th:field="*{id}" readonly/>
     </label><br/>
 
-    <label>Member ID:
-        <input th:field="*{memberId}"/>
+    <label>Publication ID:
+        <input th:field="*{publicationId}" required/>
     </label><br/>
 
-    <label>Readable Item ID:
-        <input th:field="*{readableItemId}"/>
-    </label><br/>
-
-    <label>Date:
-        <input th:field="*{date}"/>
+    <label>Barcode:
+        <input th:field="*{barcode}" required/>
     </label><br/>
 
     <label>Status:
-        <input th:field="*{status}"/>
+        <select th:field="*{status}">
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s}">
+            </option>
+        </select>
     </label><br/>
 
     <button type="submit">Update</button>
 </form>
 
-<a th:href="@{/reservation}">Back</a>
+<a th:href="@{/readableitems}">Back</a>
 
 </body>
 </html>
