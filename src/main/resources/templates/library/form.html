@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Library</title>
+    <style>
+        .error { color: red; font-size: 0.9em; }
+    </style>
 </head>
 <body>
 
@@ -10,34 +13,34 @@
 
 <form th:action="@{/libraries}" th:object="${library}" method="post">
 
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="error" th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}"></p>
+    </div>
+
     <label>ID:
         <input th:field="*{id}" readonly/>
-    </label>
-    <br/>
+    </label><br/>
 
     <label>Name:
         <input th:field="*{name}"/>
     </label>
-    <div th:if="${#fields.hasErrors('name')}"
-         th:errors="*{name}"></div>
-    <br/>
+    <div class="error" th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}"></div><br/>
 
     <label>Address:
         <input th:field="*{address}"/>
-    </label>
-    <br/>
+    </label><br/>
 
     <label>Phone:
         <input th:field="*{phoneNumber}"/>
-    </label>
-    <br/>
+    </label><br/>
 
     <label>Email:
         <input type="email" th:field="*{email}"/>
     </label>
-    <div th:if="${#fields.hasErrors('email')}"
-         th:errors="*{email}"></div>
-    <br/>
+    <div class="error" th:if="${#fields.hasErrors('email')}"
+         th:errors="*{email}"></div><br/>
 
     <button type="submit">Save</button>
 </form>

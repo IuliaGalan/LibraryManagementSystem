@@ -2,8 +2,10 @@ package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Library;
 import com.example.librarymanagementsystem.service.LibraryService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -30,9 +32,25 @@ public class LibraryController {
         return "library/form";
     }
 
-    // CREATE
+    // CREATE - CU VALIDARE NAME DUPLICAT ✅
     @PostMapping
-    public String create(@ModelAttribute Library library) {
+    public String create(@Valid @ModelAttribute Library library,
+                         BindingResult bindingResult,
+                         Model model) {
+
+        // 🔹 VALIDARE: Nume duplicat?
+        if (library.getName() != null && !library.getName().isBlank()) {
+            if (service.existsByName(library.getName())) {
+                bindingResult.rejectValue("name", "error.library",
+                        "This library name already exists.");
+            }
+        }
+
+        // Dacă sunt erori, rămâi pe formular
+        if (bindingResult.hasErrors()) {
+            return "library/form";
+        }
+
         service.save(library);
         return "redirect:/libraries";
     }
@@ -59,10 +77,28 @@ public class LibraryController {
         return "library/edit";
     }
 
-    // UPDATE
+    // UPDATE - CU VALIDARE NAME DUPLICAT ✅
     @PostMapping("/{id}")
-    public String update(@PathVariable String id, @ModelAttribute Library library) {
+    public String update(@PathVariable String id,
+                         @Valid @ModelAttribute Library library,
+                         BindingResult bindingResult,
+                         Model model) {
+
         library.setId(id);
+
+        // 🔹validare, are bibliotecă are deja acest nume?
+        if (library.getName() != null && !library.getName().isBlank()) {
+            if (service.existsByNameForOtherLibrary(library.getName(), id)) {
+                bindingResult.rejectValue("name", "error.library",
+                        "This library name is already used by another library.");
+            }
+        }
+
+        // Dacă sunt erori, raman pe edit
+        if (bindingResult.hasErrors()) {
+            return "library/edit";
+        }
+
         service.save(library);
         return "redirect:/libraries";
     }

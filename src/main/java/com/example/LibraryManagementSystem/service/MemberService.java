@@ -26,7 +26,7 @@ public class MemberService {
             String num2 = id2.replaceAll("\\D+", "");
 
             if (num1.isEmpty() || num2.isEmpty()) {
-                return id1.compareTo(id2); // fallback la sortare alfabetică
+                return id1.compareTo(id2);
             }
 
             return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));

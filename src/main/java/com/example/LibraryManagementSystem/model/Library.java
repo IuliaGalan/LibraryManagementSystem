@@ -29,10 +29,8 @@ public class Library {
     @Column
     private String email;
 
-    // Dacă vrei relații cu Member sau ReadableItem, le poți adăuga aici:
-    // @OneToMany(mappedBy = "library")
-    // private List<Member> members = new ArrayList<>();
-
+    @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReadableItem> readableItems = new ArrayList<>();
     public Library() {}
 
     public Library(String id, String name, String address) {

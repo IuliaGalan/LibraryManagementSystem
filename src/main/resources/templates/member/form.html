@@ -3,12 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Member</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
 
 <h2>Add Member</h2>
 
 <form th:action="@{/members}" th:object="${member}" method="post">
+
+    <!-- 🔹 ERORI GLOBALE (dacă există) -->
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="error" th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}"></p>
+    </div>
 
     <label>ID:
         <input th:field="*{id}" readonly/>
@@ -18,7 +30,8 @@
     <label>Name:
         <input th:field="*{name}"/>
     </label>
-    <div th:if="${#fields.hasErrors('name')}"
+    <!-- 🔹 Eroare pentru name (@NotBlank) -->
+    <div class="error" th:if="${#fields.hasErrors('name')}"
          th:errors="*{name}"></div>
     <br/>
 
@@ -35,7 +48,8 @@
     <label>Email:
         <input type="email" th:field="*{email}"/>
     </label>
-    <div th:if="${#fields.hasErrors('email')}"
+    <!-- 🔹 Eroare pentru email (duplicat sau @Email) -->
+    <div class="error" th:if="${#fields.hasErrors('email')}"
          th:errors="*{email}"></div>
     <br/>
 

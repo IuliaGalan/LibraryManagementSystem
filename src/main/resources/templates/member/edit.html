@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Member</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,6 +17,12 @@
 <form th:action="@{/members/{id}(id=${member.id})}"
       th:object="${member}"
       method="post">
+
+    <!-- 🔹 ERORI GLOBALE (dacă există) -->
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="error" th:each="err : ${#fields.globalErrors()}"
+           th:text="${err}"></p>
+    </div>
 
     <p>
         <label>ID:
@@ -22,7 +34,7 @@
         <label>Name:
             <input th:field="*{name}"/>
         </label>
-        <span th:if="${#fields.hasErrors('name')}"
+        <span class="error" th:if="${#fields.hasErrors('name')}"
               th:errors="*{name}"></span>
     </p>
 
@@ -42,7 +54,7 @@
         <label>Email:
             <input type="email" th:field="*{email}"/>
         </label>
-        <span th:if="${#fields.hasErrors('email')}"
+        <span class="error" th:if="${#fields.hasErrors('email')}"
               th:errors="*{email}"></span>
     </p>
 
