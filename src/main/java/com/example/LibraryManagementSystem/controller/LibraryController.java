@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/libraries")
 public class LibraryController {
@@ -18,12 +20,44 @@ public class LibraryController {
         this.service = service;
     }
 
-    // LIST
+    // ========================================
+    // ✅ MODIFICI METODA LIST - AICI E SCHIMBAREA PRINCIPALĂ!
+    // ========================================
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("libraries", service.getAll());
+    public String list(
+            // Parametri pentru SORTARE
+            @RequestParam(required = false, defaultValue = "id") String sort,
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+
+            // Parametri pentru FILTRARE
+            @RequestParam(required = false) String filterName,
+            @RequestParam(required = false) String filterAddress,
+            @RequestParam(required = false) String filterEmail,
+
+            Model model) {
+
+        // 1️⃣ Obține lista sortată și filtrată
+        List<Library> libraries = service.getAll(sort, direction,
+                filterName, filterAddress, filterEmail);
+
+        // 2️⃣ Trimite datele către view
+        model.addAttribute("libraries", libraries);
+
+        // 3️⃣ Trimite parametrii actuali (pentru UI să știe ce e selectat)
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDirection", direction);
+
+        // 4️⃣ Trimite filtrele înapoi (ca să rămână în formular)
+        model.addAttribute("filterName", filterName);
+        model.addAttribute("filterAddress", filterAddress);
+        model.addAttribute("filterEmail", filterEmail);
+
         return "library/index";
     }
+
+    // ========================================
+    // ✅ RESTUL METODELOR RĂMÂN EXACT LA FEL
+    // ========================================
 
     // CREATE FORM
     @GetMapping("/new")
@@ -86,7 +120,7 @@ public class LibraryController {
 
         library.setId(id);
 
-        // 🔹validare, are bibliotecă are deja acest nume?
+        // 🔹 VALIDARE: Alt library are deja acest nume?
         if (library.getName() != null && !library.getName().isBlank()) {
             if (service.existsByNameForOtherLibrary(library.getName(), id)) {
                 bindingResult.rejectValue("name", "error.library",
@@ -94,7 +128,7 @@ public class LibraryController {
             }
         }
 
-        // Dacă sunt erori, raman pe edit
+        // Dacă sunt erori, rămâi pe edit
         if (bindingResult.hasErrors()) {
             return "library/edit";
         }
