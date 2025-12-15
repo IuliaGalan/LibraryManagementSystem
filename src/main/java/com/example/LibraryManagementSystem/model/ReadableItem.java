@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,23 @@ public class ReadableItem {
 
     @Id
     @Column(length = 50)
+    @NotBlank(message = "ID is required.")
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "Publication ID is required.")
+    @Pattern(
+            regexp = "^PUB\\d{3}$",
+            message = "Publication ID must have format PUB001 (PUB + 3 digits)."
+    )
     @Column(name = "publication_id", nullable = false)
     private String publicationId;
 
-    @Column(unique = true)
+    @NotBlank(message = "Barcode is required.")
+    @Pattern(
+            regexp = "^\\d{13}$",
+            message = "Barcode must contain exactly 13 digits."
+    )
+    @Column(unique = true, nullable = false)
     private String barcode;
 
     @Enumerated(EnumType.STRING)

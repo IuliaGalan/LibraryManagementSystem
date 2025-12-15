@@ -2,41 +2,230 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Readable Item</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #f44336;
+            margin-left: 3px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #FF9800;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        input.error {
+            border-color: #f44336;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h2>Edit Readable Item</h2>
+<div class="container">
+    <h2>✏️ Edit Readable Item</h2>
+    <p class="subtitle">Update item information</p>
 
-<form th:action="@{/readableitems/{id}(id=${item.id})}"
-      th:object="${item}"
-      method="post">
+    <form th:action="@{/readableitems/{id}(id=${item.id})}"
+          th:object="${item}"
+          method="post">
 
-    <label>ID:
-        <input th:field="*{id}" readonly/>
-    </label><br/>
+        <!-- ID (readonly) -->
+        <div class="form-group">
+            <label for="id">Item ID</label>
+            <input type="text"
+                   id="id"
+                   th:field="*{id}"
+                   readonly/>
+        </div>
 
-    <label>Publication ID:
-        <input th:field="*{publicationId}" required/>
-    </label><br/>
+        <!-- Publication ID (required) -->
+        <div class="form-group">
+            <label for="publicationId">
+                Publication ID <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="publicationId"
+                   th:field="*{publicationId}"
+                   th:classappend="${#fields.hasErrors('publicationId')} ? 'error' : ''"
+                   placeholder="e.g., PUB001, B1, M1"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('publicationId')}"
+                  th:errors="*{publicationId}"></span>
+        </div>
 
-    <label>Barcode:
-        <input th:field="*{barcode}" required/>
-    </label><br/>
+        <!-- Barcode (required) -->
+        <div class="form-group">
+            <label for="barcode">
+                Barcode <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="barcode"
+                   th:field="*{barcode}"
+                   th:classappend="${#fields.hasErrors('barcode')} ? 'error' : ''"
+                   placeholder="e.g., 9780140449136"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('barcode')}"
+                  th:errors="*{barcode}"></span>
+        </div>
 
-    <label>Status:
-        <select th:field="*{status}">
-            <option th:each="s : ${statuses}"
-                    th:value="${s}"
-                    th:text="${s}">
-            </option>
-        </select>
-    </label><br/>
+        <!-- Status (input text - NU dropdown) -->
+        <div class="form-group">
+            <label for="statusInput">
+                Status <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="statusInput"
+                   name="statusInput"
+                   th:value="${item.status}"
+                   th:classappend="${#fields.hasErrors('status')} ? 'error' : ''"
+                   placeholder="ACTIVE, COMPLETED, or CANCELLED"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('status')}"
+                  th:errors="*{status}"></span>
+        </div>
 
-    <button type="submit">Update</button>
-</form>
+        <!-- Buttons -->
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">💾 Update Item</button>
+            <a th:href="@{/readableitems}" class="btn btn-secondary">✖ Cancel</a>
+        </div>
 
-<a th:href="@{/readableitems}">Back</a>
+    </form>
+</div>
 
 </body>
 </html>
