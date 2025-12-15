@@ -62,7 +62,8 @@
         }
 
         input[type="text"],
-        input[type="email"] {
+        input[type="email"],
+        select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
@@ -73,7 +74,8 @@
         }
 
         input[type="text"]:focus,
-        input[type="email"]:focus {
+        input[type="email"]:focus,
+        select:focus {
             outline: none;
             border-color: #FF9800;
             background-color: white;
@@ -86,25 +88,20 @@
             cursor: not-allowed;
         }
 
+        input.error,
+        select.error {
+            border-color: #f44336;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
         .error-message {
             color: #f44336;
             font-size: 13px;
             margin-top: 5px;
             display: block;
-        }
-
-        .global-error {
-            background-color: #ffebee;
-            border-left: 4px solid #f44336;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-
-        .global-error p {
-            color: #c62828;
-            font-size: 14px;
-            margin: 5px 0;
         }
 
         .button-group {
@@ -147,20 +144,6 @@
             transform: translateY(-2px);
         }
 
-        .warning-box {
-            background-color: #fff3e0;
-            border-left: 4px solid #FF9800;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-
-        .warning-box p {
-            color: #e65100;
-            font-size: 13px;
-            margin: 0;
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 25px;
@@ -186,11 +169,6 @@
           th:object="${member}"
           method="post">
 
-        <!-- 🔹 ERORI GLOBALE -->
-        <div class="global-error" th:if="${#fields.hasGlobalErrors()}">
-            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
-        </div>
-
         <!-- ID (readonly) -->
         <div class="form-group">
             <label for="id">Member ID</label>
@@ -208,29 +186,12 @@
             <input type="text"
                    id="name"
                    th:field="*{name}"
+                   th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"
                    placeholder="e.g., John Doe"
                    required/>
             <span class="error-message"
                   th:if="${#fields.hasErrors('name')}"
                   th:errors="*{name}"></span>
-        </div>
-
-        <!-- Library ID -->
-        <div class="form-group">
-            <label for="libraryId">Library ID</label>
-            <input type="text"
-                   id="libraryId"
-                   th:field="*{libraryId}"
-                   placeholder="e.g., LIB1"/>
-        </div>
-
-        <!-- Address -->
-        <div class="form-group">
-            <label for="address">Address</label>
-            <input type="text"
-                   id="address"
-                   th:field="*{address}"
-                   placeholder="e.g., 123 Main Street, City"/>
         </div>
 
         <!-- Email (required) -->
@@ -241,11 +202,41 @@
             <input type="email"
                    id="email"
                    th:field="*{email}"
-                   placeholder="e.g., member@example.com"
+                   th:classappend="${#fields.hasErrors('email')} ? 'error' : ''"
+                   placeholder="e.g., john@example.com"
                    required/>
             <span class="error-message"
                   th:if="${#fields.hasErrors('email')}"
                   th:errors="*{email}"></span>
+        </div>
+
+        <!-- Address (required) -->
+        <div class="form-group">
+            <label for="address">
+                Address <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="address"
+                   th:field="*{address}"
+                   th:classappend="${#fields.hasErrors('address')} ? 'error' : ''"
+                   placeholder="e.g., 123 Main Street"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('address')}"
+                  th:errors="*{address}"></span>
+        </div>
+
+        <!-- Library (optional) -->
+        <div class="form-group">
+            <label for="libraryId">Library (Optional)</label>
+            <select id="libraryId" name="libraryId">
+                <option value="">-- No Library --</option>
+                <option th:each="lib : ${libraries}"
+                        th:value="${lib.id}"
+                        th:text="${lib.name + ' (' + lib.id + ')'"
+                        th:selected="${member.library != null && member.library.id == lib.id}">
+                </option>
+            </select>
         </div>
 
         <!-- Buttons -->

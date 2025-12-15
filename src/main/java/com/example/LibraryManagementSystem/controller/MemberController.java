@@ -1,6 +1,7 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.model.Member;
+import com.example.librarymanagementsystem.service.LibraryService;
 import com.example.librarymanagementsystem.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -15,39 +16,27 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService service;
+    private final LibraryService libraryService;
 
-    public MemberController(MemberService service) {
+    public MemberController(MemberService service, LibraryService libraryService) {
         this.service = service;
+        this.libraryService = libraryService;
     }
 
-    // ========================================
-    // ✅ MODIFICI METODA LIST - AICI E SCHIMBAREA PRINCIPALĂ!
-    // ========================================
     @GetMapping
     public String list(
-            // Parametri pentru SORTARE
             @RequestParam(required = false, defaultValue = "id") String sort,
             @RequestParam(required = false, defaultValue = "asc") String direction,
-
-            // Parametri pentru FILTRARE
             @RequestParam(required = false) String filterName,
             @RequestParam(required = false) String filterAddress,
             @RequestParam(required = false) String filterEmail,
-
             Model model) {
 
-        // 1️⃣ Obține lista sortată și filtrată
-        List<Member> members = service.getAll(sort, direction,
-                filterName, filterAddress, filterEmail);
+        List<Member> members = service.getAll(sort, direction, filterName, filterAddress, filterEmail);
 
-        // 2️⃣ Trimite datele către view
         model.addAttribute("members", members);
-
-        // 3️⃣ Trimite parametrii actuali (pentru UI să știe ce e selectat)
         model.addAttribute("currentSort", sort);
         model.addAttribute("currentDirection", direction);
-
-        // 4️⃣ Trimite filtrele înapoi (ca să rămână în formular)
         model.addAttribute("filterName", filterName);
         model.addAttribute("filterAddress", filterAddress);
         model.addAttribute("filterEmail", filterEmail);
@@ -55,33 +44,34 @@ public class MemberController {
         return "member/index";
     }
 
-    // ========================================
-    // ✅ RESTUL METODELOR RĂMÂN EXACT LA FEL
-    // ========================================
-
-    // CREATE FORM
     @GetMapping("/new")
-    public String newForm(Model model) {
+    public String form(Model model) {
         model.addAttribute("member", service.newForForm());
+        model.addAttribute("libraries", libraryService.getAll());
         return "member/form";
     }
 
-    // CREATE - CU VALIDARE EMAIL DUPLICAT ✅
     @PostMapping
-    public String create(@Valid @ModelAttribute Member member,
+    public String create(@Valid @ModelAttribute("member") Member member,
                          BindingResult bindingResult,
+                         @RequestParam(value = "libraryId", required = false) String libraryId,
                          Model model) {
 
-        // 🔹 VALIDARE: Email duplicat?
+        // Validare: Email duplicat
         if (member.getEmail() != null && !member.getEmail().isBlank()) {
             if (service.existsByEmail(member.getEmail())) {
                 bindingResult.rejectValue("email", "error.member",
-                        "This email is already registered.");
+                        "This email already exists.");
             }
         }
 
-        // Dacă sunt erori, rămâi pe formular
+        // Set library dacă e specificat
+        if (libraryId != null && !libraryId.isBlank()) {
+            member.setLibrary(libraryService.getById(libraryId));
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("libraries", libraryService.getAll());
             return "member/form";
         }
 
@@ -89,7 +79,6 @@ public class MemberController {
         return "redirect:/members";
     }
 
-    // DETAILS
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
         Member member = service.getById(id);
@@ -100,7 +89,6 @@ public class MemberController {
         return "member/details";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Member member = service.getById(id);
@@ -108,28 +96,34 @@ public class MemberController {
             return "redirect:/members";
         }
         model.addAttribute("member", member);
+        model.addAttribute("libraries", libraryService.getAll());
         return "member/edit";
     }
 
-    // UPDATE - CU VALIDARE EMAIL DUPLICAT ✅
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
-                         @Valid @ModelAttribute Member member,
+                         @Valid @ModelAttribute("member") Member member,
                          BindingResult bindingResult,
+                         @RequestParam(value = "libraryId", required = false) String libraryId,
                          Model model) {
 
         member.setId(id);
 
-        // 🔹 VALIDARE: Alt membru are deja acest email?
+        // Validare: Alt member are deja acest email
         if (member.getEmail() != null && !member.getEmail().isBlank()) {
             if (service.existsByEmailForOtherMember(member.getEmail(), id)) {
                 bindingResult.rejectValue("email", "error.member",
-                        "This email is already registered to another member.");
+                        "This email is already used by another member.");
             }
         }
 
-        // Dacă sunt erori, rămâi pe edit
+        // Set library dacă e specificat
+        if (libraryId != null && !libraryId.isBlank()) {
+            member.setLibrary(libraryService.getById(libraryId));
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("libraries", libraryService.getAll());
             return "member/edit";
         }
 
@@ -137,7 +131,6 @@ public class MemberController {
         return "redirect:/members";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);

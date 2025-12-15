@@ -88,8 +88,20 @@
             cursor: not-allowed;
         }
 
+        input.error,
+        select.error {
+            border-color: #f44336;
+        }
+
         select {
             cursor: pointer;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
         }
 
         .button-group {
@@ -174,7 +186,7 @@
             <select id="memberId" name="memberId" required>
                 <option th:each="m : ${members}"
                         th:value="${m.id}"
-                        th:text="${m.name}"
+                        th:text="${m.name + ' (' + m.id + ')'}"
                         th:selected="${reservation.member != null && reservation.member.id == m.id}">
                 </option>
             </select>
@@ -202,20 +214,28 @@
             <input type="date"
                    id="date"
                    th:field="*{date}"
+                   th:classappend="${#fields.hasErrors('date')} ? 'error' : ''"
                    required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('date')}"
+                  th:errors="*{date}"></span>
         </div>
 
-        <!-- Status (required) -->
+        <!-- Status (input text - NU dropdown) -->
         <div class="form-group">
-            <label for="status">
+            <label for="statusInput">
                 Status <span class="required">*</span>
             </label>
-            <select id="status" th:field="*{status}" required>
-                <option th:each="s : ${statuses}"
-                        th:value="${s}"
-                        th:text="${s}">
-                </option>
-            </select>
+            <input type="text"
+                   id="statusInput"
+                   name="statusInput"
+                   th:value="${reservation.status}"
+                   th:classappend="${#fields.hasErrors('status')} ? 'error' : ''"
+                   placeholder="ACTIVE, COMPLETED, or CANCELLED"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('status')}"
+                  th:errors="*{status}"></span>
         </div>
 
         <!-- Buttons -->

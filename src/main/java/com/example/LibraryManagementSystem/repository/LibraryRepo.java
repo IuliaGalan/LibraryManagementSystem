@@ -11,45 +11,30 @@ import java.util.List;
 @Repository
 public interface LibraryRepo extends JpaRepository<Library, String> {
 
-    // ✅ VALIDĂRI (deja le ai)
-    boolean existsByNameIgnoreCase(String name);
-    boolean existsByNameIgnoreCaseAndIdNot(String name, String id);
-
-    // ✅ SORTARE NATURALĂ (o păstrezi pentru compatibilitate)
-    @Query("SELECT l FROM Library l ORDER BY CAST(SUBSTRING(l.id, 4) AS int)")
+    // ✅ SORTARE NATURALĂ - compatibilă cu toate bazele de date
+    @Query("SELECT l FROM Library l ORDER BY " +
+            "CASE WHEN LENGTH(l.id) = LENGTH('LIB') + 1 THEN 0 " +
+            "WHEN LENGTH(l.id) = LENGTH('LIB') + 2 THEN 1 " +
+            "WHEN LENGTH(l.id) = LENGTH('LIB') + 3 THEN 2 " +
+            "ELSE 3 END, l.id")
     List<Library> findAllSorted();
 
-    // ========================================
-    // ✅ SORTARE DINAMICĂ
-    // ========================================
     List<Library> findAll(Sort sort);
 
-    // ========================================
-    // ✅ FILTRARE (queries noi)
-    // ========================================
-
-    // Filtrare după nume (conține text, ignore case)
     List<Library> findByNameContainingIgnoreCase(String name, Sort sort);
-
-    // Filtrare după adresă (conține text, ignore case)
     List<Library> findByAddressContainingIgnoreCase(String address, Sort sort);
-
-    // Filtrare după email (conține text, ignore case)
     List<Library> findByEmailContainingIgnoreCase(String email, Sort sort);
 
-    // Filtrare după nume ȘI adresă
     List<Library> findByNameContainingIgnoreCaseAndAddressContainingIgnoreCase(
             String name, String address, Sort sort);
-
-    // Filtrare după nume ȘI email
     List<Library> findByNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
             String name, String email, Sort sort);
-
-    // Filtrare după adresă ȘI email
     List<Library> findByAddressContainingIgnoreCaseAndEmailContainingIgnoreCase(
             String address, String email, Sort sort);
 
-    // Filtrare după TOATE TREI
     List<Library> findByNameContainingIgnoreCaseAndAddressContainingIgnoreCaseAndEmailContainingIgnoreCase(
             String name, String address, String email, Sort sort);
+
+    Library findByEmail(String email);
+    Library findByName(String name);
 }

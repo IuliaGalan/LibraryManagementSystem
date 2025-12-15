@@ -12,19 +12,15 @@ import java.util.List;
 @Repository
 public interface LoanRepo extends JpaRepository<Loan, String> {
 
-    // ✅ SORTARE NATURALĂ
-    @Query("SELECT l FROM Loan l ORDER BY CAST(SUBSTRING(l.id, 5) AS int)")
+    @Query("SELECT l FROM Loan l ORDER BY CAST(SUBSTRING(l.id, 5, 3) AS int)")
     List<Loan> findAllSorted();
 
-    // ✅ SORTARE DINAMICĂ
     List<Loan> findAll(Sort sort);
 
-    // ✅ FILTRARE - 1 filtru
     List<Loan> findByMember_NameContainingIgnoreCase(String memberName, Sort sort);
     List<Loan> findByStatus(Loan.LoanStatus status, Sort sort);
     List<Loan> findByLoanDate(LocalDate loanDate, Sort sort);
 
-    // ✅ FILTRARE - 2 filtre
     List<Loan> findByMember_NameContainingIgnoreCaseAndStatus(
             String memberName, Loan.LoanStatus status, Sort sort);
     List<Loan> findByMember_NameContainingIgnoreCaseAndLoanDate(
@@ -32,7 +28,6 @@ public interface LoanRepo extends JpaRepository<Loan, String> {
     List<Loan> findByStatusAndLoanDate(
             Loan.LoanStatus status, LocalDate loanDate, Sort sort);
 
-    // ✅ FILTRARE - toate 3 filtre
     List<Loan> findByMember_NameContainingIgnoreCaseAndStatusAndLoanDate(
             String memberName, Loan.LoanStatus status, LocalDate loanDate, Sort sort);
 }

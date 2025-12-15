@@ -17,18 +17,15 @@ public class ReservationService {
         this.repo = repo;
     }
 
-    // ✅ METODĂ VECHE (compatibilitate)
     public List<Reservation> getAll() {
         return repo.findAllSorted();
     }
 
-    // ✅ METODĂ NOUĂ - CU SORTARE ȘI FILTRARE
     public List<Reservation> getAll(String sortBy, String direction,
                                     String filterMemberName,
                                     String filterStatus,
                                     String filterDate) {
 
-        // 1️⃣ CONSTRUIEȘTE SORTAREA
         Sort sort = Sort.by(sortBy);
         if ("desc".equalsIgnoreCase(direction)) {
             sort = sort.descending();
@@ -36,12 +33,10 @@ public class ReservationService {
             sort = sort.ascending();
         }
 
-        // 2️⃣ VERIFICĂ CARE FILTRE SUNT ACTIVE
         boolean hasMemberNameFilter = filterMemberName != null && !filterMemberName.trim().isEmpty();
         boolean hasStatusFilter = filterStatus != null && !filterStatus.trim().isEmpty();
         boolean hasDateFilter = filterDate != null && !filterDate.trim().isEmpty();
 
-        // Convert status string to enum if needed
         Reservation.ReservationStatus status = null;
         if (hasStatusFilter) {
             try {
@@ -51,7 +46,6 @@ public class ReservationService {
             }
         }
 
-        // Convert date string to LocalDate if needed
         LocalDate date = null;
         if (hasDateFilter) {
             try {
@@ -61,47 +55,37 @@ public class ReservationService {
             }
         }
 
-        // 3️⃣ APLICĂ FILTRELE CORESPUNZĂTOARE
-
-        // TOATE 3 FILTRE
         if (hasMemberNameFilter && hasStatusFilter && hasDateFilter) {
             return repo.findByMember_NameContainingIgnoreCaseAndStatusAndDate(
                     filterMemberName.trim(), status, date, sort);
         }
 
-        // 2 FILTRE: Member + Status
         if (hasMemberNameFilter && hasStatusFilter) {
             return repo.findByMember_NameContainingIgnoreCaseAndStatus(
                     filterMemberName.trim(), status, sort);
         }
 
-        // 2 FILTRE: Member + Date
         if (hasMemberNameFilter && hasDateFilter) {
             return repo.findByMember_NameContainingIgnoreCaseAndDate(
                     filterMemberName.trim(), date, sort);
         }
 
-        // 2 FILTRE: Status + Date
         if (hasStatusFilter && hasDateFilter) {
             return repo.findByStatusAndDate(status, date, sort);
         }
 
-        // 1 FILTRU: Doar Member Name
         if (hasMemberNameFilter) {
             return repo.findByMember_NameContainingIgnoreCase(filterMemberName.trim(), sort);
         }
 
-        // 1 FILTRU: Doar Status
         if (hasStatusFilter) {
             return repo.findByStatus(status, sort);
         }
 
-        // 1 FILTRU: Doar Date
         if (hasDateFilter) {
             return repo.findByDate(date, sort);
         }
 
-        // FĂRĂ FILTRE: Doar sortare
         return repo.findAll(sort);
     }
 
@@ -130,11 +114,16 @@ public class ReservationService {
     public String generateNextId() {
         int maxNumber = repo.findAll().stream()
                 .map(Reservation::getId)
-                .filter(id -> id != null && id.startsWith("R"))
-                .map(id -> id.substring(1))
-                .filter(num -> num.matches("\\d+"))
-                .mapToInt(Integer::parseInt)
-                .max()
+                .filter(id -> id != null && id.toUpperCase().startsWith("R"))
+                .map(id -> {
+                    String numericPart = id.substring(1);
+                    try {
+                        return Integer.parseInt(numericPart);
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                })
+                .max(Integer::compareTo)
                 .orElse(0);
 
         return "R" + (maxNumber + 1);

@@ -464,12 +464,12 @@
             <tbody>
             <!-- Data Rows -->
             <tr th:each="lib : ${libraries}">
-                <td th:text="${lib.id}">LIB1</td>
-                <td th:text="${lib.name}">Central Library</td>
-                <td th:text="${lib.address}">123 Main Street</td>
-                <td th:text="${lib.phoneNumber}">+40 264 123 456</td>
-                <td th:text="${lib.email}">central@library.ro</td>
+                <td th:text="${lib.id}">LIB001</td>
+                <td th:text="${lib.name}">Library Name</td>
+                <td th:text="${lib.email}">email@example.com</td>
+                <td th:text="${lib.address}">Address</td>
 
+                <!-- ✅ ACTIONS COLUMN -->
                 <td>
                     <div class="actions">
                         <a th:href="@{/libraries/{id}/details(id=${lib.id})}" class="btn-action btn-details">📄 Details</a>

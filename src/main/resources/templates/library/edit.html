@@ -2,62 +2,231 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Library</title>
     <style>
-        .error { color: red; font-size: 0.9em; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #f44336;
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #FF9800;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        input.error {
+            border-color: #f44336;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<h2>Edit Library</h2>
+<div class="container">
+    <h2>✏️ Edit Library</h2>
+    <p class="subtitle">Update library information</p>
 
-<form th:action="@{/libraries/{id}(id=${library.id})}"
-      th:object="${library}"
-      method="post">
+    <form th:action="@{/libraries/{id}(id=${library.id})}"
+          th:object="${library}"
+          method="post">
 
-    <div th:if="${#fields.hasGlobalErrors()}">
-        <p class="error" th:each="err : ${#fields.globalErrors()}"
-           th:text="${err}"></p>
-    </div>
+        <!-- ID (readonly) -->
+        <div class="form-group">
+            <label for="id">Library ID</label>
+            <input type="text"
+                   id="id"
+                   th:field="*{id}"
+                   readonly/>
+        </div>
 
-    <p>
-        <label>ID:
-            <input th:field="*{id}" readonly/>
-        </label>
-    </p>
+        <!-- Name (required) -->
+        <div class="form-group">
+            <label for="name">
+                Library Name <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="name"
+                   th:field="*{name}"
+                   th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"
+                   placeholder="e.g., Central Library"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}"></span>
+        </div>
 
-    <p>
-        <label>Name:
-            <input th:field="*{name}"/>
-        </label>
-        <span class="error" th:if="${#fields.hasErrors('name')}"
-              th:errors="*{name}"></span>
-    </p>
+        <!-- Address (required) -->
+        <div class="form-group">
+            <label for="address">
+                Address <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="address"
+                   th:field="*{address}"
+                   th:classappend="${#fields.hasErrors('address')} ? 'error' : ''"
+                   placeholder="e.g., 123 Main Street"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('address')}"
+                  th:errors="*{address}"></span>
+        </div>
 
-    <p>
-        <label>Address:
-            <input th:field="*{address}"/>
-        </label>
-    </p>
+        <!-- Email (required) -->
+        <div class="form-group">
+            <label for="email">
+                Email <span class="required">*</span>
+            </label>
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   th:classappend="${#fields.hasErrors('email')} ? 'error' : ''"
+                   placeholder="e.g., library@example.com"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('email')}"
+                  th:errors="*{email}"></span>
+        </div>
 
-    <p>
-        <label>Phone:
-            <input th:field="*{phoneNumber}"/>
-        </label>
-    </p>
+        <!-- Buttons -->
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">💾 Update Library</button>
+            <a th:href="@{/libraries}" class="btn btn-secondary">✖ Cancel</a>
+        </div>
 
-    <p>
-        <label>Email:
-            <input type="email" th:field="*{email}"/>
-        </label>
-        <span class="error" th:if="${#fields.hasErrors('email')}"
-              th:errors="*{email}"></span>
-    </p>
-
-    <button type="submit">Update</button>
-</form>
-
-<p><a th:href="@{/libraries}">Back</a></p>
+    </form>
+</div>
 
 </body>
 </html>
