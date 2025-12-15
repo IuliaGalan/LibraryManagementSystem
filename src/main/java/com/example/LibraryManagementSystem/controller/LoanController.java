@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/loans")
 public class LoanController {
@@ -19,18 +21,53 @@ public class LoanController {
         this.memberService = memberService;
     }
 
-    // LIST
+    // ========================================
+    // ✅ MODIFICI METODA LIST - AICI E SCHIMBAREA PRINCIPALĂ!
+    // ========================================
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("loans", service.getAll());
+    public String list(
+            // Parametri pentru SORTARE
+            @RequestParam(required = false, defaultValue = "id") String sort,
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+
+            // Parametri pentru FILTRARE
+            @RequestParam(required = false) String filterMemberName,
+            @RequestParam(required = false) String filterStatus,
+            @RequestParam(required = false) String filterLoanDate,
+
+            Model model) {
+
+        // 1️⃣ Obține lista sortată și filtrată
+        List<Loan> loans = service.getAll(sort, direction,
+                filterMemberName, filterStatus, filterLoanDate);
+
+        // 2️⃣ Trimite datele către view
+        model.addAttribute("loans", loans);
+
+        // 3️⃣ Trimite parametrii actuali (pentru UI să știe ce e selectat)
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDirection", direction);
+
+        // 4️⃣ Trimite filtrele înapoi (ca să rămână în formular)
+        model.addAttribute("filterMemberName", filterMemberName);
+        model.addAttribute("filterStatus", filterStatus);
+        model.addAttribute("filterLoanDate", filterLoanDate);
+
+        // 5️⃣ Trimite lista de status-uri pentru dropdown
+        model.addAttribute("statuses", Loan.LoanStatus.values());
+
         return "loan/index";
     }
+
+    // ========================================
+    // ✅ RESTUL METODELOR RĂMÂN EXACT LA FEL
+    // ========================================
 
     // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("loan", service.newForForm());
-        model.addAttribute("members", memberService.getAll());  // ✅ LISTĂ MEMBRI
+        model.addAttribute("members", memberService.getAll());
         model.addAttribute("statuses", Loan.LoanStatus.values());
         return "loan/form";
     }
@@ -38,8 +75,8 @@ public class LoanController {
     // CREATE
     @PostMapping
     public String create(@ModelAttribute Loan loan,
-                         @RequestParam("memberId") String memberId) {  // ✅ PRIMEȘTE memberId
-        loan.setMember(memberService.getById(memberId));  // ✅ SETEAZĂ MEMBER
+                         @RequestParam("memberId") String memberId) {
+        loan.setMember(memberService.getById(memberId));
         service.add(loan.getId(), loan);
         return "redirect:/loans";
     }
@@ -63,7 +100,7 @@ public class LoanController {
             return "redirect:/loans";
         }
         model.addAttribute("loan", loan);
-        model.addAttribute("members", memberService.getAll());  // ✅ LISTĂ MEMBRI
+        model.addAttribute("members", memberService.getAll());
         model.addAttribute("statuses", Loan.LoanStatus.values());
         return "loan/edit";
     }
@@ -72,9 +109,9 @@ public class LoanController {
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
                          @ModelAttribute Loan loan,
-                         @RequestParam("memberId") String memberId) {  // ✅ PRIMEȘTE memberId
+                         @RequestParam("memberId") String memberId) {
         loan.setId(id);
-        loan.setMember(memberService.getById(memberId));  // ✅ SETEAZĂ MEMBER
+        loan.setMember(memberService.getById(memberId));
         service.update(id, loan);
         return "redirect:/loans";
     }
