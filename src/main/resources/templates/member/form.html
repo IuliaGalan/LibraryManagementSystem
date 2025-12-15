@@ -2,61 +2,264 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Member</title>
     <style>
-        .error {
-            color: red;
-            font-size: 0.9em;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #f44336;
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .global-error {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .global-error p {
+            color: #c62828;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
 
-<h2>Add Member</h2>
+<div class="container">
+    <h2>➕ Add New Member</h2>
+    <p class="subtitle">Fill in the details to create a new member</p>
 
-<form th:action="@{/members}" th:object="${member}" method="post">
+    <form th:action="@{/members}" th:object="${member}" method="post">
 
-    <!-- 🔹 ERORI GLOBALE (dacă există) -->
-    <div th:if="${#fields.hasGlobalErrors()}">
-        <p class="error" th:each="err : ${#fields.globalErrors()}"
-           th:text="${err}"></p>
-    </div>
+        <!-- 🔹 ERORI GLOBALE -->
+        <div class="global-error" th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+        </div>
 
-    <label>ID:
-        <input th:field="*{id}" readonly/>
-    </label>
-    <br/>
+        <!-- ID (readonly) -->
+        <div class="form-group">
+            <label for="id">Member ID</label>
+            <input type="text"
+                   id="id"
+                   th:field="*{id}"
+                   readonly/>
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                Auto-generated ID
+            </small>
+        </div>
 
-    <label>Name:
-        <input th:field="*{name}"/>
-    </label>
-    <!-- 🔹 Eroare pentru name (@NotBlank) -->
-    <div class="error" th:if="${#fields.hasErrors('name')}"
-         th:errors="*{name}"></div>
-    <br/>
+        <!-- Name (required) -->
+        <div class="form-group">
+            <label for="name">
+                Name <span class="required">*</span>
+            </label>
+            <input type="text"
+                   id="name"
+                   th:field="*{name}"
+                   placeholder="e.g., John Doe"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}"></span>
+        </div>
 
-    <label>Library ID:
-        <input th:field="*{libraryId}"/>
-    </label>
-    <br/>
+        <!-- Library ID -->
+        <div class="form-group">
+            <label for="libraryId">Library ID</label>
+            <input type="text"
+                   id="libraryId"
+                   th:field="*{libraryId}"
+                   placeholder="e.g., LIB1"/>
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                The library this member belongs to
+            </small>
+        </div>
 
-    <label>Address:
-        <input th:field="*{address}"/>
-    </label>
-    <br/>
+        <!-- Address -->
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text"
+                   id="address"
+                   th:field="*{address}"
+                   placeholder="e.g., 123 Main Street, City"/>
+        </div>
 
-    <label>Email:
-        <input type="email" th:field="*{email}"/>
-    </label>
-    <!-- 🔹 Eroare pentru email (duplicat sau @Email) -->
-    <div class="error" th:if="${#fields.hasErrors('email')}"
-         th:errors="*{email}"></div>
-    <br/>
+        <!-- Email (required) -->
+        <div class="form-group">
+            <label for="email">
+                Email <span class="required">*</span>
+            </label>
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   placeholder="e.g., member@example.com"
+                   required/>
+            <span class="error-message"
+                  th:if="${#fields.hasErrors('email')}"
+                  th:errors="*{email}"></span>
+        </div>
 
-    <button type="submit">Save</button>
-</form>
+        <!-- Buttons -->
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">💾 Save Member</button>
+            <a th:href="@{/members}" class="btn btn-secondary">✖ Cancel</a>
+        </div>
 
-<a th:href="@{/members}">Back</a>
+    </form>
+</div>
 
 </body>
 </html>

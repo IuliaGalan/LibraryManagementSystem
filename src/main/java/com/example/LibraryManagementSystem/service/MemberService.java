@@ -2,9 +2,9 @@ package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.model.Member;
 import com.example.librarymanagementsystem.repository.MemberRepo;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -16,23 +16,73 @@ public class MemberService {
         this.repo = repo;
     }
 
+    // ✅ METODĂ VECHE (compatibilitate)
     public List<Member> getAll() {
-        List<Member> members = repo.findAll();
+        return repo.findAllSorted();
+    }
 
-        // Sortare naturală pentru ID-uri (M1, M2, ..., M10)
-        members.sort(Comparator.comparing(Member::getId, (id1, id2) -> {
-            // Extrage partea numerică din ID
-            String num1 = id1.replaceAll("\\D+", "");
-            String num2 = id2.replaceAll("\\D+", "");
+    // ✅ METODĂ NOUĂ - CU SORTARE ȘI FILTRARE
+    public List<Member> getAll(String sortBy, String direction,
+                               String filterName,
+                               String filterAddress,
+                               String filterEmail) {
 
-            if (num1.isEmpty() || num2.isEmpty()) {
-                return id1.compareTo(id2);
-            }
+        // 1️⃣ CONSTRUIEȘTE SORTAREA
+        Sort sort = Sort.by(sortBy);
+        if ("desc".equalsIgnoreCase(direction)) {
+            sort = sort.descending();
+        } else {
+            sort = sort.ascending();
+        }
 
-            return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
-        }));
+        // 2️⃣ VERIFICĂ CARE FILTRE SUNT ACTIVE
+        boolean hasNameFilter = filterName != null && !filterName.trim().isEmpty();
+        boolean hasAddressFilter = filterAddress != null && !filterAddress.trim().isEmpty();
+        boolean hasEmailFilter = filterEmail != null && !filterEmail.trim().isEmpty();
 
-        return members;
+        // 3️⃣ APLICĂ FILTRELE CORESPUNZĂTOARE
+
+        // TOATE 3 FILTRE
+        if (hasNameFilter && hasAddressFilter && hasEmailFilter) {
+            return repo.findByNameContainingIgnoreCaseAndAddressContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                    filterName.trim(), filterAddress.trim(), filterEmail.trim(), sort);
+        }
+
+        // 2 FILTRE: Nume + Adresă
+        if (hasNameFilter && hasAddressFilter) {
+            return repo.findByNameContainingIgnoreCaseAndAddressContainingIgnoreCase(
+                    filterName.trim(), filterAddress.trim(), sort);
+        }
+
+        // 2 FILTRE: Nume + Email
+        if (hasNameFilter && hasEmailFilter) {
+            return repo.findByNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                    filterName.trim(), filterEmail.trim(), sort);
+        }
+
+        // 2 FILTRE: Adresă + Email
+        if (hasAddressFilter && hasEmailFilter) {
+            return repo.findByAddressContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                    filterAddress.trim(), filterEmail.trim(), sort);
+        }
+
+        // 1 FILTRU: Doar Nume
+        if (hasNameFilter) {
+            return repo.findByNameContainingIgnoreCase(filterName.trim(), sort);
+        }
+
+        // 1 FILTRU: Doar Adresă
+        if (hasAddressFilter) {
+            return repo.findByAddressContainingIgnoreCase(filterAddress.trim(), sort);
+        }
+
+        // 1 FILTRU: Doar Email
+        if (hasEmailFilter) {
+            return repo.findByEmailContainingIgnoreCase(filterEmail.trim(), sort);
+        }
+
+        // FĂRĂ FILTRE: Doar sortare
+        return repo.findAll(sort);
     }
 
     public Member getById(String id) {
