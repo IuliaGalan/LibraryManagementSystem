@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/reservations")  // plural
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService service;
@@ -24,12 +26,47 @@ public class ReservationController {
         this.readableItemService = readableItemService;
     }
 
-    // LIST
+    // ========================================
+    // ✅ MODIFICI METODA LIST - AICI E SCHIMBAREA PRINCIPALĂ!
+    // ========================================
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("reservations", service.getAll());
+    public String list(
+            // Parametri pentru SORTARE
+            @RequestParam(required = false, defaultValue = "id") String sort,
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+
+            // Parametri pentru FILTRARE
+            @RequestParam(required = false) String filterMemberName,
+            @RequestParam(required = false) String filterStatus,
+            @RequestParam(required = false) String filterDate,
+
+            Model model) {
+
+        // 1️⃣ Obține lista sortată și filtrată
+        List<Reservation> reservations = service.getAll(sort, direction,
+                filterMemberName, filterStatus, filterDate);
+
+        // 2️⃣ Trimite datele către view
+        model.addAttribute("reservations", reservations);
+
+        // 3️⃣ Trimite parametrii actuali (pentru UI să știe ce e selectat)
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDirection", direction);
+
+        // 4️⃣ Trimite filtrele înapoi (ca să rămână în formular)
+        model.addAttribute("filterMemberName", filterMemberName);
+        model.addAttribute("filterStatus", filterStatus);
+        model.addAttribute("filterDate", filterDate);
+
+        // 5️⃣ Trimite lista de status-uri pentru dropdown
+        model.addAttribute("statuses", Reservation.ReservationStatus.values());
+
         return "reservation/index";
     }
+
+    // ========================================
+    // ✅ RESTUL METODELOR RĂMÂN EXACT LA FEL
+    // ========================================
 
     // CREATE FORM
     @GetMapping("/new")
