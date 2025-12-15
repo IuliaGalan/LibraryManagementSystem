@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "book_authors")
 public class BookAuthor {
 
+// OBS: Nu toate atributele unei clase devin coloane in tabelul din SQL
+
     @Id
     @Column(name = "id", length = 50)
     @NotBlank(message = "ID is required.")

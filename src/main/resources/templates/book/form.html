@@ -3,44 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Book</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #555; }
+        input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px; transition: border-color 0.3s; }
+        input[type="text"]:focus { outline: none; border-color: #4CAF50; }
+        input[readonly] { background-color: #f0f0f0; cursor: not-allowed; }
+        .error-message { color: #d32f2f; font-size: 13px; margin-top: 5px; display: block; }
+        .global-error { background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb; }
+        .btn-container { display: flex; gap: 10px; margin-top: 25px; }
+        button[type="submit"] { background-color: #4CAF50; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background-color 0.3s; }
+        button[type="submit"]:hover { background-color: #45a049; }
+        .btn-back { background-color: #757575; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-size: 16px; transition: background-color 0.3s; }
+        .btn-back:hover { background-color: #616161; }
+    </style>
 </head>
 <body>
-<h2>Add new book</h2>
 
-<form th:action="@{/books}" th:object="${book}" method="post">
+<div class="container">
+    <h2>Add new book</h2>
 
-    <!-- erori globale, dacă există -->
-    <div th:if="${#fields.hasGlobalErrors()}">
-        <p th:each="err : ${#fields.globalErrors()}"
-           th:text="${err}"></p>
-    </div>
+    <form th:action="@{/books}" th:object="${book}" method="post">
 
-    <!-- ID generat în BookService.newForForm(), doar afișat -->
-    <label>ID:
-        <input th:field="*{id}" readonly />
-    </label>
-    <br/>
+        <!-- ✅ ERORI GLOBALE -->
+        <div th:if="${#fields.hasGlobalErrors()}" class="global-error">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+        </div>
 
-    <label>Title:
-        <input th:field="*{title}" />
-    </label>
-    <div th:if="${#fields.hasErrors('title')}"
-         th:errors="*{title}"></div>
-    <br/>
+        <!-- ID -->
+        <div class="form-group">
+            <label>ID:</label>
+            <input th:field="*{id}" readonly />
+        </div>
 
-    <label>Genre:
-        <input th:field="*{genre}" />
-    </label>
-    <div th:if="${#fields.hasErrors('genre')}"
-         th:errors="*{genre}"></div>
-    <br/>
+        <!-- TITLE -->
+        <div class="form-group">
+            <label>Title: <span style="color: red;">*</span></label>
+            <input th:field="*{title}" />
+            <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+        </div>
 
-    <!-- alte câmpuri din BookDetails dacă ai nevoie -->
+        <!-- GENRE -->
+        <div class="form-group">
+            <label>Genre: <span style="color: red;">*</span></label>
+            <input th:field="*{genre}" />
+            <span class="error-message" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></span>
+        </div>
 
-    <button type="submit">Save</button>
-</form>
+        <div class="btn-container">
+            <button type="submit">💾 Save</button>
+            <a th:href="@{/books}" class="btn-back">← Back</a>
+        </div>
 
-<a th:href="@{/books}">Back to list</a>
+    </form>
+</div>
 
 </body>
 </html>

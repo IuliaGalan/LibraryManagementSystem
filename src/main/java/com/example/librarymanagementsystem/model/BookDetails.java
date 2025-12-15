@@ -43,7 +43,7 @@ public class BookDetails extends Publication {
         this.authorLinks = authorLinks;
     }
 
-    // helper optional
+    // helper
     public void addAuthorLink(BookAuthor link) {
         if (link == null) return;
         if (!authorLinks.contains(link)) {

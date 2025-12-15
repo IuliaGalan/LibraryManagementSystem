@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.repository.BookRepo;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,37 @@ public class BookService {
         this.repo = repo;
     }
 
-    // RETURNĂ LISTA SORTATĂ NATURAL
     public List<BookDetails> getAll() {
         return repo.findAllSorted();
+    }
+
+    //SORTARE ȘI FILTRARE
+    public List<BookDetails> getAll(String sortBy, String direction,
+                                    String filterTitle, String filterGenre) {
+
+        //Construiește sortarea
+        Sort sort = Sort.by(sortBy);
+        if ("desc".equalsIgnoreCase(direction)) {
+            sort = sort.descending();
+        } else {
+            sort = sort.ascending();
+        }
+
+        //Verifică filtrele active
+        boolean hasTitleFilter = filterTitle != null && !filterTitle.trim().isEmpty();
+        boolean hasGenreFilter = filterGenre != null && !filterGenre.trim().isEmpty();
+
+        //Aplică filtrele corespunzătoare
+        if (hasTitleFilter && hasGenreFilter) {
+            return repo.findByTitleContainingIgnoreCaseAndGenreContainingIgnoreCase(
+                    filterTitle.trim(), filterGenre.trim(), sort);
+        } else if (hasTitleFilter) {
+            return repo.findByTitleContainingIgnoreCase(filterTitle.trim(), sort);
+        } else if (hasGenreFilter) {
+            return repo.findByGenreContainingIgnoreCase(filterGenre.trim(), sort);
+        } else {
+            return repo.findAll(sort);
+        }
     }
 
     public BookDetails getById(String id) {
@@ -32,7 +61,6 @@ public class BookService {
         repo.deleteById(id);
     }
 
-    // GENERARE ID: B1, B2, B3, ...
     public String generateNextId() {
         return "B" + (repo.count() + 1);
     }
@@ -43,7 +71,6 @@ public class BookService {
         return book;
     }
 
-    // --- VALIDĂRI ---
     public boolean existsByTitle(String title) {
         if (title == null) return false;
         return repo.existsByTitleIgnoreCase(title.trim());

@@ -13,23 +13,26 @@ public class Author {
 
     @Id
     @Column(length = 50)
-    private String id;
+    //@GeneratedValue
+    private String id; //atribut normal
 
-    @NotBlank(message = "Name is required.")
-    @Size(max = 255, message = "Name must have at most 255 characters.")
-    @Column(nullable = false)
-    private String name;
+    @NotBlank(message = "Name is required.") //Bean Validation
+    @Size(max = 255, message = "Name must have at most 255 characters.") //Bean Validation
+    @Column(nullable = false) //JPA
+    private String name; //atribut normal
 
     @Size(max = 255, message = "Nationality must have at most 255 characters.")
-    @Column
-    private String nationality;
+    @Column //nu are conditii, deci poate fi null
+    private String nationality;  //atribut normal
 
     /**
      * Relația 1:N cu BookAuthor.
      * Un autor poate avea mai multe cărți (prin legături în BookAuthor).
      */
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<BookAuthor> bookLinks = new ArrayList<>();
+    //lista cu toate carile asociate Autorului respectiv
+    //camp necessar pt ca fiecare autor sa poata afisa/modifica toate carile sale chiar din pagina author in browser
+    private List<BookAuthor> bookLinks = new ArrayList<>(); //atribut de relatie catre entitatea BookAuthors in JPA (NU devine coloana)
 
     /**
      * Relație 1:1 cu MagazineDetails.
@@ -37,17 +40,19 @@ public class Author {
      * Partea inversă este în MagazineDetails.author.
      */
     @OneToOne(mappedBy = "author")
-    private MagazineDetails magazine;
+    private MagazineDetails magazine; //atribut de relatie catre entitatea Magazine in JPA (NU devine coloana)
 
+    //necesar pt framework ul JPA/Hibernate/Jackson/ Spring MVC, pt ca creeaza initial un tuplu gol pe care il populeaza in cele din urma
     public Author() {}
 
+    //folosit pt crearea de obiecte manual
     public Author(String id, String name, String nationality) {
         this.id = id;
         this.name = name;
         this.nationality = nationality;
     }
 
-    // --- GET / SET de bază ---
+    // GET/SET
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -74,7 +79,8 @@ public class Author {
         this.magazine = magazine;
     }
 
-    // --- helperi opționali pentru relația cu BookAuthor ---
+    //helperi pentru relația cu BookAuthor
+    // asigura ca ambele parti ale relatiei Author si BookAuthor se sincronizeaza concomitent
 
     public void addBookLink(BookAuthor link) {
         if (link == null) return;
