@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/bookauthors")
 public class BookAuthorController {
@@ -28,39 +30,48 @@ public class BookAuthorController {
         this.authorService = authorService;
     }
 
-    // mic DTO pentru formular
+    // DTO pentru formular
     public static class BookAuthorForm {
-
         private String id;
-
         @NotBlank(message = "Book is required.")
         private String bookId;
-
         @NotBlank(message = "Author is required.")
         private String authorId;
 
         public String getId() { return id; }
         public void setId(String id) { this.id = id; }
-
         public String getBookId() { return bookId; }
         public void setBookId(String bookId) { this.bookId = bookId; }
-
         public String getAuthorId() { return authorId; }
         public void setAuthorId(String authorId) { this.authorId = authorId; }
     }
 
-    // LIST
+    // ========================================
+    // ✅ MODIFICAT - LISTA CU SORTARE ȘI FILTRARE
+    // ========================================
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("rows", linkService.getAllRows());
+    public String list(
+            @RequestParam(required = false, defaultValue = "id") String sort,
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+            @RequestParam(required = false) String filterBookTitle,
+            @RequestParam(required = false) String filterAuthorName,
+            Model model) {
+
+        List<BookAuthorRow> rows = linkService.getAllRows(sort, direction, filterBookTitle, filterAuthorName);
+
+        model.addAttribute("rows", rows);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDirection", direction);
+        model.addAttribute("filterBookTitle", filterBookTitle);
+        model.addAttribute("filterAuthorName", filterAuthorName);
+
         return "bookauthor/index";
     }
 
-    // CREATE FORM
+    // ✅ RESTUL METODELOR (neschimbate)
     @GetMapping("/new")
     public String newForm(Model model) {
         BookAuthor ba = linkService.newForForm();
-
         BookAuthorForm form = new BookAuthorForm();
         form.setId(ba.getId());
 
@@ -70,7 +81,6 @@ public class BookAuthorController {
         return "bookauthor/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute("form") @Valid BookAuthorForm form,
                          BindingResult bindingResult,
@@ -83,14 +93,12 @@ public class BookAuthorController {
         }
 
         try {
-            // folosim ID-ul din form (BA1, BA2, ...) sau generăm altul dacă vrei
             String id = (form.getId() != null && !form.getId().isBlank())
                     ? form.getId()
                     : linkService.generateNextId();
 
             linkService.add(id, form.getBookId(), form.getAuthorId());
         } catch (IllegalArgumentException ex) {
-            // eroare de business: link duplicat sau book/author invalid
             bindingResult.reject("linkError", ex.getMessage());
             model.addAttribute("books", bookService.getAll());
             model.addAttribute("authors", authorService.getAll());
@@ -100,14 +108,12 @@ public class BookAuthorController {
         return "redirect:/bookauthors";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         linkService.delete(id);
         return "redirect:/bookauthors";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         BookAuthor link = linkService.getById(id);
@@ -125,7 +131,6 @@ public class BookAuthorController {
         return "bookauthor/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
                          @ModelAttribute("form") @Valid BookAuthorForm form,
@@ -150,7 +155,6 @@ public class BookAuthorController {
         return "redirect:/bookauthors";
     }
 
-    // DETAILS
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
         BookAuthorRow row = linkService.getRowById(id);

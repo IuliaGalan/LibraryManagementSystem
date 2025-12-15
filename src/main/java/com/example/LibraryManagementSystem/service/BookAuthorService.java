@@ -6,10 +6,12 @@ import com.example.librarymanagementsystem.model.BookDetails;
 import com.example.librarymanagementsystem.repository.AuthorRepo;
 import com.example.librarymanagementsystem.repository.BookAuthorRepo;
 import com.example.librarymanagementsystem.repository.BookRepo;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class BookAuthorService {
@@ -26,7 +28,6 @@ public class BookAuthorService {
         this.authorRepo = authorRepo;
     }
 
-    // 🔹 listă pentru /bookauthors (index) — SORTATĂ după id BA1, BA2, ... BA10
     public List<BookAuthorRow> getAllRows() {
         return repo.findAllSorted().stream()
                 .map(ba -> new BookAuthorRow(
@@ -39,7 +40,48 @@ public class BookAuthorService {
                 .toList();
     }
 
-    // 🔹 un singur "row" pentru pagina de details
+    //SORTARE ȘI FILTRARE
+    public List<BookAuthorRow> getAllRows(String sortBy, String direction,
+                                          String filterBookTitle, String filterAuthorName) {
+
+        //Construiește sortarea
+        Sort sort = Sort.by(sortBy);
+        if ("desc".equalsIgnoreCase(direction)) {
+            sort = sort.descending();
+        } else {
+            sort = sort.ascending();
+        }
+
+        //Verifică filtrele active
+        boolean hasBookFilter = filterBookTitle != null && !filterBookTitle.trim().isEmpty();
+        boolean hasAuthorFilter = filterAuthorName != null && !filterAuthorName.trim().isEmpty();
+
+        //Aplică filtrele corespunzătoare
+        List<BookAuthor> results;
+
+        if (hasBookFilter && hasAuthorFilter) {
+            results = repo.findByBook_TitleContainingIgnoreCaseAndAuthor_NameContainingIgnoreCase(
+                    filterBookTitle.trim(), filterAuthorName.trim(), sort);
+        } else if (hasBookFilter) {
+            results = repo.findByBook_TitleContainingIgnoreCase(filterBookTitle.trim(), sort);
+        } else if (hasAuthorFilter) {
+            results = repo.findByAuthor_NameContainingIgnoreCase(filterAuthorName.trim(), sort);
+        } else {
+            results = repo.findAll(sort);
+        }
+
+        //Convertește tupluri din DB in obiecte Java
+        return results.stream()
+                .map(ba -> new BookAuthorRow(
+                        ba.getId(),
+                        ba.getBook().getId(),
+                        ba.getBook().getTitle(),
+                        ba.getAuthor().getId(),
+                        ba.getAuthor().getName()
+                ))
+                .collect(Collectors.toList());
+    }
+
     public BookAuthorRow getRowById(String id) {
         return repo.findById(id)
                 .map(ba -> new BookAuthorRow(
@@ -52,12 +94,10 @@ public class BookAuthorService {
                 .orElse(null);
     }
 
-    // 🔹 pentru editForm / update
     public BookAuthor getById(String id) {
         return repo.findById(id).orElse(null);
     }
 
-    // 🔹 toți autorii unei cărți
     public List<Author> getAuthorsForBook(String bookId) {
         return repo.findByBook_Id(bookId)
                 .stream()
@@ -65,7 +105,6 @@ public class BookAuthorService {
                 .toList();
     }
 
-    // 🔹 toate cărțile unui autor
     public List<BookDetails> getBooksForAuthor(String authorId) {
         return repo.findByAuthor_Id(authorId)
                 .stream()
@@ -73,7 +112,6 @@ public class BookAuthorService {
                 .toList();
     }
 
-    // 🔹 CREATE – creează legătura carte–autor
     public void add(String id, String bookId, String authorId) {
         BookDetails book = bookRepo.findById(bookId).orElse(null);
         Author author = authorRepo.findById(authorId).orElse(null);
@@ -94,7 +132,6 @@ public class BookAuthorService {
         repo.save(link);
     }
 
-    // 🔹 UPDATE – modifică legătura carte–autor
     public void update(String id, String bookId, String authorId) {
         BookAuthor existing = repo.findById(id).orElse(null);
         if (existing == null) {
@@ -108,9 +145,7 @@ public class BookAuthorService {
             throw new IllegalArgumentException("Invalid book or author.");
         }
 
-        // dacă se schimbă perechea, verificăm să nu existe deja altă legătură cu aceeași pereche
         if (repo.existsByBook_IdAndAuthor_Id(bookId, authorId)) {
-            // dacă e aceeași înregistrare, e ok; dacă e altă legătură, nu e ok
             if (!existing.getBook().getId().equals(bookId) ||
                     !existing.getAuthor().getId().equals(authorId)) {
                 throw new IllegalArgumentException("This author is already linked to this book.");
@@ -122,12 +157,10 @@ public class BookAuthorService {
         repo.save(existing);
     }
 
-    // 🔹 DELETE
     public void delete(String id) {
         repo.deleteById(id);
     }
 
-    // 🔹 generează ID-uri BA1, BA2, BA3...
     public String generateNextId() {
         int next = repo.findAll().stream()
                 .map(BookAuthor::getId)
@@ -142,14 +175,13 @@ public class BookAuthorService {
         return "BA" + next;
     }
 
-    // 🔹 pentru formularul /new – doar ID pre-generat
     public BookAuthor newForForm() {
         BookAuthor ba = new BookAuthor();
         ba.setId(generateNextId());
         return ba;
     }
 
-    // 🔹 DTO folosit în index/details
+    // DTO
     public static class BookAuthorRow {
         private String id;
         private String bookId;
@@ -157,11 +189,7 @@ public class BookAuthorService {
         private String authorId;
         private String authorName;
 
-        public BookAuthorRow(String id,
-                             String bookId,
-                             String bookTitle,
-                             String authorId,
-                             String authorName) {
+        public BookAuthorRow(String id, String bookId, String bookTitle, String authorId, String authorName) {
             this.id = id;
             this.bookId = bookId;
             this.bookTitle = bookTitle;
@@ -169,44 +197,16 @@ public class BookAuthorService {
             this.authorName = authorName;
         }
 
-        public String getId() {
-            return id;
-        }
+        public String getId() { return id; }
+        public String getBookId() { return bookId; }
+        public String getBookTitle() { return bookTitle; }
+        public String getAuthorId() { return authorId; }
+        public String getAuthorName() { return authorName; }
 
-        public String getBookId() {
-            return bookId;
-        }
-
-        public String getBookTitle() {
-            return bookTitle;
-        }
-
-        public String getAuthorId() {
-            return authorId;
-        }
-
-        public String getAuthorName() {
-            return authorName;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setBookId(String bookId) {
-            this.bookId = bookId;
-        }
-
-        public void setBookTitle(String bookTitle) {
-            this.bookTitle = bookTitle;
-        }
-
-        public void setAuthorId(String authorId) {
-            this.authorId = authorId;
-        }
-
-        public void setAuthorName(String authorName) {
-            this.authorName = authorName;
-        }
+        public void setId(String id) { this.id = id; }
+        public void setBookId(String bookId) { this.bookId = bookId; }
+        public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
+        public void setAuthorId(String authorId) { this.authorId = authorId; }
+        public void setAuthorName(String authorName) { this.authorName = authorName; }
     }
 }

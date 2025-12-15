@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .menu-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .menu-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+        .menu-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .menu-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .menu-count {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Color themes for each card */
+        .card-authors:hover { background: linear-gradient(135deg, #fff 0%, #e8f5e9 100%); }
+        .card-books:hover { background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%); }
+        .card-magazines:hover { background: linear-gradient(135deg, #fff 0%, #fce4ec 100%); }
+        .card-bookauthors:hover { background: linear-gradient(135deg, #fff 0%, #fff3e0 100%); }
+        .card-libraries:hover { background: linear-gradient(135deg, #fff 0%, #f3e5f5 100%); }
+        .card-members:hover { background: linear-gradient(135deg, #fff 0%, #e0f2f1 100%); }
+        .card-loans:hover { background: linear-gradient(135deg, #fff 0%, #fff9c4 100%); }
+        .card-reservations:hover { background: linear-gradient(135deg, #fff 0%, #ede7f6 100%); }
+        .card-items:hover { background: linear-gradient(135deg, #fff 0%, #e1f5fe 100%); }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 36px; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📚 Library Management System</h1>
+        <p>Manage your library resources efficiently</p>
+    </div>
+
+    <div class="menu-grid">
+
+        <!-- AUTHORS -->
+        <a href="/authors" class="menu-card card-authors">
+            <div class="menu-icon">✍️</div>
+            <div class="menu-title">Authors</div>
+            <div class="menu-description">Manage book and magazine authors</div>
+            <div class="menu-count">Create, edit, view authors</div>
+        </a>
+
+        <!-- BOOKS -->
+        <a href="/books" class="menu-card card-books">
+            <div class="menu-icon">📚</div>
+            <div class="menu-title">Books</div>
+            <div class="menu-description">Manage book collection</div>
+            <div class="menu-count">Browse, search, organize books</div>
+        </a>
+
+        <!-- MAGAZINES -->
+        <a href="/magazines" class="menu-card card-magazines">
+            <div class="menu-icon">📰</div>
+            <div class="menu-title">Magazines</div>
+            <div class="menu-description">Manage magazine publications</div>
+            <div class="menu-count">Track magazine issues</div>
+        </a>
+
+        <!-- BOOK-AUTHORS -->
+        <a href="/bookauthors" class="menu-card card-bookauthors">
+            <div class="menu-icon">🔗</div>
+            <div class="menu-title">Book-Author Links</div>
+            <div class="menu-description">Connect books with authors</div>
+            <div class="menu-count">Manage relationships</div>
+        </a>
+
+        <!-- LIBRARIES -->
+        <a href="/libraries" class="menu-card card-libraries">
+            <div class="menu-icon">🏛️</div>
+            <div class="menu-title">Libraries</div>
+            <div class="menu-description">Manage library locations</div>
+            <div class="menu-count">Branch management</div>
+        </a>
+
+        <!-- MEMBERS -->
+        <a href="/members" class="menu-card card-members">
+            <div class="menu-icon">👥</div>
+            <div class="menu-title">Members</div>
+            <div class="menu-description">Library membership management</div>
+            <div class="menu-count">Register and track members</div>
+        </a>
+
+        <!-- LOANS -->
+        <a href="/loans" class="menu-card card-loans">
+            <div class="menu-icon">📖</div>
+            <div class="menu-title">Loans</div>
+            <div class="menu-description">Book lending operations</div>
+            <div class="menu-count">Track borrowed items</div>
+        </a>
+
+        <!-- RESERVATIONS -->
+        <a href="/reservations" class="menu-card card-reservations">
+            <div class="menu-icon">🔖</div>
+            <div class="menu-title">Reservations</div>
+            <div class="menu-description">Manage book reservations</div>
+            <div class="menu-count">Hold requests system</div>
+        </a>
+
+        <!-- READABLE ITEMS -->
+        <a href="/readableitems" class="menu-card card-items">
+            <div class="menu-icon">📦</div>
+            <div class="menu-title">Readable Items</div>
+            <div class="menu-description">Physical copies inventory</div>
+            <div class="menu-count">Track individual items</div>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        <p>Library Management System © 2025 | Babeș-Bolyai University</p>
+    </div>
+</div>
+
+</body>
+</html>
