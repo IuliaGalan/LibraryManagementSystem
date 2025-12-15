@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/libraries")
 public class LibraryController {
@@ -18,27 +20,47 @@ public class LibraryController {
         this.service = service;
     }
 
-    // LIST
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("libraries", service.getAll());
+    public String list(
+            @RequestParam(required = false, defaultValue = "id") String sort,
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+            @RequestParam(required = false) String filterName,
+            @RequestParam(required = false) String filterAddress,
+            @RequestParam(required = false) String filterEmail,
+            Model model) {
+
+        List<Library> libraries = service.getAll(sort, direction, filterName, filterAddress, filterEmail);
+
+        model.addAttribute("libraries", libraries);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDirection", direction);
+        model.addAttribute("filterName", filterName);
+        model.addAttribute("filterAddress", filterAddress);
+        model.addAttribute("filterEmail", filterEmail);
+
         return "library/index";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
-    public String newForm(Model model) {
+    public String form(Model model) {
         model.addAttribute("library", service.newForForm());
         return "library/form";
     }
 
-    // CREATE - CU VALIDARE NAME DUPLICAT ✅
     @PostMapping
-    public String create(@Valid @ModelAttribute Library library,
+    public String create(@Valid @ModelAttribute("library") Library library,
                          BindingResult bindingResult,
                          Model model) {
 
-        // 🔹 VALIDARE: Nume duplicat?
+        // Validare: Email duplicat
+        if (library.getEmail() != null && !library.getEmail().isBlank()) {
+            if (service.existsByEmail(library.getEmail())) {
+                bindingResult.rejectValue("email", "error.library",
+                        "This email already exists.");
+            }
+        }
+
+        // Validare: Nume duplicat
         if (library.getName() != null && !library.getName().isBlank()) {
             if (service.existsByName(library.getName())) {
                 bindingResult.rejectValue("name", "error.library",
@@ -46,7 +68,6 @@ public class LibraryController {
             }
         }
 
-        // Dacă sunt erori, rămâi pe formular
         if (bindingResult.hasErrors()) {
             return "library/form";
         }
@@ -55,7 +76,6 @@ public class LibraryController {
         return "redirect:/libraries";
     }
 
-    // DETAILS
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
         Library library = service.getById(id);
@@ -66,7 +86,6 @@ public class LibraryController {
         return "library/details";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Library library = service.getById(id);
@@ -77,24 +96,30 @@ public class LibraryController {
         return "library/edit";
     }
 
-    // UPDATE - CU VALIDARE NAME DUPLICAT ✅
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
-                         @Valid @ModelAttribute Library library,
+                         @Valid @ModelAttribute("library") Library library,
                          BindingResult bindingResult,
                          Model model) {
 
         library.setId(id);
 
-        // 🔹validare, are bibliotecă are deja acest nume?
-        if (library.getName() != null && !library.getName().isBlank()) {
-            if (service.existsByNameForOtherLibrary(library.getName(), id)) {
-                bindingResult.rejectValue("name", "error.library",
-                        "This library name is already used by another library.");
+        // Validare: Alt library are deja acest email
+        if (library.getEmail() != null && !library.getEmail().isBlank()) {
+            if (service.existsByEmailForOtherLibrary(library.getEmail(), id)) {
+                bindingResult.rejectValue("email", "error.library",
+                        "This email is already used by another library.");
             }
         }
 
-        // Dacă sunt erori, raman pe edit
+        // Validare: Alt library are deja acest nume
+        if (library.getName() != null && !library.getName().isBlank()) {
+            if (service.existsByNameForOtherLibrary(library.getName(), id)) {
+                bindingResult.rejectValue("name", "error.library",
+                        "This library name is already used.");
+            }
+        }
+
         if (bindingResult.hasErrors()) {
             return "library/edit";
         }
@@ -103,7 +128,6 @@ public class LibraryController {
         return "redirect:/libraries";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);

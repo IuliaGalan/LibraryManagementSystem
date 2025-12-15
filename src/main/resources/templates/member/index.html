@@ -2,49 +2,502 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Members</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .header-actions {
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .filter-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-form label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .filter-form input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: rgba(255,255,255,0.9);
+            transition: border-color 0.3s;
+        }
+
+        .filter-form input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: white;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .btn-filter {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-filter:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-clear {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-clear:hover {
+            background-color: #da190b;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* Sortable Headers */
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 25px;
+            transition: background-color 0.2s;
+        }
+
+        .sortable:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .sortable a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sort-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .sort-active {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        }
+
+        .sort-active .sort-icon {
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-details {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-details:hover {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit {
+            background-color: #FF9800;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #e68900;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background-color: #da190b;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h1>Members</h1>
-<a th:href="@{/members/new}">Add new Member</a>
-<br/><br/>
+<div class="container">
+    <h1>👥 Members Management</h1>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Address</th>
-        <th>Library ID</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+    <div class="header-actions">
+        <a th:href="@{/members/new}" class="btn-primary">➕ Add new Member</a>
+    </div>
 
-    <tbody>
-    <tr th:each="member : ${members}">
-        <td th:text="${member.id}">M1</td>
-        <td th:text="${member.name}">Ana Popescu</td>
-        <td th:text="${member.email}">ana@example.com</td>
-        <td th:text="${member.address}">Address</td>
-        <td th:text="${member.libraryId}">LIB1</td>
+    <!-- ✅ FILTER SECTION -->
+    <div class="filter-section">
+        <h3>🔍 Filter Members</h3>
+        <form th:action="@{/members}" method="get" class="filter-form">
+            <div>
+                <label for="filterName">Member Name</label>
+                <input type="text"
+                       id="filterName"
+                       name="filterName"
+                       th:value="${filterName}"
+                       placeholder="e.g., John Doe"/>
+            </div>
 
-        <td>
-            <a th:href="@{/members/{id}/details(id=${member.id})}">Details</a>
-            &nbsp;|&nbsp;
-            <a th:href="@{/members/{id}/edit(id=${member.id})}">Edit</a>
-            &nbsp;|&nbsp;
+            <div>
+                <label for="filterAddress">Address</label>
+                <input type="text"
+                       id="filterAddress"
+                       name="filterAddress"
+                       th:value="${filterAddress}"
+                       placeholder="e.g., Main Street"/>
+            </div>
 
-            <form th:action="@{/members/{id}/delete(id=${member.id})}"
-                  method="post"
-                  style="display:inline">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            <div>
+                <label for="filterEmail">Email</label>
+                <input type="text"
+                       id="filterEmail"
+                       name="filterEmail"
+                       th:value="${filterEmail}"
+                       placeholder="e.g., member@example.com"/>
+            </div>
+
+            <!-- Păstrează sortarea curentă -->
+            <input type="hidden" name="sort" th:value="${currentSort}"/>
+            <input type="hidden" name="direction" th:value="${currentDirection}"/>
+
+            <div class="filter-buttons">
+                <button type="submit" class="btn-filter">🔎 Search</button>
+                <a th:href="@{/members}" class="btn-clear">✖ Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- ✅ TABLE WITH SORTING -->
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <!-- ID Column -->
+                <th class="sortable" th:classappend="${currentSort == 'id'} ? 'sort-active' : ''">
+                    <a th:href="@{/members(
+                            sort='id',
+                            direction=${currentSort == 'id' && currentDirection == 'asc' ? 'desc' : 'asc'},
+                            filterName=${filterName},
+                            filterAddress=${filterAddress},
+                            filterEmail=${filterEmail}
+                        )}">
+                        ID
+                        <span class="sort-icon">
+                            <span th:if="${currentSort == 'id' && currentDirection == 'asc'}">▲</span>
+                            <span th:if="${currentSort == 'id' && currentDirection == 'desc'}">▼</span>
+                            <span th:if="${currentSort != 'id'}">⇅</span>
+                        </span>
+                    </a>
+                </th>
+
+                <!-- Name Column -->
+                <th class="sortable" th:classappend="${currentSort == 'name'} ? 'sort-active' : ''">
+                    <a th:href="@{/members(
+                            sort='name',
+                            direction=${currentSort == 'name' && currentDirection == 'asc' ? 'desc' : 'asc'},
+                            filterName=${filterName},
+                            filterAddress=${filterAddress},
+                            filterEmail=${filterEmail}
+                        )}">
+                        Name
+                        <span class="sort-icon">
+                            <span th:if="${currentSort == 'name' && currentDirection == 'asc'}">▲</span>
+                            <span th:if="${currentSort == 'name' && currentDirection == 'desc'}">▼</span>
+                            <span th:if="${currentSort != 'name'}">⇅</span>
+                        </span>
+                    </a>
+                </th>
+
+                <!-- Email Column -->
+                <th class="sortable" th:classappend="${currentSort == 'email'} ? 'sort-active' : ''">
+                    <a th:href="@{/members(
+                            sort='email',
+                            direction=${currentSort == 'email' && currentDirection == 'asc' ? 'desc' : 'asc'},
+                            filterName=${filterName},
+                            filterAddress=${filterAddress},
+                            filterEmail=${filterEmail}
+                        )}">
+                        Email
+                        <span class="sort-icon">
+                            <span th:if="${currentSort == 'email' && currentDirection == 'asc'}">▲</span>
+                            <span th:if="${currentSort == 'email' && currentDirection == 'desc'}">▼</span>
+                            <span th:if="${currentSort != 'email'}">⇅</span>
+                        </span>
+                    </a>
+                </th>
+
+                <!-- Address Column -->
+                <th class="sortable" th:classappend="${currentSort == 'address'} ? 'sort-active' : ''">
+                    <a th:href="@{/members(
+                            sort='address',
+                            direction=${currentSort == 'address' && currentDirection == 'asc' ? 'desc' : 'asc'},
+                            filterName=${filterName},
+                            filterAddress=${filterAddress},
+                            filterEmail=${filterEmail}
+                        )}">
+                        Address
+                        <span class="sort-icon">
+                            <span th:if="${currentSort == 'address' && currentDirection == 'asc'}">▲</span>
+                            <span th:if="${currentSort == 'address' && currentDirection == 'desc'}">▼</span>
+                            <span th:if="${currentSort != 'address'}">⇅</span>
+                        </span>
+                    </a>
+                </th>
+
+                <!-- Library ID Column -->
+                <th class="sortable" th:classappend="${currentSort == 'libraryId'} ? 'sort-active' : ''">
+                    <a th:href="@{/members(
+                            sort='libraryId',
+                            direction=${currentSort == 'libraryId' && currentDirection == 'asc' ? 'desc' : 'asc'},
+                            filterName=${filterName},
+                            filterAddress=${filterAddress},
+                            filterEmail=${filterEmail}
+                        )}">
+                        Library ID
+                        <span class="sort-icon">
+                            <span th:if="${currentSort == 'libraryId' && currentDirection == 'asc'}">▲</span>
+                            <span th:if="${currentSort == 'libraryId' && currentDirection == 'desc'}">▼</span>
+                            <span th:if="${currentSort != 'libraryId'}">⇅</span>
+                        </span>
+                    </a>
+                </th>
+
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tbody>
+            <!-- Data Rows -->
+            <tr th:each="mem : ${members}">
+                <td th:text="${mem.id}">M1</td>
+                <td th:text="${mem.name}">Member Name</td>
+                <td th:text="${mem.email}">email@example.com</td>
+                <td th:text="${mem.address}">Address</td>
+                <td th:text="${mem.library != null ? mem.library.id : 'N/A'}">LIB001</td>
+
+                <!-- ✅ ACTIONS COLUMN -->
+                <td>
+                    <div class="actions">
+                        <a th:href="@{/members/{id}/details(id=${mem.id})}" class="btn-action btn-details">📄 Details</a>
+                        <a th:href="@{/members/{id}/edit(id=${mem.id})}" class="btn-action btn-edit">✏️ Edit</a>
+
+                        <form th:action="@{/members/{id}/delete(id=${mem.id})}"
+                              method="post"
+                              style="display:inline"
+                              onsubmit="return confirm('Are you sure you want to delete this member?');">
+                            <button type="submit" class="btn-delete">🗑️ Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Empty State (shown when no results) -->
+        <div class="empty-state" th:if="${#lists.isEmpty(members)}">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-text">No members found</div>
+            <div class="empty-state-subtext">Try adjusting your search filters or add a new member</div>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>

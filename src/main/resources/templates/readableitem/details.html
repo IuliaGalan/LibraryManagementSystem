@@ -2,18 +2,302 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Readable Item Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .details-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .details-section h3 {
+            color: #2196F3;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 15px;
+        }
+
+        .detail-value.empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .badge-completed {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .badge-cancelled {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .list-section {
+            margin-top: 30px;
+        }
+
+        .list-section h3 {
+            color: #FF9800;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #FF9800;
+            padding-bottom: 10px;
+        }
+
+        .list-container {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .empty-message {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h2>Readable Item Details</h2>
+<div class="container">
+    <h2>📋 Readable Item Details</h2>
+    <p class="subtitle">Detailed information about the item</p>
 
-<p><strong>ID:</strong> <span th:text="${item.id}">I1</span></p>
-<p><strong>Publication ID:</strong> <span th:text="${item.publicationId}">P1</span></p>
-<p><strong>Barcode:</strong> <span th:text="${item.barcode}">123456</span></p>
-<p><strong>Status:</strong> <span th:text="${item.status}">ACTIVE</span></p>
+    <!-- Basic Information -->
+    <div class="details-section">
+        <h3>📦 Item Information</h3>
 
-<a th:href="@{/readableitems}">Back</a>
+        <div class="detail-row">
+            <div class="detail-label">Item ID:</div>
+            <div class="detail-value" th:text="${item.id}">Item1</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Publication ID:</div>
+            <div class="detail-value" th:text="${item.publicationId}">B1</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Barcode:</div>
+            <div class="detail-value" th:text="${item.barcode}">123456</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Status:</div>
+            <div class="detail-value">
+                <span class="badge"
+                      th:classappend="${item.status.toString() == 'ACTIVE'} ? 'badge-active' : (${item.status.toString() == 'COMPLETED'} ? 'badge-completed' : 'badge-cancelled')"
+                      th:text="${item.status}">
+                    ACTIVE
+                </span>
+            </div>
+        </div>
+
+        <div class="detail-row" th:if="${item.library != null}">
+            <div class="detail-label">Library:</div>
+            <div class="detail-value" th:text="${item.library.name + ' (' + item.library.id + ')'}">Library Name</div>
+        </div>
+
+        <div class="detail-row" th:if="${item.loan != null}">
+            <div class="detail-label">Current Loan:</div>
+            <div class="detail-value" th:text="${item.loan.id}">Loan1</div>
+        </div>
+    </div>
+
+    <!-- Reservations Section -->
+    <div class="list-section">
+        <h3>🔖 Reservations for this Item</h3>
+        <div class="list-container">
+            <div th:if="${#lists.isEmpty(item.reservations)}">
+                <p class="empty-message">No reservations for this item</p>
+            </div>
+            <div th:if="${!#lists.isEmpty(item.reservations)}">
+                <div class="list-item" th:each="res : ${item.reservations}">
+                    <strong th:text="${res.id}">R1</strong> -
+                    Member: <span th:text="${res.member != null ? res.member.name : 'N/A'}">Member Name</span>
+                    <br/>
+                    <small style="color: #666;">
+                        Date: <span th:text="${res.date}">2024-01-15</span> |
+                        Status: <span th:text="${res.status}">ACTIVE</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="button-group">
+        <a th:href="@{/readableitems}" class="btn btn-primary">⬅️ Back to List</a>
+        <a th:href="@{/readableitems/{id}/edit(id=${item.id})}" class="btn btn-edit">✏️ Edit Item</a>
+        <form th:action="@{/readableitems/{id}/delete(id=${item.id})}"
+              method="post"
+              style="flex: 1; margin: 0;"
+              onsubmit="return confirm('Are you sure you want to delete this item? This action cannot be undone.');">
+            <button type="submit" class="btn btn-danger" style="width: 100%;">🗑️ Delete Item</button>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

@@ -3,9 +3,13 @@ package com.example.librarymanagementsystem.controller;
 import com.example.librarymanagementsystem.model.Loan;
 import com.example.librarymanagementsystem.service.LoanService;
 import com.example.librarymanagementsystem.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/loans")
@@ -19,32 +23,73 @@ public class LoanController {
         this.memberService = memberService;
     }
 
-    // LIST
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("loans", service.getAll());
+    public String list(
+            @RequestParam(required = false, defaultValue = "id") String sort,
+            @RequestParam(required = false, defaultValue = "asc") String direction,
+            @RequestParam(required = false) String filterMemberName,
+            @RequestParam(required = false) String filterStatus,
+            @RequestParam(required = false) String filterLoanDate,
+            Model model) {
+
+        List<Loan> loans = service.getAll(sort, direction,
+                filterMemberName, filterStatus, filterLoanDate);
+
+        model.addAttribute("loans", loans);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDirection", direction);
+        model.addAttribute("filterMemberName", filterMemberName);
+        model.addAttribute("filterStatus", filterStatus);
+        model.addAttribute("filterLoanDate", filterLoanDate);
+        model.addAttribute("statuses", Loan.LoanStatus.values());
+
         return "loan/index";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("loan", service.newForForm());
-        model.addAttribute("members", memberService.getAll());  // ✅ LISTĂ MEMBRI
-        model.addAttribute("statuses", Loan.LoanStatus.values());
+        model.addAttribute("members", memberService.getAll());
         return "loan/form";
     }
 
-    // CREATE
     @PostMapping
-    public String create(@ModelAttribute Loan loan,
-                         @RequestParam("memberId") String memberId) {  // ✅ PRIMEȘTE memberId
-        loan.setMember(memberService.getById(memberId));  // ✅ SETEAZĂ MEMBER
-        service.add(loan.getId(), loan);
+    public String create(@Valid @ModelAttribute("loan") Loan loan,
+                         BindingResult bindingResult,
+                         @RequestParam("memberId") String memberId,
+                         @RequestParam("statusInput") String statusInput,
+                         Model model) {
+
+        // Validare: Status valid?
+        Loan.LoanStatus validStatus = null;
+        try {
+            validStatus = Loan.LoanStatus.valueOf(statusInput.toUpperCase().trim());
+            loan.setStatus(validStatus);
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("status", "error.loan",
+                    "Status must be: OPEN, CLOSED, or OVERDUE");
+        }
+
+        // Validare: Due date după loan date?
+        if (loan.getLoanDate() != null && loan.getDueDate() != null) {
+            if (loan.getDueDate().isBefore(loan.getLoanDate())) {
+                bindingResult.rejectValue("dueDate", "error.loan",
+                        "Due date must be after loan date.");
+            }
+        }
+
+        // Set member
+        loan.setMember(memberService.getById(memberId));
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("members", memberService.getAll());
+            return "loan/form";
+        }
+
+        service.save(loan);
         return "redirect:/loans";
     }
 
-    // DETAILS
     @GetMapping("/{id}/details")
     public String details(@PathVariable String id, Model model) {
         Loan loan = service.getById(id);
@@ -55,7 +100,6 @@ public class LoanController {
         return "loan/details";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         Loan loan = service.getById(id);
@@ -63,23 +107,50 @@ public class LoanController {
             return "redirect:/loans";
         }
         model.addAttribute("loan", loan);
-        model.addAttribute("members", memberService.getAll());  // ✅ LISTĂ MEMBRI
-        model.addAttribute("statuses", Loan.LoanStatus.values());
+        model.addAttribute("members", memberService.getAll());
         return "loan/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}")
     public String update(@PathVariable String id,
-                         @ModelAttribute Loan loan,
-                         @RequestParam("memberId") String memberId) {  // ✅ PRIMEȘTE memberId
+                         @Valid @ModelAttribute("loan") Loan loan,
+                         BindingResult bindingResult,
+                         @RequestParam("memberId") String memberId,
+                         @RequestParam("statusInput") String statusInput,
+                         Model model) {
+
         loan.setId(id);
-        loan.setMember(memberService.getById(memberId));  // ✅ SETEAZĂ MEMBER
-        service.update(id, loan);
+
+        // Validare: Status valid?
+        Loan.LoanStatus validStatus = null;
+        try {
+            validStatus = Loan.LoanStatus.valueOf(statusInput.toUpperCase().trim());
+            loan.setStatus(validStatus);
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("status", "error.loan",
+                    "Status must be: OPEN, CLOSED, or OVERDUE");
+        }
+
+        // Validare: Due date după loan date?
+        if (loan.getLoanDate() != null && loan.getDueDate() != null) {
+            if (loan.getDueDate().isBefore(loan.getLoanDate())) {
+                bindingResult.rejectValue("dueDate", "error.loan",
+                        "Due date must be after loan date.");
+            }
+        }
+
+        // Set member
+        loan.setMember(memberService.getById(memberId));
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("members", memberService.getAll());
+            return "loan/edit";
+        }
+
+        service.save(loan);
         return "redirect:/loans";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.delete(id);

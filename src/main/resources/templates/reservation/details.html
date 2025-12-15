@@ -2,20 +2,256 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservation Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .details-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .details-section h3 {
+            color: #2196F3;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 15px;
+        }
+
+        .detail-value.empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .badge-completed {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .badge-cancelled {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h2>Reservation Details</h2>
+<div class="container">
+    <h2>📋 Reservation Details</h2>
+    <p class="subtitle">Detailed information about the reservation</p>
 
-<p><strong>ID:</strong> <span th:text="${reservation.id}">R1</span></p>
-<p><strong>Date:</strong> <span th:text="${reservation.date}">2024-01-01</span></p>
-<p><strong>Status:</strong> <span th:text="${reservation.status}">ACTIVE</span></p>
-<p><strong>Member:</strong> <span th:text="${reservation.member != null ? reservation.member.name : 'N/A'}">Member Name</span></p>
-<p><strong>Readable Item:</strong> <span th:text="${reservation.readableItem != null ? reservation.readableItem.id : 'N/A'}">Item ID</span></p>
-<p><strong>Loan:</strong> <span th:text="${reservation.loan != null ? reservation.loan.id : 'N/A'}">Loan ID</span></p>
+    <!-- Basic Information -->
+    <div class="details-section">
+        <h3>🔖 Reservation Information</h3>
 
-<a th:href="@{/reservations}">Back</a>
+        <div class="detail-row">
+            <div class="detail-label">Reservation ID:</div>
+            <div class="detail-value" th:text="${reservation.id}">R1</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Member:</div>
+            <div class="detail-value"
+                 th:text="${reservation.member != null ? reservation.member.name : 'N/A'}">
+                Member Name
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Readable Item:</div>
+            <div class="detail-value"
+                 th:text="${reservation.readableItem != null ? reservation.readableItem.id : 'N/A'}">
+                Item ID
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Barcode:</div>
+            <div class="detail-value"
+                 th:text="${reservation.readableItem != null ? reservation.readableItem.barcode : 'N/A'}">
+                Barcode
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Reservation Date:</div>
+            <div class="detail-value" th:text="${reservation.date}">2024-01-01</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Status:</div>
+            <div class="detail-value">
+                <span class="badge"
+                      th:classappend="${reservation.status.toString() == 'ACTIVE'} ? 'badge-active' : (${reservation.status.toString() == 'COMPLETED'} ? 'badge-completed' : 'badge-cancelled')"
+                      th:text="${reservation.status}">
+                    ACTIVE
+                </span>
+            </div>
+        </div>
+
+        <div class="detail-row" th:if="${reservation.loan != null}">
+            <div class="detail-label">Associated Loan:</div>
+            <div class="detail-value" th:text="${reservation.loan.id}">Loan1</div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="button-group">
+        <a th:href="@{/reservations}" class="btn btn-primary">⬅️ Back to List</a>
+        <a th:href="@{/reservations/{id}/edit(id=${reservation.id})}" class="btn btn-edit">✏️ Edit Reservation</a>
+        <form th:action="@{/reservations/{id}/delete(id=${reservation.id})}"
+              method="post"
+              style="flex: 1; margin: 0;"
+              onsubmit="return confirm('Are you sure you want to delete this reservation? This action cannot be undone.');">
+            <button type="submit" class="btn btn-danger" style="width: 100%;">🗑️ Delete Reservation</button>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

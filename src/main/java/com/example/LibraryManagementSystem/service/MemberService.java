@@ -2,9 +2,9 @@ package com.example.librarymanagementsystem.service;
 
 import com.example.librarymanagementsystem.model.Member;
 import com.example.librarymanagementsystem.repository.MemberRepo;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -17,22 +17,57 @@ public class MemberService {
     }
 
     public List<Member> getAll() {
-        List<Member> members = repo.findAll();
+        return repo.findAllSorted();
+    }
 
-        // Sortare naturală pentru ID-uri (M1, M2, ..., M10)
-        members.sort(Comparator.comparing(Member::getId, (id1, id2) -> {
-            // Extrage partea numerică din ID
-            String num1 = id1.replaceAll("\\D+", "");
-            String num2 = id2.replaceAll("\\D+", "");
+    public List<Member> getAll(String sortBy, String direction,
+                               String filterName,
+                               String filterAddress,
+                               String filterEmail) {
+        Sort sort = Sort.by(sortBy);
+        if ("desc".equalsIgnoreCase(direction)) {
+            sort = sort.descending();
+        } else {
+            sort = sort.ascending();
+        }
 
-            if (num1.isEmpty() || num2.isEmpty()) {
-                return id1.compareTo(id2);
-            }
+        boolean hasNameFilter = filterName != null && !filterName.trim().isEmpty();
+        boolean hasAddressFilter = filterAddress != null && !filterAddress.trim().isEmpty();
+        boolean hasEmailFilter = filterEmail != null && !filterEmail.trim().isEmpty();
 
-            return Integer.compare(Integer.parseInt(num1), Integer.parseInt(num2));
-        }));
+        if (hasNameFilter && hasAddressFilter && hasEmailFilter) {
+            return repo.findByNameContainingIgnoreCaseAndAddressContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                    filterName.trim(), filterAddress.trim(), filterEmail.trim(), sort);
+        }
 
-        return members;
+        if (hasNameFilter && hasAddressFilter) {
+            return repo.findByNameContainingIgnoreCaseAndAddressContainingIgnoreCase(
+                    filterName.trim(), filterAddress.trim(), sort);
+        }
+
+        if (hasNameFilter && hasEmailFilter) {
+            return repo.findByNameContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                    filterName.trim(), filterEmail.trim(), sort);
+        }
+
+        if (hasAddressFilter && hasEmailFilter) {
+            return repo.findByAddressContainingIgnoreCaseAndEmailContainingIgnoreCase(
+                    filterAddress.trim(), filterEmail.trim(), sort);
+        }
+
+        if (hasNameFilter) {
+            return repo.findByNameContainingIgnoreCase(filterName.trim(), sort);
+        }
+
+        if (hasAddressFilter) {
+            return repo.findByAddressContainingIgnoreCase(filterAddress.trim(), sort);
+        }
+
+        if (hasEmailFilter) {
+            return repo.findByEmailContainingIgnoreCase(filterEmail.trim(), sort);
+        }
+
+        return repo.findAll(sort);
     }
 
     public Member getById(String id) {
@@ -43,6 +78,16 @@ public class MemberService {
         return repo.save(member);
     }
 
+    public void add(String id, Member member) {
+        member.setId(id);
+        repo.save(member);
+    }
+
+    public void update(String id, Member member) {
+        member.setId(id);
+        repo.save(member);
+    }
+
     public void delete(String id) {
         repo.deleteById(id);
     }
@@ -50,30 +95,41 @@ public class MemberService {
     public String generateNextId() {
         int maxNumber = repo.findAll().stream()
                 .map(Member::getId)
-                .filter(id -> id != null && id.startsWith("M"))
-                .map(id -> id.substring(1))
-                .filter(num -> num.matches("\\d+"))
-                .mapToInt(Integer::parseInt)
-                .max()
+                .filter(id -> id != null && id.toUpperCase().startsWith("MEM"))
+                .map(id -> {
+                    String numericPart = id.substring(3);
+                    try {
+                        return Integer.parseInt(numericPart);
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                })
+                .max(Integer::compareTo)
                 .orElse(0);
 
-        return "M" + (maxNumber + 1);
+        return String.format("MEM%03d", maxNumber + 1);
     }
 
     public Member newForForm() {
-        Member m = new Member();
-        m.setId(generateNextId());
-        return m;
+        Member member = new Member();
+        member.setId(generateNextId());
+        return member;
     }
 
-    // Business validation helpers
+    // ✅ VALIDĂRI BUSINESS
+    public boolean existsById(String id) {
+        if (id == null) return false;
+        return repo.existsById(id);
+    }
+
     public boolean existsByEmail(String email) {
         if (email == null) return false;
-        return repo.existsByEmailIgnoreCase(email.trim());
+        return repo.findByEmail(email.trim()) != null;
     }
 
     public boolean existsByEmailForOtherMember(String email, String excludedId) {
         if (email == null) return false;
-        return repo.existsByEmailIgnoreCaseAndIdNot(email.trim(), excludedId);
+        Member existing = repo.findByEmail(email.trim());
+        return existing != null && !existing.getId().equals(excludedId);
     }
 }
