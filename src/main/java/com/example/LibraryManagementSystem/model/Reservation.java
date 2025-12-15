@@ -44,6 +44,7 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "readable_item_id", nullable = false)
     private ReadableItem readableItem;
+    //sa testam si cand e empty field
 
     /**
      * Relație N → 1 cu Loan (opțional)
