@@ -21,7 +21,7 @@ public class ReadableItemController {
     }
 
     // ========================================
-    // ✅ LISTA CU SORTARE ȘI FILTRARE
+    // ✅ LISTA CU SORTARE ȘI FILTRARE - FIXED
     // ========================================
     @GetMapping
     public String list(
@@ -35,7 +35,8 @@ public class ReadableItemController {
         List<ReadableItem> items = service.getAll(sort, direction,
                 filterPublicationId, filterBarcode, filterStatus);
 
-        model.addAttribute("items", items);
+        // ✅ FIXED: changed from "items" to "readableItems"
+        model.addAttribute("readableItems", items);
         model.addAttribute("currentSort", sort);
         model.addAttribute("currentDirection", direction);
         model.addAttribute("filterPublicationId", filterPublicationId);

@@ -36,6 +36,22 @@
             margin-bottom: 25px;
         }
 
+        .btn-home {
+            background-color: #9C27B0;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn-home:hover {
+            background-color: #7B1FA2;
+        }
+
         .btn-primary {
             background-color: #4CAF50;
             color: white;
@@ -317,6 +333,7 @@
     <h1>👥 Members Management</h1>
 
     <div class="header-actions">
+        <a th:href="@{/}" class="btn-home">🏠 Home</a>
         <a th:href="@{/members/new}" class="btn-primary">➕ Add new Member</a>
     </div>
 
@@ -440,19 +457,19 @@
                 </th>
 
                 <!-- Library ID Column -->
-                <th class="sortable" th:classappend="${currentSort == 'libraryId'} ? 'sort-active' : ''">
+                <th class="sortable" th:classappend="${currentSort == 'library.id'} ? 'sort-active' : ''">
                     <a th:href="@{/members(
-                            sort='libraryId',
-                            direction=${currentSort == 'libraryId' && currentDirection == 'asc' ? 'desc' : 'asc'},
+                            sort='library.id',
+                            direction=${currentSort == 'library.id' && currentDirection == 'asc' ? 'desc' : 'asc'},
                             filterName=${filterName},
                             filterAddress=${filterAddress},
                             filterEmail=${filterEmail}
                         )}">
                         Library ID
                         <span class="sort-icon">
-                            <span th:if="${currentSort == 'libraryId' && currentDirection == 'asc'}">▲</span>
-                            <span th:if="${currentSort == 'libraryId' && currentDirection == 'desc'}">▼</span>
-                            <span th:if="${currentSort != 'libraryId'}">⇅</span>
+                            <span th:if="${currentSort == 'library.id' && currentDirection == 'asc'}">▲</span>
+                            <span th:if="${currentSort == 'library.id' && currentDirection == 'desc'}">▼</span>
+                            <span th:if="${currentSort != 'library.id'}">⇅</span>
                         </span>
                     </a>
                 </th>
@@ -461,7 +478,6 @@
             </tr>
             </thead>
 
-            <tbody>
             <tbody>
             <!-- Data Rows -->
             <tr th:each="mem : ${members}">
