@@ -13,91 +13,94 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
-        .container {
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             max-width: 600px;
             width: 100%;
-            background-color: white;
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .form-content {
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        label {
+        .form-group label {
             display: block;
+            margin-bottom: 8px;
             color: #333;
             font-weight: 600;
-            margin-bottom: 8px;
             font-size: 14px;
         }
 
         .required {
             color: #f44336;
-            margin-left: 3px;
         }
 
-        input[type="text"],
-        input[type="email"] {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 15px;
-            transition: all 0.3s;
-            background-color: #fafafa;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus {
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
-            border-color: #FF9800;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
-        input[readonly] {
-            background-color: #f0f0f0;
-            color: #666;
-            cursor: not-allowed;
-        }
-
-        input.error {
-            border-color: #f44336;
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
         }
 
         .error-message {
             color: #f44336;
             font-size: 13px;
             margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input {
+            border-color: #f44336;
+        }
+
+        .form-group.error .error-message {
             display: block;
         }
 
-        .button-group {
+        .form-actions {
             display: flex;
             gap: 15px;
             margin-top: 30px;
@@ -105,128 +108,178 @@
 
         .btn {
             flex: 1;
-            padding: 14px 24px;
+            padding: 14px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
-            display: inline-block;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
         }
 
         .btn-secondary {
-            background-color: #e0e0e0;
-            color: #333;
+            background: #f5f5f5;
+            color: #666;
         }
 
         .btn-secondary:hover {
-            background-color: #d0d0d0;
-            transform: translateY(-2px);
+            background: #e0e0e0;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
-            .container {
+            .form-content {
                 padding: 25px;
             }
 
-            .button-group {
+            .form-actions {
                 flex-direction: column;
-            }
-
-            h2 {
-                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
+<div class="form-container">
+    <div class="form-header">
+        <h1>✏️ Edit Library</h1>
+        <p>Update library details</p>
+    </div>
 
-<div class="container">
-    <h2>✏️ Edit Library</h2>
-    <p class="subtitle">Update library information</p>
+    <div class="form-content">
+        <form th:action="@{/libraries/{id}/update(id=${library.id})}" method="post" th:object="${library}" id="libraryForm">
 
-    <form th:action="@{/libraries/{id}(id=${library.id})}"
-          th:object="${library}"
-          method="post">
+            <!-- Hidden ID field -->
+            <input type="hidden" th:field="*{id}">
 
-        <!-- ID (readonly) -->
-        <div class="form-group">
-            <label for="id">Library ID</label>
-            <input type="text"
-                   id="id"
-                   th:field="*{id}"
-                   readonly/>
-        </div>
+            <!-- NAME -->
+            <div class="form-group">
+                <label for="name">Library Name <span class="required">*</span></label>
+                <input type="text"
+                       id="name"
+                       th:field="*{name}"
+                       required
+                       placeholder="Enter library name"
+                       maxlength="100">
+                <div class="error-message" id="nameError">Please enter a library name</div>
+            </div>
 
-        <!-- Name (required) -->
-        <div class="form-group">
-            <label for="name">
-                Library Name <span class="required">*</span>
-            </label>
-            <input type="text"
-                   id="name"
-                   th:field="*{name}"
-                   th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"
-                   placeholder="e.g., Central Library"
-                   required/>
-            <span class="error-message"
-                  th:if="${#fields.hasErrors('name')}"
-                  th:errors="*{name}"></span>
-        </div>
+            <!-- ADDRESS -->
+            <div class="form-group">
+                <label for="address">Address <span class="required">*</span></label>
+                <textarea id="address"
+                          th:field="*{address}"
+                          required
+                          placeholder="Enter library address"
+                          maxlength="255"></textarea>
+                <div class="error-message" id="addressError">Please enter an address</div>
+            </div>
 
-        <!-- Address (required) -->
-        <div class="form-group">
-            <label for="address">
-                Address <span class="required">*</span>
-            </label>
-            <input type="text"
-                   id="address"
-                   th:field="*{address}"
-                   th:classappend="${#fields.hasErrors('address')} ? 'error' : ''"
-                   placeholder="e.g., 123 Main Street"
-                   required/>
-            <span class="error-message"
-                  th:if="${#fields.hasErrors('address')}"
-                  th:errors="*{address}"></span>
-        </div>
+            <!-- PHONE NUMBER -->
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                <input type="tel"
+                       id="phoneNumber"
+                       th:field="*{phoneNumber}"
+                       required
+                       placeholder="e.g., 0264-590110 or +40264590110"
+                       pattern="^(\+?\d{1,3}[-.\s]?)?\(?\d{3,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}$"
+                       maxlength="20">
+                <div class="help-text">Format: 0264-590110, +40264590110, sau (0264) 590110</div>
+                <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+            </div>
 
-        <!-- Email (required) -->
-        <div class="form-group">
-            <label for="email">
-                Email <span class="required">*</span>
-            </label>
-            <input type="email"
-                   id="email"
-                   th:field="*{email}"
-                   th:classappend="${#fields.hasErrors('email')} ? 'error' : ''"
-                   placeholder="e.g., library@example.com"
-                   required/>
-            <span class="error-message"
-                  th:if="${#fields.hasErrors('email')}"
-                  th:errors="*{email}"></span>
-        </div>
+            <!-- EMAIL -->
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="email"
+                       id="email"
+                       th:field="*{email}"
+                       required
+                       placeholder="library@example.com"
+                       maxlength="100">
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
 
-        <!-- Buttons -->
-        <div class="button-group">
-            <button type="submit" class="btn btn-primary">💾 Update Library</button>
-            <a th:href="@{/libraries}" class="btn btn-secondary">✖ Cancel</a>
-        </div>
-
-    </form>
+            <!-- ACTIONS -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 Update Library</button>
+                <a href="/libraries" class="btn btn-secondary">❌ Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 
+<script>
+    // Client-side validation
+    const form = document.getElementById('libraryForm');
+    const phoneInput = document.getElementById('phoneNumber');
+    const phoneError = document.getElementById('phoneError');
+
+    // Phone number validation patterns
+    const phonePatterns = [
+        /^(\+?\d{1,3}[-.\s]?)?\(?\d{3,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}$/,  // General international
+        /^0\d{3}[-.\s]?\d{3}[-.\s]?\d{3,4}$/,  // Romanian format: 0264-590-110
+        /^\+40\d{9}$/,  // Romanian international: +40264590110
+    ];
+
+    phoneInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        const isValid = phonePatterns.some(pattern => pattern.test(value));
+
+        const formGroup = this.parentElement;
+        if (!isValid && value.length > 0) {
+            formGroup.classList.add('error');
+        } else {
+            formGroup.classList.remove('error');
+        }
+    });
+
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+
+        // Validate all required fields
+        const requiredFields = form.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            const formGroup = field.parentElement;
+            if (!field.value.trim()) {
+                formGroup.classList.add('error');
+                isValid = false;
+            } else {
+                formGroup.classList.remove('error');
+            }
+        });
+
+        // Validate phone number specifically
+        const phoneValue = phoneInput.value.trim();
+        const phoneValid = phonePatterns.some(pattern => pattern.test(phoneValue));
+
+        if (!phoneValid) {
+            phoneInput.parentElement.classList.add('error');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please correct the errors in the form before submitting.');
+        }
+    });
+</script>
 </body>
 </html>
